@@ -1,0 +1,240 @@
+---
+const links = [
+  { label: 'Resultados', href: '#resultados' },
+  { label: 'Por qué elegirnos', href: '#elegirnos' },
+  { label: 'Cómo funciona', href: '#comofunciona' },
+  { label: 'Testimonios', href: '#testimonios' },
+];
+---
+
+<header class="v1-header" data-v1-header>
+  <div class="container v1-header__inner">
+    <a class="v1-header__logo" href="/version1/" aria-label="Clínica Témpora - versión 1">
+      <picture>
+        <source type="image/webp" srcset="/assets/img/logo-tempora-229.webp 1x, /assets/img/logo-tempora-458.webp 2x" />
+        <img
+          src="/assets/img/logo-tempora-229.png"
+          srcset="/assets/img/logo-tempora-229.png 1x, /assets/img/logo-tempora-458.png 2x"
+          width="229"
+          height="39"
+          alt="Clínica Témpora"
+        />
+      </picture>
+    </a>
+
+    <nav class="v1-header__nav" id="v1-navigation" aria-label="Navegación principal" data-v1-nav>
+      <ul>
+        {links.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+      <a class="v1-header__cta v1-header__cta--mobile" href="#form">QUIERO AGENDAR</a>
+    </nav>
+
+    <a class="v1-header__cta v1-header__cta--desktop" href="#form">QUIERO AGENDAR</a>
+
+    <button
+      class="v1-header__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="v1-navigation"
+      aria-label="Abrir menú"
+      data-v1-toggle
+    >
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .v1-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding-block: 18px;
+    border-bottom: 1px solid rgba(45, 80, 87, 0.08);
+    background: rgba(248, 246, 230, 0.92);
+    backdrop-filter: blur(16px);
+  }
+
+  .v1-header__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .v1-header__logo img {
+    width: 210px;
+    border-radius: 0;
+  }
+
+  .v1-header__nav {
+    justify-self: end;
+  }
+
+  .v1-header__nav ul {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .v1-header__nav a:not(.v1-header__cta) {
+    display: block;
+    padding: 10px 12px;
+    color: var(--nav-ink);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: color var(--t-fast);
+  }
+
+  .v1-header__nav a:not(.v1-header__cta):hover {
+    color: var(--teal);
+  }
+
+  .v1-header__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 18px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.2;
+    transition: background-color var(--t-fast), color var(--t-fast);
+  }
+
+  .v1-header__cta:hover,
+  .v1-header__cta:focus-visible {
+    background: var(--lime);
+    color: var(--ink);
+  }
+
+  .v1-header__cta--mobile,
+  .v1-header__toggle {
+    display: none;
+  }
+
+  @media (max-width: 1024px) {
+    .v1-header {
+      padding-block: 15px;
+    }
+
+    .v1-header__inner {
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+    }
+
+    .v1-header__logo img {
+      width: 190px;
+    }
+
+    .v1-header__nav {
+      position: absolute;
+      top: 100%;
+      right: 20px;
+      left: 20px;
+      display: grid;
+      max-height: 0;
+      padding: 0 18px;
+      border-radius: 0 0 22px 22px;
+      background: rgba(248, 246, 230, 0.98);
+      box-shadow: 0 20px 35px rgba(6, 26, 28, 0.12);
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transition: max-height 280ms ease, padding 280ms ease, opacity 180ms ease;
+    }
+
+    .v1-header__nav.is-open {
+      max-height: 430px;
+      padding-block: 18px 22px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .v1-header__nav ul {
+      display: grid;
+      gap: 2px;
+    }
+
+    .v1-header__nav a:not(.v1-header__cta) {
+      padding: 12px 4px;
+      border-bottom: 1px solid rgba(45, 80, 87, 0.1);
+      font-size: 0.98rem;
+    }
+
+    .v1-header__cta--desktop {
+      justify-self: end;
+    }
+
+    .v1-header__cta--mobile {
+      display: inline-flex;
+      margin-top: 16px;
+    }
+
+    .v1-header__toggle {
+      position: relative;
+      display: block;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid rgba(45, 80, 87, 0.14);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .v1-header__toggle span {
+      position: absolute;
+      left: 12px;
+      width: 16px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--teal);
+      transition: transform 220ms ease, top 220ms ease;
+    }
+
+    .v1-header__toggle span:first-child { top: 16px; }
+    .v1-header__toggle span:last-child { top: 23px; }
+    .v1-header__toggle[aria-expanded='true'] span:first-child { top: 20px; transform: rotate(45deg); }
+    .v1-header__toggle[aria-expanded='true'] span:last-child { top: 20px; transform: rotate(-45deg); }
+  }
+
+  @media (max-width: 620px) {
+    .v1-header__inner {
+      grid-template-columns: 1fr auto;
+    }
+
+    .v1-header__logo img {
+      width: 180px;
+    }
+
+    .v1-header__cta--desktop {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-v1-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-v1-toggle]');
+  const nav = header?.querySelector<HTMLElement>('[data-v1-nav]');
+
+  if (toggle && nav) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      nav.classList.toggle('is-open', open);
+    };
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (event) => event.key === 'Escape' && setOpen(false));
+  }
+</script>
