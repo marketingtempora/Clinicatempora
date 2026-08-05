@@ -10,16 +10,7 @@ const links = [
 <header class="v1-header" data-v1-header>
   <div class="container v1-header__inner">
     <a class="v1-header__logo" href="/version1/" aria-label="Clínica Témpora - versión 1">
-      <picture>
-        <source type="image/webp" srcset="/assets/img/logo-tempora-229.webp 1x, /assets/img/logo-tempora-458.webp 2x" />
-        <img
-          src="/assets/img/logo-tempora-229.png"
-          srcset="/assets/img/logo-tempora-229.png 1x, /assets/img/logo-tempora-458.png 2x"
-          width="229"
-          height="39"
-          alt="Clínica Témpora"
-        />
-      </picture>
+      <img src="/assets/img/logo-tempora-blanco.webp" width="321" height="54" alt="Clínica Témpora" />
     </a>
 
     <nav class="v1-header__nav" id="v1-navigation" aria-label="Navegación principal" data-v1-nav>
@@ -51,58 +42,61 @@ const links = [
     position: sticky;
     top: 0;
     z-index: 40;
-    padding-block: 18px;
-    border-bottom: 1px solid rgba(45, 80, 87, 0.08);
-    background: rgba(248, 246, 230, 0.92);
-    backdrop-filter: blur(16px);
+    height: 72px;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(6, 26, 28, 0.94);
+    box-shadow: 0 10px 30px rgba(6, 26, 28, 0.12);
+    backdrop-filter: saturate(150%) blur(18px);
   }
 
   .v1-header__inner {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
+    height: 100%;
     align-items: center;
-    gap: 30px;
+    gap: 32px;
   }
 
   .v1-header__logo img {
-    width: 210px;
+    display: block;
+    width: 190px;
     border-radius: 0;
   }
 
   .v1-header__nav {
-    justify-self: end;
+    margin-left: auto;
   }
 
   .v1-header__nav ul {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
   }
 
   .v1-header__nav a:not(.v1-header__cta) {
     display: block;
     padding: 10px 12px;
-    color: var(--nav-ink);
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.84rem;
     font-weight: 600;
     line-height: 1.2;
     transition: color var(--t-fast);
   }
 
   .v1-header__nav a:not(.v1-header__cta):hover {
-    color: var(--teal);
+    color: var(--lime);
   }
 
   .v1-header__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
-    padding: 11px 18px;
+    min-height: 46px;
+    padding: 12px 20px;
     border-radius: 999px;
-    background: var(--ink);
-    color: var(--cream);
-    font-family: var(--font-display);
+    background: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-body);
     font-size: 0.82rem;
     font-weight: 800;
     line-height: 1.2;
@@ -111,7 +105,7 @@ const links = [
 
   .v1-header__cta:hover,
   .v1-header__cta:focus-visible {
-    background: var(--lime);
+    background: var(--cream);
     color: var(--ink);
   }
 
@@ -122,16 +116,15 @@ const links = [
 
   @media (max-width: 1024px) {
     .v1-header {
-      padding-block: 15px;
+      height: 68px;
     }
 
     .v1-header__inner {
-      grid-template-columns: auto 1fr auto;
       gap: 16px;
     }
 
     .v1-header__logo img {
-      width: 190px;
+      width: 174px;
     }
 
     .v1-header__nav {
@@ -143,8 +136,9 @@ const links = [
       max-height: 0;
       padding: 0 18px;
       border-radius: 0 0 22px 22px;
-      background: rgba(248, 246, 230, 0.98);
-      box-shadow: 0 20px 35px rgba(6, 26, 28, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 26, 28, 0.98);
+      box-shadow: 0 20px 40px rgba(6, 26, 28, 0.28);
       opacity: 0;
       overflow: hidden;
       pointer-events: none;
@@ -165,12 +159,12 @@ const links = [
 
     .v1-header__nav a:not(.v1-header__cta) {
       padding: 12px 4px;
-      border-bottom: 1px solid rgba(45, 80, 87, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 0.98rem;
     }
 
     .v1-header__cta--desktop {
-      justify-self: end;
+      margin-left: auto;
     }
 
     .v1-header__cta--mobile {
@@ -184,7 +178,7 @@ const links = [
       width: 42px;
       height: 42px;
       padding: 0;
-      border: 1px solid rgba(45, 80, 87, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 50%;
       background: transparent;
       cursor: pointer;
@@ -196,7 +190,7 @@ const links = [
       width: 16px;
       height: 2px;
       border-radius: 2px;
-      background: var(--teal);
+      background: var(--lime);
       transition: transform 220ms ease, top 220ms ease;
     }
 
@@ -207,16 +201,16 @@ const links = [
   }
 
   @media (max-width: 620px) {
-    .v1-header__inner {
-      grid-template-columns: 1fr auto;
-    }
-
     .v1-header__logo img {
-      width: 180px;
+      width: 158px;
     }
 
     .v1-header__cta--desktop {
       display: none;
+    }
+
+    .v1-header__toggle {
+      margin-left: auto;
     }
   }
 </style>
