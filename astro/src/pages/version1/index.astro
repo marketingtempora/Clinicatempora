@@ -30,6 +30,10 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
 </Layout>
 
 <style is:global>
+  html {
+    scroll-padding-top: 92px;
+  }
+
   body > .skip-link {
     display: none;
   }
@@ -74,6 +78,10 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
   }
 
   @media (max-width: 767px) {
+    html {
+      scroll-padding-top: 76px;
+    }
+
     .version1 {
       padding-bottom: 70px;
     }
