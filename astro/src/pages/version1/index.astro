@@ -25,7 +25,7 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
     </main>
     <FooterVersion1 />
 
-    <a class="version1__floating-cta" href="#form">QUIERO AGENDAR</a>
+    <a class="version1__floating-cta" href="#form">Quiero agendar <span aria-hidden="true">→</span></a>
   </div>
 </Layout>
 
@@ -47,34 +47,40 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
     right: 24px;
     bottom: 22px;
     z-index: 50;
-    display: block;
-    padding: 15px 22px;
-    border: 1px solid rgba(248, 246, 230, 0.22);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 15px 18px 15px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 999px;
-    background: var(--ink);
-    box-shadow: 0 12px 30px rgba(6, 26, 28, 0.28);
-    color: var(--cream);
-    font-family: var(--font-display);
-    font-size: 0.9rem;
+    background: var(--lime);
+    box-shadow: 0 18px 50px rgba(6, 26, 28, 0.3);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.86rem;
     font-weight: 800;
     line-height: 1.2;
     text-align: center;
     opacity: 0;
     pointer-events: none;
-    transform: translateY(18px);
-    transition: opacity 220ms ease, transform 220ms ease, background-color 220ms ease, color 220ms ease;
+    translate: 0 18px;
+    transition: opacity 180ms ease, translate 180ms ease;
   }
 
-  .version1__floating-cta:hover,
-  .version1__floating-cta:focus-visible {
-    background: var(--lime);
-    color: var(--ink);
+  .version1__floating-cta span {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: white;
   }
 
   .version1__floating-cta.is-visible {
     opacity: 1;
     pointer-events: auto;
-    transform: none;
+    translate: 0;
   }
 
   @media (max-width: 767px) {
@@ -90,6 +96,7 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
       right: 12px;
       bottom: 10px;
       left: 12px;
+      justify-content: space-between;
       padding: 15px 20px;
       font-size: 0.98rem;
     }
