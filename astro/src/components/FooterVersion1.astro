@@ -1,5 +1,5 @@
 ---
-import { site } from '../data/content';
+import { installments, site } from '../data/content';
 
 const links = [
   { label: 'Resultados', href: '#resultados' },
@@ -10,6 +10,12 @@ const links = [
 ---
 
 <footer class="footer-v1">
+  <div class="container footer-v1__finance">
+    <span>12 CUOTAS</span>
+    <strong>{installments.title}</strong>
+    <small>{installments.note}</small>
+  </div>
+
   <div class="container footer-v1__top">
     <div class="footer-v1__brand">
       <img
@@ -46,6 +52,40 @@ const links = [
     padding: 72px 0 26px;
     background: var(--ink);
     color: var(--cream);
+  }
+
+  .footer-v1__finance {
+    display: grid;
+    grid-template-columns: auto minmax(300px, 1fr) minmax(260px, 0.72fr);
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 48px;
+    padding: 18px 22px;
+    border-radius: 18px;
+    background: var(--lime);
+    color: var(--ink);
+  }
+
+  .footer-v1__finance > span {
+    padding: 8px 12px;
+    border: 1px solid rgba(6, 26, 28, 0.18);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .footer-v1__finance strong {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .footer-v1__finance small {
+    color: rgba(6, 26, 28, 0.66);
+    font-size: 0.68rem;
+    line-height: 1.35;
   }
 
   .footer-v1__top {
@@ -124,6 +164,18 @@ const links = [
       grid-template-columns: 1fr;
       gap: 34px;
       padding-bottom: 38px;
+    }
+
+    .footer-v1__finance {
+      grid-template-columns: 1fr;
+      gap: 9px;
+      margin-bottom: 38px;
+      padding: 18px;
+      border-radius: 16px;
+    }
+
+    .footer-v1__finance > span {
+      justify-self: start;
     }
 
     .footer-v1__brand img {
