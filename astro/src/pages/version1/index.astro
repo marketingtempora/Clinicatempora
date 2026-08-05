@@ -1,0 +1,192 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import HeroVersion1 from '../../components/HeroVersion1.astro';
+import Claim from '../../components/Claim.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import Results from '../../components/Results.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import WhyUs from '../../components/WhyUs.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Installments from '../../components/Installments.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout>
+  <div class="version1">
+    <Header />
+    <main>
+      <HeroVersion1 />
+      <Claim />
+      <Testimonials />
+      <Results />
+      <HowItWorks />
+      <WhyUs />
+      <CtaBand />
+      <Installments />
+    </main>
+    <Footer />
+
+    <a class="version1__mobile-cta" href="#form">QUIERO AGENDAR</a>
+  </div>
+</Layout>
+
+<style is:global>
+  .version1 {
+    --section-y: 58px;
+  }
+
+  .version1 [hidden] {
+    display: none !important;
+  }
+
+  .version1__mobile-cta {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .version1 {
+      --section-y: 42px;
+      --fs-h2: 2.35rem;
+      --fs-h3: 1.65rem;
+      --fs-label: 1.55rem;
+      padding-bottom: 70px;
+    }
+
+    .version1 .site-header {
+      padding-block: 18px;
+    }
+
+    .version1 .site-header__logo img {
+      width: 190px;
+    }
+
+    .version1 .claim__title,
+    .version1 .results__title,
+    .version1 .testimonials__title,
+    .version1 .why__title,
+    .version1 .cta__title {
+      letter-spacing: -0.03em;
+      line-height: 1.04;
+    }
+
+    .version1 .testimonials__inner {
+      margin-bottom: 0;
+    }
+
+    .version1 .testimonials__carousel {
+      width: 100%;
+      max-width: 300px;
+      margin-inline: auto;
+    }
+
+    .version1 .results__inner {
+      margin-bottom: 0;
+    }
+
+    .version1 .timeline {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 82%;
+      gap: 12px;
+      padding: 8px 20px 16px;
+      margin-inline: -20px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline mandatory;
+      scrollbar-width: none;
+    }
+
+    .version1 .timeline::-webkit-scrollbar {
+      display: none;
+    }
+
+    .version1 .timeline__item {
+      display: grid;
+      gap: 10px;
+      padding: 12px 12px 16px;
+      border: 1px solid rgba(45, 80, 87, 0.1);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.55);
+      scroll-snap-align: center;
+    }
+
+    .version1 .timeline__img {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      aspect-ratio: 219 / 147;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+
+    .version1 .timeline__label {
+      font-size: 1.5rem;
+    }
+
+    .version1 .how {
+      padding-block: 58px;
+    }
+
+    .version1 .how__inner {
+      gap: 30px;
+    }
+
+    .version1 .feature__title {
+      margin: 6px 0 12px;
+      font-size: 1rem;
+    }
+
+    .version1 .why__copy {
+      margin-top: 32px;
+    }
+
+    .version1 .installments__note {
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .version1__mobile-cta {
+      position: fixed;
+      right: 12px;
+      bottom: 10px;
+      left: 12px;
+      z-index: 50;
+      display: block;
+      padding: 15px 20px;
+      border: 1px solid rgba(248, 246, 230, 0.22);
+      border-radius: 999px;
+      background: var(--ink);
+      box-shadow: 0 12px 30px rgba(6, 26, 28, 0.28);
+      color: var(--cream);
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 800;
+      line-height: 1.2;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .version1__mobile-cta.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const mobileCta = document.querySelector<HTMLElement>('.version1__mobile-cta');
+  const leadForm = document.getElementById('form');
+
+  if (mobileCta && leadForm && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => mobileCta.classList.toggle('is-visible', !entry.isIntersecting),
+      { threshold: 0.08 }
+    );
+    observer.observe(leadForm);
+  }
+</script>
