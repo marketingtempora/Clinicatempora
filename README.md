@@ -100,7 +100,7 @@ mismos breakpoints (1024px y 767px) y el mismo alto de sección que el original.
 | Campo | Valor |
 |---|---|
 | Root Directory | `astro` |
-| Build Command | `npm ci && npm run build` |
+| Build Command | `npm run render-build` |
 | Publish Directory | `dist` |
 
 Y en **Environment**:

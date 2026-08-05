@@ -17,10 +17,12 @@ dist/
 npm-debug.log*
 yarn-error.log*
 
-# Sistema / editor
+# Sistema / editor / herramientas locales
 .DS_Store
 Thumbs.db
 desktop.ini
 .vscode/*
 !.vscode/extensions.json
 .idea/
+.claude/
+.claude*

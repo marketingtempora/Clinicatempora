@@ -17,15 +17,22 @@
 services:
   # ---------------------------------------------------------------------------
   # Versión Astro (con build)
+  #
+  # El build es un solo comando ("npm run render-build") a propósito: Render no
+  # siempre pasa el buildCommand por una shell, y cuando no lo hace, un
+  # "npm ci && npm run build" llega como argumentos posicionales de npm, que
+  # entonces imprime su "Usage" y el deploy falla. El && vive dentro del script
+  # de package.json, que npm sí ejecuta con shell.
+  #
   #   Root Directory   : astro
-  #   Build Command    : npm ci && npm run build
+  #   Build Command    : npm run render-build
   #   Publish Directory: dist
   # ---------------------------------------------------------------------------
   - type: web
     runtime: static
     name: tempora-implante-capilar
     rootDir: astro
-    buildCommand: npm ci && npm run build
+    buildCommand: npm run render-build
     staticPublishPath: dist
     autoDeploy: true
     envVars:
@@ -67,7 +74,7 @@ services:
   - type: web
     runtime: static
     name: tempora-implante-capilar-vanilla
-    buildCommand: ""
+    buildCommand: echo "sin build: se sirve tal cual"
     staticPublishPath: vanilla
     autoDeploy: true
     headers:

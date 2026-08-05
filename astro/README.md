@@ -67,11 +67,17 @@ mensaje de éxito y escribe el payload en la consola.
 | Campo | Valor |
 |---|---|
 | Root Directory | `astro` |
-| Build Command | `npm ci && npm run build` |
+| Build Command | `npm run render-build` |
 | Publish Directory | `dist` |
 
 Después las variables en **Environment**. Como se resuelven en build time, un
 cambio necesita **Manual Deploy → Clear build cache & deploy**.
+
+> El build es **un solo comando** a propósito. `npm run render-build` corre
+> `npm ci && astro build` desde el `package.json`. Si pones el `&&` directamente
+> en el campo de Render y este no lo pasa por una shell, npm recibe `&&`, `npm`,
+> `run` y `build` como argumentos posicionales, imprime su `Usage` y el deploy
+> falla. Dentro de un script de npm el `&&` siempre se ejecuta con shell.
 
 El blueprint [`../render.yaml`](../render.yaml) ya trae esta configuración con
 headers de cache para `/_astro/*` y `/assets/*`.

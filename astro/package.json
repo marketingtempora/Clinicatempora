@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "astro": "astro"
+    "astro": "astro",
+    "render-build": "npm ci --no-audit --no-fund && astro build"
   },
   "dependencies": {
     "astro": "^5.6.1"
