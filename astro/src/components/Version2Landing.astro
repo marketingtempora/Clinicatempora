@@ -1,0 +1,667 @@
+---
+import LeadForm from './LeadForm.astro';
+import YouTubeFacade from './YouTubeFacade.astro';
+
+const prices = [
+  ['1.000', '$2.600.000'],
+  ['1.500', '$3.100.000'],
+  ['2.000', '$3.600.000'],
+  ['2.500', '$4.100.000'],
+  ['3.000', '$4.600.000'],
+  ['3.500', '$5.100.000'],
+  ['4.000', '$5.600.000'],
+] as const;
+
+const results = [
+  { before: '001A-1.jpg', after: '001B-1.jpg', label: 'Caso 01 · línea frontal' },
+  { before: '002A.jpg', after: '002B.jpg', label: 'Caso 02 · densidad superior' },
+  { before: '006A.jpg', after: '006B.jpg', label: 'Caso 03 · entradas' },
+] as const;
+
+const faqs = [
+  {
+    question: '¿Cuánto cuesta un implante capilar?',
+    answer:
+      'El valor depende de la cantidad de unidades foliculares que requiera tu caso. En Témpora los valores publicados comienzan en $2.600.000 para 1.000 folículos e incluyen pabellón, equipo médico, insumos, fármacos y controles postoperatorios.',
+  },
+  {
+    question: '¿Cómo sé si necesito FUE o FUSS?',
+    answer:
+      'No tienes que decidirlo antes. El equipo evalúa tu tipo de alopecia, zona donante, cantidad de folículos y objetivos para recomendar FUE, FUSS o una combinación de ambas.',
+  },
+  {
+    question: '¿Es necesario internarse?',
+    answer:
+      'No. Es una cirugía ambulatoria con anestesia local. Recibes indicaciones de cuidado y continúas con el programa de seguimiento de la clínica.',
+  },
+  {
+    question: '¿Cuándo se ven los resultados?',
+    answer:
+      'El crecimiento es progresivo. Cada evolución es distinta y el resultado se controla durante los meses posteriores a la cirugía.',
+  },
+  {
+    question: '¿Puedo evaluarme si vivo fuera de Santiago?',
+    answer:
+      'Sí. El formulario permite elegir evaluación presencial o a distancia. La sucursal de Santiago está en Providencia, a pasos del metro Los Leones.',
+  },
+  {
+    question: '¿Qué opciones de pago existen?',
+    answer:
+      'Puedes pagar por transferencia con 5% de descuento o hasta en 12 cuotas sin interés con tarjetas de crédito, según las condiciones publicadas por la clínica.',
+  },
+] as const;
+---
+
+<div class="version2">
+  <header class="v2-nav" data-v2-nav>
+    <div class="v2-container v2-nav__inner">
+      <a class="v2-nav__brand" href="#inicio" aria-label="Clínica Témpora, inicio">
+        <img src="/assets/img/logo-tempora-blanco.webp" width="321" height="54" alt="Clínica Témpora" />
+      </a>
+      <nav class="v2-nav__links" aria-label="Navegación principal">
+        <a href="#resultados">Resultados</a>
+        <a href="#tecnicas">Técnicas</a>
+        <a href="#valores">Valores</a>
+        <a href="#preguntas">Preguntas</a>
+      </nav>
+      <a class="v2-button v2-button--lime v2-nav__cta" href="#form">Quiero agendar</a>
+    </div>
+  </header>
+
+  <main id="hero">
+    <section class="v2-hero" id="inicio">
+      <div class="v2-hero__glow" aria-hidden="true"></div>
+      <div class="v2-container v2-hero__grid">
+        <div class="v2-hero__copy">
+          <p class="v2-kicker">Clínica especializada · Providencia</p>
+          <h1>Implante capilar que se planifica para <span>verse natural.</span></h1>
+          <p class="v2-hero__lead">
+            Técnicas FUE y FUSS elegidas según tu diagnóstico, con cirugía ambulatoria y seguimiento médico antes y después del procedimiento.
+          </p>
+          <ul class="v2-hero__checks" aria-label="Características principales">
+            <li><span aria-hidden="true">✓</span> Evaluación presencial o a distancia</li>
+            <li><span aria-hidden="true">✓</span> Valor definido por unidades foliculares</li>
+            <li><span aria-hidden="true">✓</span> Pabellones autorizados en Providencia</li>
+          </ul>
+          <div class="v2-hero__actions">
+            <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
+            <a class="v2-text-link" href="#valores">Ver valores <span aria-hidden="true">↘</span></a>
+          </div>
+
+          <figure class="v2-hero__media">
+            <img
+              src="/assets/img/v2/tempora-galeria4.webp"
+              width="759"
+              height="889"
+              alt="Especialista de Clínica Témpora durante un implante capilar"
+              fetchpriority="high"
+            />
+            <figcaption>
+              <strong>15+ años</strong>
+              <span>de experiencia del equipo en restauración capilar</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="v2-form-shell" id="form" data-form-shell>
+          <div class="v2-form-shell__topline">
+            <span>Evaluación capilar</span>
+            <span>8 pasos · 2 min</span>
+          </div>
+          <LeadForm />
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-proofbar" aria-label="Datos de la clínica">
+      <div class="v2-container v2-proofbar__grid">
+        <div><strong>2</strong><span>pabellones de cirugía mayor</span></div>
+        <div><strong>FUE + FUSS</strong><span>la técnica la define tu diagnóstico</span></div>
+        <div><strong>Los Leones</strong><span>Suecia 0142, oficina 603</span></div>
+      </div>
+    </section>
+
+    <section class="v2-pricing v2-section" id="valores">
+      <div class="v2-container">
+        <div class="v2-heading v2-heading--split">
+          <div>
+            <p class="v2-kicker v2-kicker--dark">Precio claro desde el inicio</p>
+            <h2>¿Cuánto cuesta<br />un implante capilar?</h2>
+          </div>
+          <div class="v2-heading__aside">
+            <p>
+              El precio se calcula por la cantidad de unidades foliculares que necesitas. La evaluación define esa cantidad y la técnica indicada para tu caso.
+            </p>
+            <p class="v2-price-from"><span>Desde</span><strong>$2.600.000</strong><small>por 1.000 folículos</small></p>
+          </div>
+        </div>
+
+        <div class="v2-pricing__body">
+          <div class="v2-pricing__included">
+            <h3>Tu inversión incluye</h3>
+            <ul>
+              <li>Derecho a pabellón acreditado</li>
+              <li>Honorarios del equipo médico</li>
+              <li>Insumos y fármacos de la cirugía</li>
+              <li>Controles y seguimiento postoperatorio</li>
+            </ul>
+            <div class="v2-payment-note">
+              <strong>5% de descuento</strong> por transferencia · Hasta <strong>12 cuotas sin interés*</strong>
+            </div>
+          </div>
+
+          <details class="v2-price-table">
+            <summary>Ver tabla completa de valores <span aria-hidden="true">+</span></summary>
+            <div class="v2-price-table__rows">
+              {prices.map(([follicles, price]) => (
+                <div><span>{follicles} folículos</span><strong>{price}</strong></div>
+              ))}
+            </div>
+            <p>*Las condiciones sobre 12 cuotas quedan sujetas a la entidad bancaria o comercial.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-results v2-section" id="resultados">
+      <div class="v2-container">
+        <div class="v2-heading v2-heading--center v2-heading--light">
+          <p class="v2-kicker">Resultados reales de Clínica Témpora</p>
+          <h2>Una línea capilar no se copia.<br /><span>Se diseña para cada persona.</span></h2>
+          <p>Casos publicados por la clínica. El resultado y la evolución pueden variar entre pacientes.</p>
+        </div>
+
+        <div class="v2-results__grid">
+          {results.map((result, index) => (
+            <article class:list={['v2-case', { 'v2-case--wide': index === 0 }]}>
+              <div class="v2-case__images">
+                <figure>
+                  <img src={`/assets/img/v2/${result.before}`} width="1080" height="872" alt={`${result.label}, antes del implante capilar`} loading="lazy" />
+                  <figcaption>Antes</figcaption>
+                </figure>
+                <figure>
+                  <img src={`/assets/img/v2/${result.after}`} width="1080" height="872" alt={`${result.label}, después del implante capilar`} loading="lazy" />
+                  <figcaption>Después</figcaption>
+                </figure>
+              </div>
+              <h3>{result.label}</h3>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-method v2-section" id="proceso">
+      <div class="v2-container v2-method__grid">
+        <div class="v2-method__copy">
+          <p class="v2-kicker v2-kicker--dark">Un plan médico, no una solución genérica</p>
+          <h2>No se trata de “poner pelo”. Se trata de decidir bien dónde, cuánto y cómo.</h2>
+          <p class="v2-method__lead">
+            El diseño, la zona donante y la técnica determinan la naturalidad del resultado. Por eso el proceso comienza con un diagnóstico y termina con seguimiento.
+          </p>
+
+          <ol class="v2-steps">
+            <li><span>01</span><div><strong>Evaluación</strong><p>Revisamos alopecia, zona donante, objetivos y antecedentes.</p></div></li>
+            <li><span>02</span><div><strong>Diseño</strong><p>Definimos la línea capilar y la cantidad estimada de folículos.</p></div></li>
+            <li><span>03</span><div><strong>Cirugía</strong><p>Aplicamos FUE, FUSS o ambas según la indicación médica.</p></div></li>
+            <li><span>04</span><div><strong>Seguimiento</strong><p>Acompañamos la evolución con controles postoperatorios.</p></div></li>
+          </ol>
+        </div>
+
+        <div class="v2-method__gallery" aria-label="Proceso clínico en Clínica Témpora">
+          <img class="v2-method__gallery-main" src="/assets/img/v2/hero-foto.webp" width="984" height="711" alt="Procedimiento de implante capilar en Clínica Témpora" loading="lazy" />
+          <img src="/assets/img/v2/tempora-galeria3.webp" width="868" height="859" alt="Evaluación médica personalizada en Clínica Témpora" loading="lazy" />
+          <img src="/assets/img/v2/tempora-galeria6.webp" width="920" height="797" alt="Preparación de paciente para cirugía capilar" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-tech v2-section" id="tecnicas">
+      <div class="v2-container">
+        <div class="v2-heading v2-heading--center">
+          <p class="v2-kicker v2-kicker--dark">Dos técnicas, una recomendación médica</p>
+          <h2>FUE o FUSS: no eliges por moda.<br /><span>Eliges lo que tu caso necesita.</span></h2>
+        </div>
+
+        <div class="v2-tech__grid">
+          <article class="v2-tech-card v2-tech-card--dark">
+            <span class="v2-tech-card__number">01</span>
+            <p class="v2-tech-card__tag">Extracción folículo a folículo</p>
+            <h3>Técnica FUE</h3>
+            <p>Procedimiento mínimamente invasivo, sin cicatriz lineal y con una recuperación más rápida y confortable.</p>
+            <ul>
+              <li>Permite llevar el cabello muy corto</li>
+              <li>Extracción individual de unidades foliculares</li>
+              <li>Indicada según calidad y capacidad de la zona donante</li>
+            </ul>
+          </article>
+          <article class="v2-tech-card v2-tech-card--lime">
+            <span class="v2-tech-card__number">02</span>
+            <p class="v2-tech-card__tag">Mayor volumen de injertos</p>
+            <h3>Técnica FUSS</h3>
+            <p>Alternativa eficaz para alopecias extensas o zonas donantes más pequeñas, con cierre tricofítico avanzado.</p>
+            <ul>
+              <li>Permite obtener un gran volumen de cabello</li>
+              <li>Separación de folículos bajo microscopio</li>
+              <li>Útil cuando se necesita optimizar la zona donante</li>
+            </ul>
+          </article>
+        </div>
+        <div class="v2-tech__cta">
+          <p>No necesitas llegar sabiendo cuál técnica elegir.</p>
+          <a class="v2-button v2-button--dark" href="#form">Evaluar mi caso</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-media v2-section" id="historias">
+      <div class="v2-container">
+        <div class="v2-heading v2-heading--split v2-heading--light">
+          <div>
+            <p class="v2-kicker">Casos, no promesas</p>
+            <h2>La experiencia contada por quienes la vivieron.</h2>
+          </div>
+          <p class="v2-heading__aside">Pacientes y medios han documentado el proceso, la evolución y el acompañamiento de Clínica Témpora.</p>
+        </div>
+
+        <div class="v2-media__feature">
+          <div class="v2-media__video">
+            <YouTubeFacade
+              id="3YyPCaqcIXQ"
+              alt="Reportaje de 24 Horas sobre el implante capilar de Jorge Coke Hevia"
+              thumb="/assets/img/v2/youtube-3YyPCaqcIXQ.jpg"
+            />
+          </div>
+          <div class="v2-media__copy">
+            <span>Reportaje 24 Horas</span>
+            <h3>Un caso real seguido durante un año.</h3>
+            <p>Evaluación, cirugía, evolución progresiva y una conversación transparente sobre lo que puede conseguirse en un caso de alopecia avanzada.</p>
+          </div>
+        </div>
+
+        <div class="v2-media__secondary">
+          <article>
+            <YouTubeFacade
+              id="Oth49NiG8Y0"
+              alt="Testimonio de paciente sobre su experiencia en Clínica Témpora"
+              thumb="/assets/img/v2/youtube-Oth49NiG8Y0.jpg"
+            />
+            <h3>“Mi experiencia con el implante capilar”</h3>
+            <p>Testimonio de paciente · Clínica Témpora</p>
+          </article>
+          <article>
+            <YouTubeFacade
+              id="ybZsii5iUIE"
+              alt="Video explicativo del proceso de implante capilar FUE"
+              thumb="/assets/img/v2/youtube-ybZsii5iUIE.jpg"
+            />
+            <h3>Así se realiza un implante FUE</h3>
+            <p>Explicación médica · Clínica Témpora</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-clinic v2-section" id="clinica">
+      <div class="v2-container v2-clinic__grid">
+        <div class="v2-clinic__visual">
+          <img src="/assets/img/v2/JESUS-1_00000000-2.jpg" width="600" height="600" alt="Dra. Jesús Díaz, fundadora y directora médica de Clínica Témpora" loading="lazy" />
+          <img src="/assets/img/v2/FRANCISCO-1_00000000.jpg" width="600" height="600" alt="Dr. Francisco Castellón, director de restauración capilar" loading="lazy" />
+        </div>
+        <div class="v2-clinic__copy">
+          <p class="v2-kicker v2-kicker--dark">Equipo médico especializado</p>
+          <h2>Tu resultado comienza con quién evalúa y opera.</h2>
+          <p>
+            Clínica Témpora reúne profesionales dedicados a restauración capilar FUE y FUSS, con formación internacional y actualización continua.
+          </p>
+          <div class="v2-clinic__doctors">
+            <div><strong>Dra. Jesús Díaz</strong><span>Fundadora y directora médica</span></div>
+            <div><strong>Dr. Francisco Castellón</strong><span>Director de restauración capilar</span></div>
+          </div>
+          <div class="v2-clinic__location">
+            <span aria-hidden="true">⌖</span>
+            <div><strong>Providencia, Santiago</strong><p>Suecia 0142, oficina 603 · A pasos del metro Los Leones</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-faq v2-section" id="preguntas">
+      <div class="v2-container v2-faq__grid">
+        <div class="v2-faq__intro">
+          <p class="v2-kicker v2-kicker--dark">Antes de decidir</p>
+          <h2>Preguntas que merecen respuestas claras.</h2>
+          <p>Si tu duda no está aquí, déjala en tu evaluación. El objetivo no es apurarte: es ayudarte a decidir con información.</p>
+          <a class="v2-button v2-button--dark" href="#form">Quiero agendar</a>
+        </div>
+        <div class="v2-faq__list">
+          {faqs.map((faq, index) => (
+            <details open={index === 0}>
+              <summary>{faq.question}<span aria-hidden="true">+</span></summary>
+              <p>{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-final">
+      <div class="v2-container v2-final__panel">
+        <div>
+          <p class="v2-kicker">Tu caso empieza con una evaluación</p>
+          <h2>Descubre qué resultado es posible para ti.</h2>
+        </div>
+        <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="v2-footer">
+    <div class="v2-container v2-footer__inner">
+      <img src="/assets/img/logo-tempora-blanco.webp" width="321" height="54" alt="Clínica Témpora" />
+      <div><strong>Suecia 0142, oficina 603</strong><span>Providencia, Santiago</span></div>
+      <div><strong>Lunes a viernes</strong><span>9:00 a 18:00 hrs.</span></div>
+    </div>
+  </footer>
+
+  <a class="v2-floating" href="#form" data-floating>Quiero agendar <span aria-hidden="true">→</span></a>
+</div>
+
+<style is:global>
+  html { scroll-padding-top: 76px; }
+  body > .skip-link { display: none; }
+  .version2 { --v2-ink: #061a1c; --v2-ink-2: #0d2a2d; --v2-cream: #f5f4e9; --v2-paper: #fffef8; --v2-lime: #bad305; --v2-mint: #dfe8dc; --v2-muted: #53686a; background: var(--v2-cream); color: var(--v2-ink); overflow: clip; }
+  .version2 [hidden] { display: none !important; }
+  .version2 *, .version2 *::before, .version2 *::after { box-sizing: border-box; }
+  .version2 h1, .version2 h2, .version2 h3 { font-family: var(--font-display); letter-spacing: -0.035em; }
+  .version2 h2 { font-size: clamp(2.5rem, 5vw, 4.9rem); line-height: .98; font-weight: 700; }
+  .version2 p { font-family: var(--font-body); }
+  .v2-container { width: min(1240px, calc(100% - 48px)); margin-inline: auto; }
+  .v2-section { padding: clamp(84px, 10vw, 150px) 0; }
+  .v2-kicker { margin: 0 0 22px; color: var(--v2-lime); font: 700 .78rem/1 var(--font-body); letter-spacing: .16em; text-transform: uppercase; }
+  .v2-kicker--dark { color: #668000; }
+  .v2-button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 13px 22px; border-radius: 999px; font: 700 .94rem/1 var(--font-body); transition: transform 180ms ease, background 180ms ease, color 180ms ease; }
+  .v2-button:hover { transform: translateY(-2px); }
+  .v2-button--lime { background: var(--v2-lime); color: var(--v2-ink); }
+  .v2-button--dark { background: var(--v2-ink); color: white; }
+  .v2-heading { margin-bottom: 62px; }
+  .v2-heading h2 span { color: #779400; }
+  .v2-heading--light h2, .v2-heading--light h3 { color: white; }
+  .v2-heading--light h2 span { color: var(--v2-lime); }
+  .v2-heading--center { max-width: 960px; margin-inline: auto; text-align: center; }
+  .v2-heading--center > p:last-child { max-width: 650px; margin: 28px auto 0; color: rgba(255,255,255,.62); font-size: 1.05rem; }
+  .v2-heading--split { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .7fr); gap: 80px; align-items: end; }
+  .v2-heading__aside { margin: 0; color: var(--v2-muted); font-size: 1.05rem; line-height: 1.75; }
+  .v2-heading--light .v2-heading__aside { color: rgba(255,255,255,.68); }
+
+  .v2-nav { position: fixed; inset: 0 0 auto; z-index: 80; height: 72px; background: rgba(6,26,28,.88); backdrop-filter: saturate(150%) blur(18px); border-bottom: 1px solid rgba(255,255,255,.08); }
+  .v2-nav__inner { height: 100%; display: flex; align-items: center; gap: 34px; }
+  .v2-nav__brand { width: 190px; flex: 0 0 auto; }
+  .v2-nav__brand img { width: 100%; border-radius: 0; }
+  .v2-nav__links { display: flex; margin-left: auto; gap: 28px; }
+  .v2-nav__links a { color: rgba(255,255,255,.76); font: 500 .86rem/1 var(--font-body); }
+  .v2-nav__links a:hover { color: var(--v2-lime); }
+
+  .v2-hero { position: relative; min-height: 900px; padding: 140px 0 82px; background: var(--v2-ink); color: white; }
+  .v2-hero__glow { position: absolute; width: 720px; height: 720px; left: -260px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(186,211,5,.18), transparent 68%); pointer-events: none; }
+  .v2-hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.38fr) minmax(390px, .78fr); gap: 60px; align-items: start; }
+  .v2-hero__copy { min-width: 0; }
+  .v2-hero h1 { max-width: 800px; margin: 0; color: white; font-size: clamp(3.8rem, 6.5vw, 6.8rem); font-weight: 700; line-height: .88; }
+  .v2-hero h1 span { display: block; color: var(--v2-lime); }
+  .v2-hero__lead { max-width: 720px; margin: 30px 0 26px; color: rgba(255,255,255,.74); font-size: clamp(1.05rem, 1.55vw, 1.3rem); line-height: 1.55; }
+  .v2-hero__checks { display: flex; flex-wrap: wrap; gap: 10px; }
+  .v2-hero__checks li { padding: 9px 13px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; color: rgba(255,255,255,.82); font: 500 .82rem/1.2 var(--font-body); }
+  .v2-hero__checks span { color: var(--v2-lime); margin-right: 5px; }
+  .v2-hero__actions { display: flex; align-items: center; gap: 24px; margin-top: 28px; }
+  .v2-text-link { color: white; font: 600 .94rem/1 var(--font-body); }
+  .v2-text-link span { color: var(--v2-lime); margin-left: 4px; }
+  .v2-hero__media { position: relative; width: min(720px, 92%); height: 260px; margin: 44px 0 0; overflow: hidden; border-radius: 24px; }
+  .v2-hero__media img { width: 100%; height: 100%; border-radius: 0; object-fit: cover; object-position: center 42%; filter: saturate(.78); }
+  .v2-hero__media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 35%, rgba(6,26,28,.88)); }
+  .v2-hero__media figcaption { position: absolute; z-index: 1; right: 28px; bottom: 25px; width: 200px; }
+  .v2-hero__media strong { display: block; color: var(--v2-lime); font: 700 2.7rem/.9 var(--font-display); letter-spacing: -.04em; }
+  .v2-hero__media span { display: block; margin-top: 8px; color: white; font: 500 .82rem/1.35 var(--font-body); }
+  .v2-form-shell { position: sticky; top: 94px; padding: 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 26px; background: rgba(255,255,255,.07); box-shadow: 0 28px 80px rgba(0,0,0,.35); }
+  .v2-form-shell__topline { display: flex; justify-content: space-between; padding: 5px 8px 15px; color: rgba(255,255,255,.66); font: 600 .72rem/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; }
+  .version2 .v2-form-shell .lead-card__body { padding: 26px !important; border-radius: 16px 16px 0 0; background: var(--v2-paper) !important; }
+  .version2 .v2-form-shell .lead-card__intro { margin: 0 0 28px !important; color: var(--v2-ink) !important; font-size: 1.12rem !important; line-height: 1.4 !important; text-shadow: none !important; }
+  .version2 .v2-form-shell .lead-card__intro br:first-child { display: none; }
+  .version2 .v2-form-shell .lead-card__footer { padding: 16px 22px !important; border-radius: 0 0 16px 16px !important; background: var(--v2-ink-2) !important; }
+  .version2 .v2-form-shell .lead-card__footer p { color: rgba(255,255,255,.72) !important; font-size: .78rem !important; font-weight: 500 !important; }
+  .version2 .v2-form-shell .lead-form__progress-track { height: 10px !important; border-radius: 999px; background: #e1e4da !important; }
+  .version2 .v2-form-shell .lead-form__progress-meter { border-radius: 999px; font-size: 0 !important; }
+  .version2 .v2-form-shell .lead-form__label { margin-bottom: 5px; color: var(--v2-ink) !important; font-size: .88rem !important; font-weight: 600 !important; }
+  .version2 .v2-form-shell .lead-form__field,
+  .version2 .v2-form-shell .lead-form__select select { height: 48px !important; border: 1px solid #dce0d6 !important; border-radius: 10px !important; background: white !important; }
+  .version2 .v2-form-shell .btn-form { min-height: 48px; border-radius: 999px !important; background: var(--v2-lime) !important; color: var(--v2-ink) !important; font-weight: 700 !important; }
+  .version2 .v2-form-shell .btn-form--prev { background: #d9ddd4 !important; }
+
+  .v2-proofbar { background: var(--v2-lime); }
+  .v2-proofbar__grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .v2-proofbar__grid > div { min-height: 116px; display: grid; align-content: center; padding: 24px 36px; border-left: 1px solid rgba(6,26,28,.17); }
+  .v2-proofbar__grid > div:last-child { border-right: 1px solid rgba(6,26,28,.17); }
+  .v2-proofbar strong { display: block; margin-bottom: 6px; color: var(--v2-ink); font: 800 1.35rem/1 var(--font-display); letter-spacing: -.025em; }
+  .v2-proofbar span { color: rgba(6,26,28,.72); font: 600 .78rem/1.35 var(--font-body); }
+
+  .v2-pricing { background: var(--v2-cream); }
+  .v2-price-from { display: grid; margin-top: 28px; padding-top: 22px; border-top: 1px solid #d9dccf; }
+  .v2-price-from span, .v2-price-from small { font: 600 .74rem/1.3 var(--font-body); text-transform: uppercase; letter-spacing: .1em; }
+  .v2-price-from strong { margin: 5px 0; color: var(--v2-ink); font: 750 2.2rem/1 var(--font-display); letter-spacing: -.04em; }
+  .v2-pricing__body { display: grid; grid-template-columns: .9fr 1.1fr; gap: 18px; }
+  .v2-pricing__included, .v2-price-table { border-radius: 24px; background: var(--v2-paper); }
+  .v2-pricing__included { padding: 40px; }
+  .v2-pricing__included h3 { margin-bottom: 28px; font-size: 1.75rem; }
+  .v2-pricing__included li { position: relative; padding: 15px 0 15px 30px; border-bottom: 1px solid #e5e6dd; color: var(--v2-muted); font: 500 .92rem/1.4 var(--font-body); }
+  .v2-pricing__included li::before { content: '✓'; position: absolute; left: 0; color: #789500; font-weight: 800; }
+  .v2-payment-note { margin-top: 28px; padding: 16px 18px; border-radius: 14px; background: var(--v2-mint); color: var(--v2-ink); font: 500 .83rem/1.45 var(--font-body); }
+  .v2-price-table { align-self: start; overflow: hidden; }
+  .v2-price-table summary { display: flex; min-height: 86px; align-items: center; justify-content: space-between; padding: 0 34px; cursor: pointer; list-style: none; color: var(--v2-ink); font: 700 1.05rem/1.2 var(--font-body); }
+  .v2-price-table summary::-webkit-details-marker { display: none; }
+  .v2-price-table summary span { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 50%; background: var(--v2-lime); font-size: 1.4rem; transition: rotate 180ms ease; }
+  .v2-price-table[open] summary span { rotate: 45deg; }
+  .v2-price-table__rows { padding: 0 34px 20px; }
+  .v2-price-table__rows div { display: flex; justify-content: space-between; padding: 13px 0; border-top: 1px solid #e5e6dd; color: var(--v2-muted); font: 500 .9rem/1 var(--font-body); }
+  .v2-price-table__rows strong { color: var(--v2-ink); }
+  .v2-price-table > p { margin: 0; padding: 0 34px 28px; color: #768587; font-size: .72rem; }
+
+  .v2-results { background: var(--v2-ink); }
+  .v2-results__grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+  .v2-case { padding: 14px; border: 1px solid rgba(255,255,255,.1); border-radius: 24px; background: rgba(255,255,255,.055); }
+  .v2-case--wide { grid-column: 1 / -1; }
+  .v2-case__images { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+  .v2-case figure { position: relative; margin: 0; overflow: hidden; border-radius: 14px; background: #d7d7d7; }
+  .v2-case img { width: 100%; aspect-ratio: 1.22 / 1; object-fit: cover; border-radius: 0; }
+  .v2-case--wide img { aspect-ratio: 2.05 / 1; }
+  .v2-case figcaption { position: absolute; left: 12px; bottom: 12px; padding: 6px 10px; border-radius: 999px; background: rgba(6,26,28,.82); color: white; font: 700 .7rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .08em; }
+  .v2-case h3 { margin: 17px 8px 5px; color: white; font-size: 1rem; letter-spacing: -.01em; }
+
+  .v2-method { background: var(--v2-paper); }
+  .v2-method__grid { display: grid; grid-template-columns: 1fr .9fr; gap: 90px; align-items: center; }
+  .v2-method__copy h2 { font-size: clamp(2.7rem, 4.2vw, 4.6rem); }
+  .v2-method__lead { margin: 30px 0 36px; color: var(--v2-muted); font-size: 1.05rem; line-height: 1.7; }
+  .v2-steps li { display: grid; grid-template-columns: 46px 1fr; gap: 18px; padding: 19px 0; border-top: 1px solid #dcdfd5; }
+  .v2-steps li > span { color: #789500; font: 800 .78rem/1.5 var(--font-body); }
+  .v2-steps strong { color: var(--v2-ink); font: 700 1rem/1.3 var(--font-body); }
+  .v2-steps p { margin: 4px 0 0; color: var(--v2-muted); font-size: .86rem; line-height: 1.45; }
+  .v2-method__gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .v2-method__gallery img { width: 100%; height: 230px; border-radius: 18px; object-fit: cover; }
+  .v2-method__gallery-main { grid-column: 1 / -1; height: 420px !important; }
+
+  .v2-tech { background: var(--v2-mint); }
+  .v2-tech__grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; }
+  .v2-tech-card { position: relative; min-height: 530px; padding: 48px; border-radius: 28px; overflow: hidden; }
+  .v2-tech-card--dark { background: var(--v2-ink); color: white; }
+  .v2-tech-card--lime { background: var(--v2-lime); color: var(--v2-ink); }
+  .v2-tech-card__number { position: absolute; right: 34px; top: 24px; opacity: .13; font: 800 7rem/1 var(--font-display); letter-spacing: -.08em; }
+  .v2-tech-card__tag { position: relative; margin-bottom: 70px; font: 700 .72rem/1 var(--font-body); letter-spacing: .13em; text-transform: uppercase; opacity: .7; }
+  .v2-tech-card h3 { position: relative; margin-bottom: 22px; color: inherit; font-size: clamp(3.3rem,5vw,5.4rem); line-height: .9; }
+  .v2-tech-card > p:not(.v2-tech-card__tag) { max-width: 510px; color: inherit; opacity: .74; font-size: 1rem; line-height: 1.65; }
+  .v2-tech-card ul { margin-top: 28px; }
+  .v2-tech-card li { padding: 13px 0; border-top: 1px solid currentColor; color: inherit; font: 600 .84rem/1.35 var(--font-body); opacity: .72; }
+  .v2-tech__cta { display: flex; justify-content: space-between; align-items: center; padding: 28px 8px 0; }
+  .v2-tech__cta p { margin: 0; color: var(--v2-muted); font-size: .92rem; }
+
+  .v2-media { background: var(--v2-ink); }
+  .v2-media__feature { display: grid; grid-template-columns: 1.45fr .65fr; min-height: 520px; border: 1px solid rgba(255,255,255,.1); border-radius: 26px; overflow: hidden; }
+  .v2-media__video { min-width: 0; }
+  .version2 .v2-media .video { height: 100%; border-radius: 0; }
+  .version2 .v2-media .video img { border-radius: 0; }
+  .v2-media__copy { display: flex; flex-direction: column; justify-content: flex-end; padding: 44px; background: #102b2e; }
+  .v2-media__copy span { color: var(--v2-lime); font: 700 .72rem/1 var(--font-body); letter-spacing: .13em; text-transform: uppercase; }
+  .v2-media__copy h3 { margin: 18px 0; color: white; font-size: clamp(2.1rem,3vw,3.2rem); line-height: 1; }
+  .v2-media__copy p { margin: 0; color: rgba(255,255,255,.62); font-size: .92rem; line-height: 1.6; }
+  .v2-media__secondary { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-top: 18px; }
+  .v2-media__secondary article { padding: 12px 12px 22px; border: 1px solid rgba(255,255,255,.1); border-radius: 22px; background: rgba(255,255,255,.045); }
+  .version2 .v2-media__secondary .video { aspect-ratio: 16/8.5; border-radius: 14px; }
+  .v2-media__secondary h3 { margin: 20px 10px 4px; color: white; font-size: 1.15rem; letter-spacing: -.02em; }
+  .v2-media__secondary p { margin: 0 10px; color: rgba(255,255,255,.5); font-size: .78rem; }
+
+  .v2-clinic { background: var(--v2-cream); }
+  .v2-clinic__grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 90px; align-items: center; }
+  .v2-clinic__visual { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+  .v2-clinic__visual img { width: 100%; border-radius: 22px; background: var(--v2-ink); }
+  .v2-clinic__visual img:nth-child(2) { margin-top: 72px; }
+  .v2-clinic__copy > p:not(.v2-kicker) { margin: 28px 0 30px; color: var(--v2-muted); font-size: 1.02rem; line-height: 1.7; }
+  .v2-clinic__doctors > div { display: grid; padding: 15px 0; border-top: 1px solid #d9dccf; }
+  .v2-clinic__doctors strong { color: var(--v2-ink); font: 700 .95rem/1.35 var(--font-body); }
+  .v2-clinic__doctors span { color: var(--v2-muted); font: 500 .8rem/1.4 var(--font-body); }
+  .v2-clinic__location { display: flex; gap: 16px; margin-top: 28px; padding: 20px; border-radius: 16px; background: var(--v2-lime); }
+  .v2-clinic__location > span { font-size: 1.5rem; }
+  .v2-clinic__location strong { display: block; font: 700 .92rem/1.3 var(--font-body); }
+  .v2-clinic__location p { margin: 2px 0 0; font-size: .78rem; }
+
+  .v2-faq { background: var(--v2-paper); }
+  .v2-faq__grid { display: grid; grid-template-columns: .7fr 1.3fr; gap: 110px; align-items: start; }
+  .v2-faq__intro { position: sticky; top: 110px; }
+  .v2-faq__intro h2 { font-size: clamp(2.7rem,4.3vw,4.5rem); }
+  .v2-faq__intro > p:not(.v2-kicker) { margin: 28px 0; color: var(--v2-muted); line-height: 1.7; }
+  .v2-faq__list details { border-top: 1px solid #d9dccf; }
+  .v2-faq__list details:last-child { border-bottom: 1px solid #d9dccf; }
+  .v2-faq__list summary { display: flex; min-height: 86px; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; list-style: none; color: var(--v2-ink); font: 700 1.05rem/1.35 var(--font-body); }
+  .v2-faq__list summary::-webkit-details-marker { display: none; }
+  .v2-faq__list summary span { font-size: 1.5rem; transition: rotate 180ms ease; }
+  .v2-faq__list details[open] summary span { rotate: 45deg; }
+  .v2-faq__list details p { max-width: 700px; margin: -4px 46px 26px 0; color: var(--v2-muted); font-size: .92rem; line-height: 1.65; }
+
+  .v2-final { padding: 0 0 18px; background: var(--v2-paper); }
+  .v2-final__panel { display: flex; min-height: 390px; align-items: flex-end; justify-content: space-between; gap: 40px; padding: 54px; border-radius: 28px; background: var(--v2-ink); }
+  .v2-final h2 { max-width: 820px; color: white; font-size: clamp(3rem,5.6vw,5.6rem); }
+  .v2-footer { padding: 48px 0 100px; background: var(--v2-ink); color: white; }
+  .v2-footer__inner { display: grid; grid-template-columns: 1fr auto auto; gap: 60px; align-items: center; padding-top: 34px; border-top: 1px solid rgba(255,255,255,.12); }
+  .v2-footer img { width: 190px; border-radius: 0; }
+  .v2-footer__inner > div { display: grid; }
+  .v2-footer strong { font: 700 .82rem/1.4 var(--font-body); }
+  .v2-footer span { color: rgba(255,255,255,.55); font: 500 .74rem/1.4 var(--font-body); }
+  .v2-floating { position: fixed; z-index: 70; right: 22px; bottom: 20px; display: flex; align-items: center; gap: 18px; padding: 15px 18px 15px 22px; border: 1px solid rgba(255,255,255,.15); border-radius: 999px; background: var(--v2-lime); box-shadow: 0 18px 50px rgba(6,26,28,.3); color: var(--v2-ink); font: 800 .86rem/1 var(--font-body); opacity: 0; pointer-events: none; translate: 0 18px; transition: opacity 180ms ease, translate 180ms ease; }
+  .v2-floating span { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--v2-ink); color: white; }
+  .v2-floating.is-visible { opacity: 1; pointer-events: auto; translate: 0; }
+  .v2-form-shell.is-emphasized { animation: v2-form-pulse 760ms cubic-bezier(.2,.8,.2,1); }
+  @keyframes v2-form-pulse { 0%,100% { transform: scale(1); } 34% { transform: scale(1.025); box-shadow: 0 0 0 8px rgba(186,211,5,.18), 0 28px 80px rgba(0,0,0,.35); } }
+
+  @media (max-width: 1023px) {
+    .v2-nav__links { display: none; }
+    .v2-nav__cta { margin-left: auto; }
+    .v2-hero { min-height: 0; }
+    .v2-hero__grid { grid-template-columns: minmax(0,1fr) 380px; gap: 30px; }
+    .v2-hero h1 { font-size: clamp(3.6rem,7vw,5rem); }
+    .v2-hero__media { width: 100%; }
+    .v2-heading--split { gap: 40px; }
+    .v2-method__grid, .v2-clinic__grid { gap: 42px; }
+    .v2-faq__grid { gap: 60px; }
+  }
+
+  @media (max-width: 767px) {
+    html { scroll-padding-top: 68px; }
+    .v2-container { width: min(100% - 28px, 680px); }
+    .v2-section { padding: 78px 0; }
+    .v2-nav { height: 64px; }
+    .v2-nav__brand { width: 154px; }
+    .v2-nav__cta { min-height: 40px; padding: 10px 15px; font-size: .78rem; }
+    .v2-hero { padding: 106px 0 44px; }
+    .v2-hero__grid { display: block; }
+    .v2-hero h1 { font-size: clamp(3.2rem,14.5vw,4.5rem); line-height: .9; }
+    .v2-hero__lead { margin-top: 24px; font-size: 1rem; }
+    .v2-hero__checks { display: grid; }
+    .v2-hero__checks li { width: fit-content; }
+    .v2-hero__actions { margin-bottom: 34px; }
+    .v2-hero__media { display: none; }
+    .v2-form-shell { position: relative; top: auto; padding: 8px; border-radius: 22px; }
+    .version2 .v2-form-shell .lead-card__body { padding: 20px !important; }
+    .version2 .v2-form-shell .lead-card__intro { font-size: 1rem !important; }
+    .v2-proofbar__grid { grid-template-columns: 1fr; padding-block: 12px; }
+    .v2-proofbar__grid > div, .v2-proofbar__grid > div:last-child { min-height: 78px; padding: 16px 12px; border: 0; border-bottom: 1px solid rgba(6,26,28,.16); }
+    .v2-proofbar__grid > div:last-child { border-bottom: 0; }
+    .v2-heading { margin-bottom: 40px; }
+    .v2-heading--split { display: block; }
+    .v2-heading--split .v2-heading__aside { margin-top: 28px; }
+    .v2-heading h2, .version2 h2 { font-size: clamp(2.55rem,11vw,3.8rem); }
+    .v2-pricing__body { grid-template-columns: 1fr; }
+    .v2-pricing__included { padding: 28px 22px; }
+    .v2-price-table summary { padding: 0 22px; font-size: .92rem; }
+    .v2-price-table__rows { padding-inline: 22px; }
+    .v2-price-table > p { padding-inline: 22px; }
+    .v2-results__grid { display: block; }
+    .v2-case { margin-bottom: 14px; }
+    .v2-case--wide { grid-column: auto; }
+    .v2-case img, .v2-case--wide img { aspect-ratio: 1 / 1; }
+    .v2-method__grid, .v2-clinic__grid, .v2-faq__grid { grid-template-columns: 1fr; gap: 48px; }
+    .v2-method__gallery-main { height: 260px !important; }
+    .v2-method__gallery img { height: 170px; }
+    .v2-tech__grid { grid-template-columns: 1fr; }
+    .v2-tech-card { min-height: 0; padding: 34px 26px; }
+    .v2-tech-card__tag { margin-bottom: 48px; }
+    .v2-tech-card h3 { font-size: 3.6rem; }
+    .v2-tech__cta { display: block; padding-top: 26px; }
+    .v2-tech__cta p { margin-bottom: 18px; }
+    .v2-media__feature { display: block; min-height: 0; }
+    .v2-media__video { aspect-ratio: 16 / 9; }
+    .v2-media__copy { padding: 28px 24px; }
+    .v2-media__secondary { grid-template-columns: 1fr; }
+    .v2-clinic__visual img:nth-child(2) { margin-top: 38px; }
+    .v2-faq__intro { position: static; }
+    .v2-faq__list summary { min-height: 76px; font-size: .94rem; }
+    .v2-final__panel { min-height: 420px; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 32px 24px; }
+    .v2-footer { padding-bottom: 104px; }
+    .v2-footer__inner { grid-template-columns: 1fr; gap: 24px; }
+    .v2-floating { right: 12px; bottom: 10px; left: 12px; justify-content: space-between; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .v2-button, .v2-floating, .v2-form-shell { transition: none; animation: none !important; }
+  }
+</style>
+
+<script>
+  const formShell = document.querySelector<HTMLElement>('[data-form-shell]');
+  const floating = document.querySelector<HTMLElement>('[data-floating]');
+  let pulseTimer: number | undefined;
+
+  const emphasizeForm = () => {
+    if (!formShell) return;
+    window.clearTimeout(pulseTimer);
+    formShell.classList.remove('is-emphasized');
+    void formShell.offsetWidth;
+    formShell.classList.add('is-emphasized');
+    pulseTimer = window.setTimeout(() => formShell.classList.remove('is-emphasized'), 900);
+  };
+
+  if (formShell && floating && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => floating.classList.toggle('is-visible', !entry.isIntersecting),
+      { threshold: 0.08 }
+    );
+    observer.observe(formShell);
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>('.version2 a[href="#form"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (!formShell) return;
+      const rect = formShell.getBoundingClientRect();
+      const visible = rect.top < innerHeight && rect.bottom > 64;
+      if (visible) {
+        event.preventDefault();
+        emphasizeForm();
+      }
+    });
+  });
+</script>
