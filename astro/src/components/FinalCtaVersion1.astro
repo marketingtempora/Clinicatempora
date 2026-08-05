@@ -1,5 +1,5 @@
 ---
-import { cta, site } from '../data/content';
+import { cta, installments } from '../data/content';
 ---
 
 <section class="final-v1">
@@ -10,16 +10,11 @@ import { cta, site } from '../data/content';
         <h2>{cta.title}</h2>
         <p>Agenda una evaluación con nuestros especialistas.</p>
         <a href="#form">{cta.button} <span aria-hidden="true">↗</span></a>
-      </div>
 
-      <div class="final-v1__details">
-        <div>
-          <span>UBICACIÓN</span>
-          <p>{site.address.street}<br />{site.address.locality}</p>
-        </div>
-        <div>
-          <span>HORARIO</span>
-          <p>{site.hours}</p>
+        <div class="final-v1__finance">
+          <strong>12 CUOTAS</strong>
+          <p>{installments.title}</p>
+          <small>{installments.note}</small>
         </div>
       </div>
     </div>
@@ -33,9 +28,6 @@ import { cta, site } from '../data/content';
   }
 
   .final-v1__panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
-    gap: 16px;
     padding: 18px;
     border-radius: 36px;
     background: var(--ink);
@@ -46,7 +38,7 @@ import { cta, site } from '../data/content';
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 420px;
+    min-height: 450px;
     padding: 52px;
     border-radius: 24px;
     background:
@@ -99,47 +91,60 @@ import { cta, site } from '../data/content';
     color: var(--cream);
   }
 
-  .final-v1__details {
+  .final-v1__finance {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    align-content: center;
+    grid-template-columns: auto minmax(240px, 1fr) minmax(230px, 0.65fr);
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(248, 246, 230, 0.14);
   }
 
-  .final-v1__details > div {
-    padding: 26px;
-    border: 1px solid rgba(248, 246, 230, 0.13);
-    border-radius: 22px;
-    background: rgba(45, 80, 87, 0.24);
-  }
-
-  .final-v1__details span {
+  .final-v1__finance strong {
+    padding: 8px 12px;
+    border: 1px solid rgba(186, 211, 5, 0.38);
+    border-radius: 999px;
     color: var(--lime);
-    font-size: 0.66rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    white-space: nowrap;
   }
 
-  .final-v1__details p {
-    margin: 10px 0 0;
-    color: rgba(248, 246, 230, 0.72);
-    font-size: 0.84rem;
-    line-height: 1.5;
+  .final-v1__finance p,
+  .final-v1__finance small {
+    margin: 0;
+  }
+
+  .final-v1__finance p {
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .final-v1__finance small {
+    color: rgba(248, 246, 230, 0.5);
+    font-size: 0.65rem;
+    line-height: 1.4;
   }
 
   @media (max-width: 900px) {
-    .final-v1__panel { grid-template-columns: 1fr; }
     .final-v1__main { min-height: 400px; }
-    .final-v1__details { grid-template-columns: repeat(2, 1fr); }
+    .final-v1__finance { grid-template-columns: auto 1fr; }
+    .final-v1__finance small { grid-column: 2; }
   }
 
   @media (max-width: 620px) {
     .final-v1 { padding: 18px 0 64px; }
     .final-v1__panel { padding: 10px; border-radius: 28px; }
-    .final-v1__main { min-height: 430px; padding: 34px 24px; border-radius: 20px; }
+    .final-v1__main { min-height: 510px; padding: 34px 24px; border-radius: 20px; }
     .final-v1 h2 { font-size: 2.8rem; }
     .final-v1__main > a { width: 100%; }
-    .final-v1__details { grid-template-columns: 1fr; }
-    .final-v1__details > div { padding: 22px; border-radius: 19px; }
+    .final-v1__finance { grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
+    .final-v1__finance strong { justify-self: start; }
+    .final-v1__finance small { grid-column: auto; }
   }
 </style>

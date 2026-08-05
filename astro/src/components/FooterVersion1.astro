@@ -1,22 +1,9 @@
 ---
-import { installments, site } from '../data/content';
-
-const links = [
-  { label: 'Resultados', href: '#resultados' },
-  { label: 'Por qué elegirnos', href: '#elegirnos' },
-  { label: 'Cómo funciona', href: '#comofunciona' },
-  { label: 'Testimonios', href: '#testimonios' },
-];
+import { site } from '../data/content';
 ---
 
 <footer class="footer-v1">
-  <div class="container footer-v1__finance">
-    <span>12 CUOTAS</span>
-    <strong>{installments.title}</strong>
-    <small>{installments.note}</small>
-  </div>
-
-  <div class="container footer-v1__top">
+  <div class="container footer-v1__inner">
     <div class="footer-v1__brand">
       <img
         src="/assets/img/logo-tempora-blanco-321.webp"
@@ -26,165 +13,131 @@ const links = [
         alt="Clínica Témpora"
         loading="lazy"
       />
-      <p>Implante capilar</p>
     </div>
 
-    <nav class="footer-v1__nav" aria-label="Navegación del pie">
-      {links.map((link) => <a href={link.href}>{link.label}</a>)}
-    </nav>
-
-    <div class="footer-v1__contact">
-      <p>{site.address.street}, {site.address.locality}</p>
-      <p>{site.branch}</p>
-      <p>{site.hours}</p>
-      <a href="#form">QUIERO AGENDAR</a>
+    <div class="footer-v1__information">
+      <div>
+        <span>DIRECCIÓN</span>
+        <p>{site.address.street}, {site.address.locality}</p>
+      </div>
+      <div>
+        <span>HORARIO DE ATENCIÓN</span>
+        <p>{site.hours}</p>
+      </div>
     </div>
-  </div>
-
-  <div class="container footer-v1__bottom">
-    <span>Clínica Témpora</span>
-    <span>Implante capilar · Providencia</span>
   </div>
 </footer>
 
 <style>
   .footer-v1 {
-    padding: 72px 0 26px;
-    background: var(--ink);
+    position: relative;
+    min-height: 520px;
+    background:
+      radial-gradient(circle at 50% -30%, rgba(186, 211, 5, 0.19), transparent 42%),
+      var(--ink);
     color: var(--cream);
+    overflow: hidden;
   }
 
-  .footer-v1__finance {
+  .footer-v1::before,
+  .footer-v1::after {
+    position: absolute;
+    left: 50%;
+    border: 1px solid rgba(186, 211, 5, 0.2);
+    border-radius: 50%;
+    content: '';
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
+  .footer-v1::before {
+    top: -390px;
+    width: 760px;
+    height: 760px;
+  }
+
+  .footer-v1::after {
+    top: -315px;
+    width: 610px;
+    height: 610px;
+    border-color: rgba(248, 246, 230, 0.08);
+  }
+
+  .footer-v1__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-v1__brand {
     display: grid;
-    grid-template-columns: auto minmax(300px, 1fr) minmax(260px, 0.72fr);
-    align-items: center;
-    gap: 22px;
-    margin-bottom: 48px;
-    padding: 18px 22px;
-    border-radius: 18px;
-    background: var(--lime);
-    color: var(--ink);
-  }
-
-  .footer-v1__finance > span {
-    padding: 8px 12px;
-    border: 1px solid rgba(6, 26, 28, 0.18);
-    border-radius: 999px;
-    font-family: var(--font-display);
-    font-size: 0.74rem;
-    font-weight: 900;
-    white-space: nowrap;
-  }
-
-  .footer-v1__finance strong {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    line-height: 1.25;
-  }
-
-  .footer-v1__finance small {
-    color: rgba(6, 26, 28, 0.66);
-    font-size: 0.68rem;
-    line-height: 1.35;
-  }
-
-  .footer-v1__top {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr 1fr;
-    gap: 60px;
-    padding-bottom: 58px;
+    min-height: 380px;
+    place-items: center;
   }
 
   .footer-v1__brand img {
-    width: min(100%, 280px);
+    width: min(47vw, 520px);
     border-radius: 0;
   }
 
-  .footer-v1__brand p {
-    margin: 22px 0 0;
+  .footer-v1__information {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 60px;
+    padding: 34px 0 44px;
+    border-top: 1px solid rgba(248, 246, 230, 0.14);
+  }
+
+  .footer-v1__information > div:last-child {
+    text-align: right;
+  }
+
+  .footer-v1__information span {
     color: var(--lime);
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-  }
-
-  .footer-v1__nav {
-    display: grid;
-    align-content: start;
-    gap: 4px;
-  }
-
-  .footer-v1__nav a {
-    padding: 5px 0;
-    color: rgba(248, 246, 230, 0.76);
-    font-size: 0.93rem;
-  }
-
-  .footer-v1__nav a:hover { color: var(--lime); }
-
-  .footer-v1__contact {
-    display: grid;
-    align-content: start;
-    justify-items: start;
-  }
-
-  .footer-v1__contact p {
-    margin: 0 0 4px;
-    color: rgba(248, 246, 230, 0.76);
-    font-size: 0.9rem;
-  }
-
-  .footer-v1__contact a {
-    display: inline-flex;
-    margin-top: 20px;
-    padding: 12px 18px;
-    border-radius: 999px;
-    background: var(--lime);
-    color: var(--ink);
-    font-family: var(--font-display);
-    font-size: 0.82rem;
+    font-size: 0.66rem;
     font-weight: 800;
+    letter-spacing: 0.18em;
   }
 
-  .footer-v1__bottom {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding-top: 22px;
-    border-top: 1px solid rgba(248, 246, 230, 0.12);
-    color: rgba(248, 246, 230, 0.5);
-    font-size: 0.76rem;
+  .footer-v1__information p {
+    margin: 9px 0 0;
+    color: rgba(248, 246, 230, 0.74);
+    font-size: 0.94rem;
+    line-height: 1.5;
   }
 
   @media (max-width: 767px) {
     .footer-v1 {
-      padding: 56px 0 96px;
+      min-height: 600px;
     }
 
-    .footer-v1__top {
-      grid-template-columns: 1fr;
-      gap: 34px;
-      padding-bottom: 38px;
+    .footer-v1::before {
+      top: -235px;
+      width: 470px;
+      height: 470px;
     }
 
-    .footer-v1__finance {
-      grid-template-columns: 1fr;
-      gap: 9px;
-      margin-bottom: 38px;
-      padding: 18px;
-      border-radius: 16px;
+    .footer-v1::after {
+      top: -185px;
+      width: 370px;
+      height: 370px;
     }
 
-    .footer-v1__finance > span {
-      justify-self: start;
+    .footer-v1__brand {
+      min-height: 355px;
     }
 
     .footer-v1__brand img {
-      width: 250px;
+      width: min(78vw, 300px);
     }
 
-    .footer-v1__bottom {
-      flex-direction: column;
-      gap: 6px;
+    .footer-v1__information {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 30px 0 120px;
+    }
+
+    .footer-v1__information > div:last-child {
+      text-align: left;
     }
   }
 </style>
