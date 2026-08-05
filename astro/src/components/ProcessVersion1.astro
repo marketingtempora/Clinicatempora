@@ -1,0 +1,188 @@
+---
+import { howItWorks } from '../data/content';
+import YouTubeFacade from './YouTubeFacade.astro';
+---
+
+<section class="process-v1" id="comofunciona">
+  <div class="container">
+    <div class="process-v1__head reveal" data-reveal="fade">
+      <p>ANTES DE AGENDAR</p>
+      <h2>{howItWorks.caption}</h2>
+    </div>
+
+    <div class="process-v1__grid">
+      <div class="process-v1__video reveal" data-reveal="fade-right">
+        <YouTubeFacade
+          id={howItWorks.videoId}
+          thumb="/assets/img/yt-como-funciona-600.webp"
+          thumb2x="/assets/img/yt-como-funciona-1200.webp"
+          sizes="(max-width: 767px) calc(100vw - 40px), 650px"
+          alt="Así funciona el implante capilar en Clínica Témpora"
+          ratio="wide"
+        />
+        <div class="process-v1__video-note">
+          <span aria-hidden="true">▶</span>
+          <p>Conoce el procedimiento antes de tu evaluación.</p>
+        </div>
+      </div>
+
+      <div class="process-v1__facts reveal" data-reveal="fade">
+        <p class="process-v1__facts-label">LO ESENCIAL</p>
+        <ol>
+          {howItWorks.features.map((feature, index) => (
+            <li>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <p>{feature}</p>
+            </li>
+          ))}
+        </ol>
+        <a href="#form">QUIERO AGENDAR</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-v1 {
+    padding: 104px 0;
+    background:
+      radial-gradient(circle at 90% 10%, rgba(186, 211, 5, 0.14), transparent 28%),
+      var(--teal);
+    overflow: hidden;
+  }
+
+  .process-v1__head {
+    display: grid;
+    grid-template-columns: 0.45fr 1.55fr;
+    align-items: end;
+    gap: 40px;
+    margin-bottom: 42px;
+  }
+
+  .process-v1__head > p,
+  .process-v1__facts-label {
+    margin: 0 0 8px;
+    color: var(--lime);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+  }
+
+  .process-v1 h2 {
+    color: var(--cream);
+    font-size: clamp(3rem, 5vw, 5.1rem);
+    letter-spacing: -0.055em;
+    line-height: 0.96;
+  }
+
+  .process-v1__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  .process-v1__video,
+  .process-v1__facts {
+    min-width: 0;
+    border-radius: 28px;
+  }
+
+  .process-v1__video {
+    align-self: center;
+    overflow: hidden;
+    box-shadow: 0 24px 55px rgba(6, 26, 28, 0.24);
+  }
+
+  .process-v1__video :global(.video) { border-radius: 28px 28px 0 0; }
+
+  .process-v1__video-note {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    background: var(--ink);
+  }
+
+  .process-v1__video-note span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--ink);
+    font-size: 0.7rem;
+  }
+
+  .process-v1__video-note p {
+    margin: 0;
+    color: var(--cream);
+    font-size: 0.9rem;
+  }
+
+  .process-v1__facts {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    background: rgba(6, 26, 28, 0.46);
+    border: 1px solid rgba(248, 246, 230, 0.13);
+  }
+
+  .process-v1__facts ol { display: grid; margin-block: auto; }
+
+  .process-v1__facts li {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(248, 246, 230, 0.12);
+  }
+
+  .process-v1__facts li > span {
+    color: var(--lime);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .process-v1__facts li p {
+    margin: 0;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .process-v1__facts > a {
+    align-self: flex-start;
+    margin-top: 24px;
+    padding: 14px 20px;
+    border-radius: 999px;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  @media (max-width: 900px) {
+    .process-v1__head { grid-template-columns: 1fr; gap: 12px; }
+    .process-v1__grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 620px) {
+    .process-v1 { padding: 72px 0; }
+    .process-v1__head { margin-bottom: 28px; }
+    .process-v1 h2 { font-size: 3rem; }
+    .process-v1__video,
+    .process-v1__facts { border-radius: 22px; }
+    .process-v1__video :global(.video) { border-radius: 22px 22px 0 0; }
+    .process-v1__facts { padding: 25px 20px; }
+    .process-v1__facts li { grid-template-columns: 34px 1fr; padding: 14px 0; }
+    .process-v1__facts li p { font-size: 0.93rem; }
+    .process-v1__facts > a { width: 100%; text-align: center; }
+  }
+</style>

@@ -1,0 +1,188 @@
+---
+import { cta, installments, site } from '../data/content';
+---
+
+<section class="final-v1">
+  <div class="container">
+    <div class="final-v1__panel reveal" data-reveal="fade">
+      <div class="final-v1__main">
+        <p class="final-v1__eyebrow">TU PRÓXIMO PASO</p>
+        <h2>{cta.title}</h2>
+        <p>Agenda una evaluación con nuestros especialistas.</p>
+        <a href="#form">{cta.button} <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <div class="final-v1__finance">
+        <span>12</span>
+        <div>
+          <h3>{installments.title}</h3>
+          <p>{installments.note}</p>
+        </div>
+      </div>
+
+      <div class="final-v1__details">
+        <div>
+          <span>UBICACIÓN</span>
+          <p>{site.address.street}<br />{site.address.locality}</p>
+        </div>
+        <div>
+          <span>HORARIO</span>
+          <p>{site.hours}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final-v1 {
+    padding: 28px 0 88px;
+    background: var(--cream);
+  }
+
+  .final-v1__panel {
+    display: grid;
+    grid-template-columns: 1.12fr 0.88fr;
+    gap: 16px;
+    padding: 18px;
+    border-radius: 36px;
+    background: var(--ink);
+    box-shadow: 0 28px 65px rgba(6, 26, 28, 0.16);
+  }
+
+  .final-v1__main {
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 500px;
+    padding: 52px;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 86% 12%, rgba(186, 211, 5, 0.2), transparent 27%),
+      var(--teal);
+  }
+
+  .final-v1__eyebrow {
+    margin: 0 0 18px;
+    color: var(--lime);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+  }
+
+  .final-v1 h2 {
+    max-width: 650px;
+    color: var(--cream);
+    font-size: clamp(3.2rem, 5.3vw, 5.5rem);
+    letter-spacing: -0.055em;
+    line-height: 0.94;
+  }
+
+  .final-v1__main > p:not(.final-v1__eyebrow) {
+    margin: 22px 0 30px;
+    color: rgba(248, 246, 230, 0.72);
+  }
+
+  .final-v1__main > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(100%, 260px);
+    padding: 14px 15px 14px 20px;
+    border-radius: 999px;
+    background: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+
+  .final-v1__main > a span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .final-v1__finance {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+    gap: 22px;
+    padding: 34px;
+    border-radius: 24px;
+    background: var(--lime);
+  }
+
+  .final-v1__finance > span {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 6rem;
+    font-weight: 900;
+    letter-spacing: -0.08em;
+    line-height: 0.8;
+  }
+
+  .final-v1__finance h3 {
+    color: var(--ink);
+    font-size: 1.35rem;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+  }
+
+  .final-v1__finance p {
+    margin: 12px 0 0;
+    color: rgba(6, 26, 28, 0.72);
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .final-v1__details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .final-v1__details > div {
+    padding: 26px;
+    border: 1px solid rgba(248, 246, 230, 0.13);
+    border-radius: 22px;
+    background: rgba(45, 80, 87, 0.24);
+  }
+
+  .final-v1__details span {
+    color: var(--lime);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+
+  .final-v1__details p {
+    margin: 10px 0 0;
+    color: rgba(248, 246, 230, 0.72);
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .final-v1__panel { grid-template-columns: 1fr; }
+    .final-v1__main { grid-row: auto; min-height: 440px; }
+  }
+
+  @media (max-width: 620px) {
+    .final-v1 { padding: 18px 0 64px; }
+    .final-v1__panel { padding: 10px; border-radius: 28px; }
+    .final-v1__main { min-height: 430px; padding: 34px 24px; border-radius: 20px; }
+    .final-v1 h2 { font-size: 3.15rem; }
+    .final-v1__main > a { width: 100%; }
+    .final-v1__finance { grid-template-columns: 80px 1fr; padding: 26px 20px; border-radius: 20px; }
+    .final-v1__finance > span { font-size: 4.5rem; }
+    .final-v1__finance h3 { font-size: 1.05rem; }
+    .final-v1__details { grid-template-columns: 1fr; }
+    .final-v1__details > div { padding: 22px; border-radius: 19px; }
+  }
+</style>
