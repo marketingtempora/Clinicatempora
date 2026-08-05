@@ -1,0 +1,51 @@
+/* =============================================================================
+   Fuentes autoalojadas (generado por tools/optimize-assets.mjs, no editar a mano)
+
+   Están subseteadas al juego de caracteres de CHARSET en ese script: todo el
+   ASCII imprimible, los acentos y signos del español y los símbolos de la
+   maqueta. Si añades copy con un carácter fuera de ese juego, vuelve a correr
+   el script o ese carácter se verá con la fuente de sistema.
+
+   Lato en Google sólo existe en 300/400/700/900: los pesos 600 y 800 del
+   diseño los sintetiza el navegador, igual que en el sitio original.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/assets/fonts/lato-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/lato-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/lato-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/assets/fonts/lato-900.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/assets/fonts/inter-400_600.woff2') format('woff2');
+}

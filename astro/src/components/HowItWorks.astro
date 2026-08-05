@@ -1,0 +1,146 @@
+---
+import { howItWorks } from '../data/content';
+import ShapeDivider from './ShapeDivider.astro';
+import YouTubeFacade from './YouTubeFacade.astro';
+
+// Icono far-check-circle de Font Awesome, el mismo del original
+const CHECK_PATH =
+  'M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z';
+---
+
+<section class="how" id="comofunciona">
+  <ShapeDivider position="top" height={22} />
+
+  <div class="container how__inner">
+    <div class="how__features reveal" data-reveal="fade">
+      <ul class="feature-list">
+        {howItWorks.features.map((feature) => (
+          <li class="feature">
+            <svg class="feature__icon" viewBox="0 0 512 512" aria-hidden="true">
+              <path d={CHECK_PATH} />
+            </svg>
+            <h3 class="feature__title">{feature}</h3>
+          </li>
+        ))}
+      </ul>
+      <a class="btn btn--cream" href="#form">QUIERO AGENDAR</a>
+    </div>
+
+    <div class="how__media reveal" data-reveal="fade-right">
+      <YouTubeFacade
+        id={howItWorks.videoId}
+        thumb="/assets/img/yt-como-funciona-600.webp"
+        thumb2x="/assets/img/yt-como-funciona-1200.webp"
+        sizes="(max-width: 767px) calc(100vw - 40px), 600px"
+        alt="Así funciona el implante capilar en Clínica Témpora"
+        ratio="wide"
+      />
+      <div class="how__media-caption">
+        <h2>{howItWorks.caption}</h2>
+      </div>
+    </div>
+  </div>
+
+  <ShapeDivider position="bottom" height={22} />
+</section>
+
+<style>
+  .how {
+    position: relative;
+    padding-block: 80px;
+    background-color: var(--teal);
+    overflow: hidden;
+  }
+  .how__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .how__features {
+    flex: 0 0 43.07%;
+  }
+  .how__media {
+    flex: 0 0 52.63%;
+    min-width: 0;
+  }
+
+  /* Sin gap: el espacio lo da el margen del título, como el icon-box original */
+  .feature-list {
+    display: grid;
+    gap: 0;
+  }
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .feature__icon {
+    flex: 0 0 27px;
+    width: 27px;
+    height: 27px;
+    fill: var(--lime);
+  }
+  .feature__title {
+    margin: 8px 0 16px;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .how__features :global(.btn) {
+    margin-top: var(--stack-gap);
+  }
+
+  .how__media-caption {
+    margin-top: -10px;
+    padding: 20px 20px 30px;
+    background-color: var(--ink);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+  .how__media-caption h2 {
+    margin-bottom: 5px;
+    color: var(--lime);
+    font-size: var(--fs-h3);
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  @media (max-width: 1024px) {
+    /* el original usa 50px en tablet y vuelve a 80px en móvil */
+    .how {
+      padding-block: 50px;
+    }
+    .how__inner {
+      gap: 24px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .how {
+      padding-block: 80px;
+    }
+    .how__inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+    }
+    .how__features {
+      margin-bottom: 20px;
+    }
+    .how__features,
+    .how__media {
+      flex: 1 1 auto;
+    }
+    .how__features {
+      text-align: center;
+    }
+    .how__features .feature {
+      text-align: start;
+    }
+    .how__features :global(.btn) {
+      display: inline-block;
+    }
+  }
+</style>

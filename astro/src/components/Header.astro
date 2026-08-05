@@ -1,0 +1,209 @@
+---
+import { nav } from '../data/content';
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__logo" href="/" aria-label="Clínica Témpora - inicio">
+      <picture>
+        <source
+          type="image/webp"
+          srcset="/assets/img/logo-tempora-229.webp 1x, /assets/img/logo-tempora-458.webp 2x"
+        />
+        <img
+          src="/assets/img/logo-tempora-229.png"
+          srcset="/assets/img/logo-tempora-229.png 1x, /assets/img/logo-tempora-458.png 2x"
+          width="229"
+          height="39"
+          alt="Clínica Témpora"
+        />
+      </picture>
+    </a>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Abrir menú"
+      data-nav-toggle
+    >
+      <svg class="nav-toggle__open" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+      </svg>
+      <svg class="nav-toggle__close" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+      </svg>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Navegación principal">
+      <ul class="site-nav__list">
+        {nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 10;
+    padding-block: 30px;
+    background-color: var(--cream);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .site-header__logo img {
+    width: 229px;
+    border-radius: var(--radius-xs);
+  }
+
+  .site-nav__list {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  /* padding 8px 16px = el del mega-menú original; deja la fila en 40px */
+  .site-nav__list a {
+    display: block;
+    padding: 8px 16px;
+    line-height: 1.5;
+    color: var(--nav-ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    transition: color var(--t-fast);
+  }
+  .site-nav__list a:hover {
+    color: var(--teal);
+  }
+
+  .nav-toggle {
+    position: relative;
+    display: none;
+    width: 44px;
+    /* mismo alto que el logo: así la fila del header mide 99px como el original */
+    height: 39px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  /* Las dos aspas se cruzan girando: hamburguesa -> X */
+  .nav-toggle svg {
+    position: absolute;
+    inset: 0;
+    width: 24px;
+    height: 24px;
+    margin: auto;
+    transition: opacity 180ms ease, transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .nav-toggle__close {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.7);
+  }
+  .nav-toggle[aria-expanded='true'] .nav-toggle__open {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.7);
+  }
+  .nav-toggle[aria-expanded='true'] .nav-toggle__close {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 1024px) {
+    .site-header__inner {
+      flex-wrap: wrap;
+    }
+    .nav-toggle {
+      display: block;
+    }
+    /* El panel se despliega animando max-height (--nav-h lo calcula el JS con
+       el alto real del contenido) y los ítems entran escalonados. */
+    .site-nav {
+      flex-basis: 100%;
+      order: 3;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 320ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease;
+    }
+    .site-nav.is-open {
+      max-height: var(--nav-h, 400px);
+      opacity: 1;
+    }
+    .site-nav__list {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      padding-top: 16px;
+    }
+    .site-nav__list li {
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 260ms ease, transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .site-nav.is-open .site-nav__list li {
+      opacity: 1;
+      transform: none;
+    }
+    .site-nav.is-open .site-nav__list li:nth-child(1) { transition-delay: 60ms; }
+    .site-nav.is-open .site-nav__list li:nth-child(2) { transition-delay: 120ms; }
+    .site-nav.is-open .site-nav__list li:nth-child(3) { transition-delay: 180ms; }
+    .site-nav__list a {
+      padding: 10px 0;
+      font-size: 1.05rem;
+    }
+  }
+
+  /* El original mantiene padding 30px y logo de 229px también en móvil */
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const nav = document.getElementById('site-nav');
+
+  if (toggle && nav) {
+    /* El panel se despliega animando max-height. Como no se puede animar
+       height:auto, medimos el contenido y lo publicamos en --nav-h. */
+    const measure = () => nav.style.setProperty('--nav-h', `${nav.scrollHeight}px`);
+
+    const setOpen = (open: boolean) => {
+      if (open) measure();
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      nav.classList.toggle('is-open', open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Al pasar a escritorio el panel deja de aplicar: limpiamos el estado
+    let t: number | undefined;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(t);
+      t = window.setTimeout(() => {
+        if (window.innerWidth > 1024) setOpen(false);
+        else if (nav.classList.contains('is-open')) measure();
+      }, 150);
+    });
+  }
+</script>

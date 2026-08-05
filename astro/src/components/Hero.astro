@@ -1,0 +1,154 @@
+---
+import { hero } from '../data/content';
+import ShapeDivider from './ShapeDivider.astro';
+import LeadForm from './LeadForm.astro';
+---
+
+<section class="hero" id="hero">
+  <ShapeDivider position="top" height={20} />
+
+  <div class="container hero__inner">
+    <div class="hero__copy reveal" data-reveal="fade">
+      <p class="hero__eyebrow">{hero.eyebrow}</p>
+      <h1 class="hero__title">{hero.title}</h1>
+      <p class="hero__subtitle">{hero.subtitle}</p>
+      <ul class="hero__bullets">
+        {hero.bullets.map((bullet) => <li>{bullet}</li>)}
+      </ul>
+    </div>
+
+    <div class="hero__form reveal" data-reveal="fade-right" id="form">
+      <LeadForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: var(--section-y);
+    background-image: url('/assets/img/hero-desktop.webp');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    isolation: isolate;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--ink);
+    opacity: 0.28;
+    z-index: -1;
+  }
+
+  /* Proporciones tomadas del original: 43.07% / 52.63% del container.
+     El sobrante (~49px) queda como separación con space-between. */
+  .hero__inner {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+  }
+  .hero__copy {
+    flex: 0 0 43.07%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero__form {
+    flex: 0 0 52.63%;
+  }
+
+  .hero__eyebrow {
+    margin: 0;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: var(--fs-strong);
+    font-weight: 700;
+    /* la caja mide 25.6px en el original (hereda el interlineado del cuerpo) */
+    line-height: 25.6px;
+  }
+  .hero__title {
+    margin: 0;
+    color: var(--cream);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .hero__subtitle {
+    /* margen inferior = 1.2em del propio tamaño, como el <p> del original */
+    margin: 0 0 1.2em;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: var(--fs-hero-sub);
+    font-weight: 400;
+    line-height: 0.7;
+  }
+  .hero__bullets {
+    display: grid;
+    gap: 0;
+    margin-bottom: var(--stack-pull);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: var(--fs-strong);
+    font-weight: 400;
+    line-height: 1.1;
+  }
+  .hero__bullets li {
+    position: relative;
+    margin-bottom: 1.2em;
+    padding-left: 16px;
+  }
+  .hero__bullets li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+
+  @media (max-width: 1024px) {
+    .hero__inner {
+      gap: 30px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* El original sirve un banner distinto en móvil */
+    .hero {
+      background-image: url('/assets/img/hero-mobile.webp');
+    }
+    /* en móvil la separación la dan los márgenes de cada columna, no el gap */
+    /* +20px inferiores: el contenedor anidado del original los aporta en móvil */
+    .hero__inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      margin-bottom: 20px;
+    }
+    .hero__copy,
+    .hero__form {
+      flex: 1 1 auto;
+    }
+    /* En móvil el original centra el texto del hero */
+    .hero__copy {
+      align-items: center;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    /* los bullets ocupan el 80% de la columna, como en el original */
+    .hero__bullets {
+      width: 80%;
+      margin-top: 10px;
+    }
+    .hero__bullets li {
+      padding-left: 0;
+    }
+    .hero__bullets li::before {
+      position: static;
+      margin-right: 6px;
+    }
+    .hero__form {
+      margin-top: 10px;
+    }
+  }
+</style>

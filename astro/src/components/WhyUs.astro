@@ -1,0 +1,174 @@
+---
+import { whyUs } from '../data/content';
+import Carousel from './Carousel.astro';
+---
+
+<section class="why" id="elegirnos">
+  <div class="container why__inner">
+    <div class="why__media">
+      <div class="reveal" data-reveal="fade-right">
+        <Carousel perView={1} autoplay={5000} rounded label="Fotos de la clínica" prevLabel="Imagen anterior" nextLabel="Imagen siguiente">
+          {whyUs.gallery.map((photo) => (
+            <li class="carousel__slide">
+              <img
+                src={`/assets/img/${photo.base}-768.webp`}
+                srcset={`/assets/img/${photo.base}-400.webp 400w, /assets/img/${photo.base}-768.webp 768w`}
+                sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1024px) 45vw, 513px"
+                alt={photo.alt}
+                loading="lazy"
+                width="768"
+                height="513"
+              />
+            </li>
+          ))}
+        </Carousel>
+      </div>
+
+      <div class="stats">
+        {whyUs.stats.map((stat) => (
+          <div class="stat">
+            <p class="stat__kicker">{stat.kicker}</p>
+            {/* El contador del original va al revés: número arriba, título abajo */}
+            <div class="stat__counter">
+              <p class="stat__number">
+                <span class="counter" data-to={stat.to} data-duration="2000">0</span>
+                <span class="stat__suffix">{stat.suffix}</span>
+              </p>
+              <p class="stat__title">{stat.title}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="why__copy reveal" data-reveal="fade">
+      <h2 class="why__title">{whyUs.title}</h2>
+      <p class="why__text">
+        Somos especialistas en implante capilar, con profesionales reconocidos internacionalmente.
+        Además, somos los <strong>primeros en Chile</strong> en tener el Dermatoscopio Leviacam,
+        tecnología que nos permite realizar un diagnóstico absolutamente objetivo y certero.
+      </p>
+      <a class="btn btn--teal" href="#form">QUIERO AGENDAR</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why {
+    padding-block: var(--section-y);
+    background-color: var(--cream);
+    overflow: hidden;
+  }
+  .why__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .why__media {
+    flex: 0 0 45%;
+    min-width: 0;
+  }
+  .why__copy {
+    flex: 0 0 50%;
+    /* el original desplaza la columna 15px de la derecha */
+    margin-right: 15px;
+  }
+  .why__media :global(.carousel) {
+    --dots-space: 37px;
+  }
+  .why__copy :global(.btn) {
+    margin-top: var(--stack-gap);
+  }
+
+  .why__title {
+    margin-bottom: 20px;
+    color: var(--teal);
+  }
+  .why__text {
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+  .why__text strong {
+    font-weight: 700;
+  }
+
+  .stats {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+    margin-top: -90px;
+  }
+  .stat {
+    flex: 0 0 40%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--stack-gap);
+    padding: 20px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--card-bg);
+  }
+  .stat__kicker {
+    margin: 0;
+    color: var(--ink);
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .stat__counter {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat__title {
+    margin: 0;
+    color: var(--teal);
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .stat__number {
+    display: flex;
+    align-items: baseline;
+    margin: 0;
+    color: var(--teal);
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 1024px) {
+    .stat {
+      padding: 10px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .why__inner {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .why__media,
+    .why__copy {
+      flex: 1 1 auto;
+    }
+    .why__copy {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .why__copy :global(.btn) {
+      display: inline-block;
+    }
+    .stats {
+      justify-content: space-between;
+      gap: 0;
+    }
+    .stat {
+      flex: 0 0 45%;
+      padding: 15px;
+    }
+  }
+</style>

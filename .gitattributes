@@ -1,0 +1,9 @@
+# Normaliza saltos de línea en todas las máquinas
+* text=auto eol=lf
+
+# Binarios: que git no los toque
+*.png binary
+*.webp binary
+*.jpg binary
+*.woff2 binary
+*.ico binary

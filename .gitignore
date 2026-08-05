@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+.astro/
+.output/
+
+# Entorno – nunca subir claves
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+.idea/

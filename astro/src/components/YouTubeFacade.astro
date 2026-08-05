@@ -1,0 +1,52 @@
+---
+/**
+ * Miniatura de YouTube que carga el iframe sólo al hacer click.
+ * Evita los ~1.5 MB de JS que mete cada embed en la carga inicial.
+ */
+interface Props {
+  id: string;
+  alt: string;
+  ratio?: 'vertical' | 'wide';
+  label?: string;
+  /** Miniatura servida en local. Sin ella cae a la de YouTube. */
+  thumb?: string;
+  /** Segundo tamaño para el srcset (sólo el video 16:9 tiene fuente grande). */
+  thumb2x?: string;
+  sizes?: string;
+}
+
+const { id, alt, ratio = 'wide', label, thumb, thumb2x, sizes } = Astro.props;
+const src = thumb ?? `https://i.ytimg.com/vi/${id}/${ratio === 'wide' ? 'maxresdefault' : 'hqdefault'}.jpg`;
+const size = ratio === 'wide' ? { w: 1200, h: 675 } : { w: 480, h: 360 };
+const srcset = thumb && thumb2x ? `${thumb} 600w, ${thumb2x} 1200w` : undefined;
+---
+
+<button
+  class={`video video--${ratio}`}
+  type="button"
+  data-video-id={id}
+  aria-label={label ?? `Reproducir video: ${alt}`}
+>
+  <img src={src} srcset={srcset} sizes={sizes} alt={alt} loading="lazy" width={size.w} height={size.h} />
+  <span class="video__play" aria-hidden="true"></span>
+</button>
+
+<script>
+  /* Un solo listener delegado para todos los facades de la página. */
+  document.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.video[data-video-id]');
+    if (!button || button.dataset.loaded === 'true') return;
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${button.dataset.videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    iframe.title = 'Video de Clínica Témpora';
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+
+    button.innerHTML = '';
+    button.appendChild(iframe);
+    button.dataset.loaded = 'true';
+    button.style.cursor = 'default';
+  });
+</script>

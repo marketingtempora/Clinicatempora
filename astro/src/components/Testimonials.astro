@@ -1,0 +1,95 @@
+---
+import { testimonials } from '../data/content';
+import Carousel from './Carousel.astro';
+import YouTubeFacade from './YouTubeFacade.astro';
+---
+
+<section class="testimonials" id="testimonios">
+  <div class="container testimonials__inner">
+    <div class="testimonials__copy reveal" data-reveal="fade">
+      <h2 class="testimonials__title">{testimonials.title}</h2>
+      <p class="testimonials__text">{testimonials.text}</p>
+      <a class="btn btn--teal" href="#form">QUIERO AGENDAR</a>
+    </div>
+
+    <div class="testimonials__carousel">
+      <Carousel
+        perView={3}
+        perViewTablet={2}
+        perViewMobile={1}
+        label="Testimonios"
+        prevLabel="Testimonio anterior"
+        nextLabel="Testimonio siguiente"
+      >
+        {testimonials.videos.map((video) => (
+          <li class="carousel__slide">
+            <YouTubeFacade id={video.id} thumb={video.thumb} alt={video.alt} ratio="vertical" />
+          </li>
+        ))}
+      </Carousel>
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    padding-block: var(--section-y);
+    overflow: hidden;
+  }
+  .testimonials__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* separación que el original aporta bajo la fila */
+    margin-bottom: var(--stack-gap);
+  }
+  /* min-width:0 para que respete el 30.42% (si no, el título fuerza más ancho) */
+  .testimonials__copy {
+    flex: 0 0 30.42%;
+    min-width: 0;
+  }
+  .testimonials__carousel {
+    flex: 0 0 65.18%;
+    min-width: 0;
+  }
+  .testimonials__carousel :global(.carousel) {
+    --dots-space: 16px;
+  }
+
+  .testimonials__title {
+    margin: var(--stack-gap) 0 0;
+    padding-right: 50px;
+    color: var(--teal);
+  }
+  .testimonials__text {
+    /* 1.2em del <p> original menos los -20px del widget */
+    margin: 0 0 calc(1.2em + var(--stack-pull));
+    color: var(--teal);
+    font-family: var(--font-display);
+    font-size: var(--fs-strong);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .testimonials__copy :global(.btn) {
+    margin-top: var(--stack-gap);
+  }
+
+  @media (max-width: 1024px) {
+    .testimonials__title {
+      padding-right: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .testimonials__inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+    }
+    .testimonials__copy {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+    /* el botón sigue siendo inline y centrado, como en el original */
+  }
+</style>

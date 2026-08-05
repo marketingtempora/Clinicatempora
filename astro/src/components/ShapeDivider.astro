@@ -1,0 +1,18 @@
+---
+/**
+ * Shape divider "tilt", el mismo que usa el original de Elementor.
+ * `position`: top | bottom. `height`: alto del corte en px.
+ */
+interface Props {
+  position?: 'top' | 'bottom';
+  height?: number;
+}
+
+const { position = 'top', height = 20 } = Astro.props;
+---
+
+<div class={`shape-divider shape-divider--${position}`} aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none" style={`height:${height}px`}>
+    <path d="M0,6V0h1000v100L0,6z" />
+  </svg>
+</div>

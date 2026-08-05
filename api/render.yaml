@@ -1,0 +1,46 @@
+# =============================================================================
+# Blueprint de Render (https://render.com/docs/blueprint-spec)
+#
+# Uso:
+#   1. Sube el repo a GitHub/GitLab.
+#   2. En Render: New -> Blueprint -> selecciona el repo.
+#   3. Render lee este archivo y crea el servicio.
+#   4. Rellena las variables marcadas con sync: false en el dashboard.
+#
+# Si prefieres crearlo a mano (New -> Web Service):
+#   Root Directory : api
+#   Build Command  : npm install
+#   Start Command  : npm start
+#   Health Check   : /health
+# =============================================================================
+services:
+  - type: web
+    name: tempora-leads-api
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: api
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # Secretos: se rellenan en el dashboard, no en el repo
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: IP_HASH_SALT
+        generateValue: true
+      - key: LEAD_WEBHOOK_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://implantecapilar.clinicatempora.cl
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "10"
+      - key: SUPABASE_LEADS_TABLE
+        value: leads

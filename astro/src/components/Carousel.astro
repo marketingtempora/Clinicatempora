@@ -1,0 +1,255 @@
+---
+/**
+ * Carrusel sin dependencias. Los slides llegan por slot; cada hijo directo
+ * debe ser un <li class="carousel__slide">.
+ *
+ * perView / perViewTablet / perViewMobile -> slides visibles por breakpoint.
+ * autoplay -> ms entre avances (0 = desactivado).
+ */
+interface Props {
+  perView?: number;
+  perViewTablet?: number;
+  perViewMobile?: number;
+  autoplay?: number;
+  rounded?: boolean;
+  label: string;
+  prevLabel?: string;
+  nextLabel?: string;
+}
+
+const {
+  perView = 1,
+  perViewTablet,
+  perViewMobile,
+  autoplay = 0,
+  rounded = false,
+  label,
+  prevLabel = 'Anterior',
+  nextLabel = 'Siguiente',
+} = Astro.props;
+---
+
+<div
+  class:list={['carousel', { 'carousel--rounded': rounded }]}
+  data-carousel
+  data-per-view={perView}
+  data-per-view-tablet={perViewTablet ?? perView}
+  data-per-view-mobile={perViewMobile ?? 1}
+  data-autoplay={autoplay}
+>
+  <div class="carousel__viewport">
+    <ul class="carousel__track">
+      <slot />
+    </ul>
+  </div>
+
+  <button class="carousel__arrow carousel__arrow--prev" type="button" aria-label={prevLabel}>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+  <button class="carousel__arrow carousel__arrow--next" type="button" aria-label={nextLabel}>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <div class="carousel__dots" role="tablist" aria-label={label}></div>
+</div>
+
+<script>
+  const GAP = 10;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function debounce(fn: () => void, wait = 150) {
+    let t: number | undefined;
+    return () => {
+      window.clearTimeout(t);
+      t = window.setTimeout(fn, wait);
+    };
+  }
+
+  function initCarousel(root: HTMLElement) {
+    const track = root.querySelector<HTMLElement>('.carousel__track');
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('.carousel__slide'));
+    const prev = root.querySelector<HTMLButtonElement>('.carousel__arrow--prev');
+    const next = root.querySelector<HTMLButtonElement>('.carousel__arrow--next');
+    const dotsWrap = root.querySelector<HTMLElement>('.carousel__dots');
+    if (!track || slides.length === 0) return;
+
+    const autoplayMs = Number(root.dataset.autoplay ?? '0');
+    let index = 0;
+    let timer: number | undefined;
+
+    const perView = () => {
+      const w = window.innerWidth;
+      if (w <= 767) return Number(root.dataset.perViewMobile ?? '1');
+      if (w <= 1024) return Number(root.dataset.perViewTablet ?? '1');
+      return Number(root.dataset.perView ?? '1');
+    };
+
+    const maxIndex = () => Math.max(0, slides.length - perView());
+
+    const step = () => slides[0].getBoundingClientRect().width + GAP;
+
+    const render = () => {
+      track.style.transform = `translate3d(${-index * step()}px,0,0)`;
+      if (prev) prev.disabled = index <= 0;
+      if (next) next.disabled = index >= maxIndex();
+      dotsWrap?.querySelectorAll<HTMLElement>('.carousel__dot').forEach((dot, i) => {
+        dot.classList.toggle('is-active', i === index);
+        dot.setAttribute('aria-selected', String(i === index));
+      });
+    };
+
+    const goTo = (i: number) => {
+      const max = maxIndex();
+      index = i < 0 ? max : i > max ? 0 : i;
+      render();
+    };
+
+    const startAutoplay = () => {
+      if (!autoplayMs || reducedMotion) return;
+      timer = window.setInterval(() => goTo(index + 1), autoplayMs);
+    };
+    const stopAutoplay = () => {
+      if (timer) window.clearInterval(timer);
+      timer = undefined;
+    };
+    const restart = () => {
+      stopAutoplay();
+      startAutoplay();
+    };
+
+    const buildDots = () => {
+      if (!dotsWrap) return;
+      dotsWrap.innerHTML = '';
+      const total = maxIndex() + 1;
+      if (total < 2) return;
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'carousel__dot';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `Ir al slide ${i + 1}`);
+        dot.addEventListener('click', () => {
+          goTo(i);
+          restart();
+        });
+        dotsWrap.appendChild(dot);
+      }
+    };
+
+    const layout = () => {
+      const pv = perView();
+      const width = `calc((100% - ${GAP * (pv - 1)}px) / ${pv})`;
+      slides.forEach((s) => s.style.setProperty('--slide-width', width));
+      index = Math.min(index, maxIndex());
+      render();
+    };
+
+    prev?.addEventListener('click', () => {
+      goTo(index - 1);
+      restart();
+    });
+    next?.addEventListener('click', () => {
+      goTo(index + 1);
+      restart();
+    });
+
+    root.addEventListener('mouseenter', stopAutoplay);
+    root.addEventListener('mouseleave', startAutoplay);
+    root.addEventListener('focusin', stopAutoplay);
+
+    /* ---- Arrastre con mouse y con el dedo -----------------------------
+       Un solo camino con Pointer Events. El CSS pone touch-action: pan-y en
+       la pista: el navegador se queda el scroll vertical y nosotros el gesto
+       horizontal. ------------------------------------------------------- */
+    const DRAG_THRESHOLD = 8; // a partir de aquí es arrastre y no click
+    const SWIPE_MIN = 40;     // recorrido mínimo para cambiar de slide
+    const drag = { active: false, id: -1, startX: 0, base: 0, moved: 0 };
+
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      drag.active = true;
+      drag.id = e.pointerId;
+      drag.startX = e.clientX;
+      drag.base = -index * step();
+      drag.moved = 0;
+      track.style.transition = 'none';
+      root.classList.add('is-dragging');
+      stopAutoplay();
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!drag.active || e.pointerId !== drag.id) return;
+      drag.moved = e.clientX - drag.startX;
+      const min = -maxIndex() * step();
+      let offset = drag.base + drag.moved;
+      // resistencia al pasarse de los extremos
+      if (offset > 0) offset *= 0.35;
+      else if (offset < min) offset = min + (offset - min) * 0.35;
+      track.style.transform = `translate3d(${offset}px,0,0)`;
+    });
+
+    const endDrag = (e?: PointerEvent) => {
+      if (!drag.active || (e && e.pointerId !== drag.id)) return;
+      // el último pointermove puede quedarse corto en un gesto rápido
+      if (e && e.type === 'pointerup') drag.moved = e.clientX - drag.startX;
+      drag.active = false;
+      track.style.transition = '';
+      root.classList.remove('is-dragging');
+      if (Math.abs(drag.moved) > SWIPE_MIN) goTo(index + (drag.moved < 0 ? 1 : -1));
+      else render();
+      startAutoplay();
+    };
+
+    window.addEventListener('pointerup', endDrag);
+    // el navegador se queda el gesto (scroll vertical): volvemos al sitio
+    track.addEventListener('pointercancel', (e) => {
+      if (!drag.active) return;
+      drag.moved = 0;
+      endDrag(e);
+    });
+
+    // Si hubo arrastre, el click no debe abrir el video
+    track.addEventListener(
+      'click',
+      (e) => {
+        if (Math.abs(drag.moved) > DRAG_THRESHOLD) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      },
+      true
+    );
+
+    // Evita el "fantasma" de arrastrar la imagen con el mouse
+    track.querySelectorAll('img').forEach((img) => img.setAttribute('draggable', 'false'));
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        goTo(index - 1);
+        restart();
+      }
+      if (e.key === 'ArrowRight') {
+        goTo(index + 1);
+        restart();
+      }
+    });
+
+    window.addEventListener(
+      'resize',
+      debounce(() => {
+        buildDots();
+        layout();
+      })
+    );
+
+    buildDots();
+    layout();
+    startAutoplay();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(initCarousel);
+</script>

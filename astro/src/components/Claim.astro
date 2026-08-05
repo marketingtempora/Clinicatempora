@@ -1,0 +1,33 @@
+---
+import { claim } from '../data/content';
+---
+
+<section class="claim">
+  <div class="container claim__inner">
+    <h2 class="claim__title reveal" data-reveal="fade">{claim.title}</h2>
+    <p class="claim__text reveal" data-reveal="fade">{claim.text}</p>
+  </div>
+</section>
+
+<style>
+  .claim {
+    padding-block: var(--section-y);
+    background-color: var(--lime);
+    overflow: hidden;
+  }
+  .claim__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .claim__title {
+    margin-bottom: 20px;
+    color: var(--teal);
+  }
+  .claim__text {
+    margin: 0;
+    max-width: 760px;
+    color: var(--teal);
+  }
+</style>

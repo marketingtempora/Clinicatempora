@@ -1,0 +1,70 @@
+---
+import { site } from '../data/content';
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <img
+        src="/assets/img/logo-tempora-blanco-321.webp"
+        srcset="/assets/img/logo-tempora-blanco-321.webp 1x, /assets/img/logo-tempora-blanco-642.webp 2x"
+        width="321"
+        height="55"
+        alt="Clínica Témpora"
+        loading="lazy"
+      />
+    </div>
+    <div class="site-footer__info">
+      <p>
+        {site.address.street}, {site.address.locality} | {site.branch}<br />
+        {site.hours}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--section-y);
+    background-color: var(--footer-bg);
+  }
+  .site-footer__inner {
+    display: flex;
+    align-items: stretch;
+  }
+  .site-footer__brand,
+  .site-footer__info {
+    flex: 0 0 50%;
+    padding: 10px;
+  }
+  .site-footer__brand img {
+    width: 321px;
+  }
+  .site-footer__info p {
+    margin: 0 0 1.2em;
+    color: var(--white);
+    text-align: end;
+  }
+
+  @media (max-width: 767px) {
+    /* el footer del original casi no tiene margen lateral en móvil */
+    .site-footer :global(.container) {
+      padding-inline: 10px;
+    }
+    .site-footer__inner {
+      flex-direction: column;
+    }
+    .site-footer__brand,
+    .site-footer__info {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+    .site-footer__brand img {
+      width: 100%;
+      max-width: 321px;
+    }
+    .site-footer__info p {
+      text-align: center;
+    }
+  }
+</style>

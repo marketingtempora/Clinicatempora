@@ -1,0 +1,42 @@
+---
+import { cta } from '../data/content';
+---
+
+<section class="cta">
+  <div class="container cta__inner">
+    <h2 class="cta__title reveal" data-reveal="fade">{cta.title}</h2>
+    <a class="btn btn--teal reveal" data-reveal="fade-up" href="#form">{cta.button}</a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    padding-block: var(--section-y);
+    background-color: var(--lime);
+    overflow: hidden;
+  }
+  .cta__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .cta__title {
+    max-width: 610px;
+    margin-bottom: var(--stack-gap);
+    color: var(--teal);
+  }
+  .cta :global(.btn) {
+    margin-top: var(--stack-gap);
+  }
+
+  @media (max-width: 767px) {
+    .cta__inner {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      text-align: center;
+    }
+
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import { installments } from '../data/content';
+---
+
+<section class="installments">
+  <div class="container installments__inner">
+    <h3 class="installments__title">{installments.title}</h3>
+    <p class="installments__note">{installments.note}</p>
+  </div>
+</section>
+
+<style>
+  .installments {
+    padding-block: var(--section-y);
+    overflow: hidden;
+  }
+  .installments__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+  .installments__title {
+    color: var(--teal);
+  }
+  .installments__note {
+    margin: var(--stack-gap) 0 0;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: var(--fs-strong);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 1024px) {
+    .installments__inner {
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* el original limita este párrafo al 80% de la columna en móvil */
+    .installments__note {
+      width: 80%;
+      margin-inline: auto;
+    }
+  }
+</style>

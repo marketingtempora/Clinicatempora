@@ -1,0 +1,570 @@
+---
+import { formSteps, hero } from '../data/content';
+
+/**
+ * A dónde escribe el formulario. Se resuelve en build time y viaja al
+ * navegador en data-attributes (Astro inlina las variables PUBLIC_*).
+ *
+ *   1. PUBLIC_API_BASE_URL definida -> POST a la API de ../api (backend propio).
+ *   2. PUBLIC_SUPABASE_URL + PUBLIC_SUPABASE_ANON_KEY -> INSERT directo en
+ *      Supabase vía su API REST. Es el modo para un Static Site.
+ *   3. Ninguna de las dos -> modo demo: valida y escribe en la consola.
+ */
+const apiBase = (import.meta.env.PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
+const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL ?? '').replace(/\/+$/, '');
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+const supabaseTable = import.meta.env.PUBLIC_SUPABASE_TABLE ?? 'leads';
+
+const totalSteps = formSteps.length;
+const firstPct = Math.floor((1 / totalSteps) * 100);
+---
+
+<div class="lead-card">
+  <div class="lead-card__body">
+    <p class="lead-card__intro">
+      <br />Déjanos tus datos y te llamaremos para<br />
+      <strong>agendar tu evaluación</strong> de injerto capilar
+    </p>
+
+    <form
+      class="lead-form"
+      id="lead-form"
+      data-api-base={apiBase}
+      data-supabase-url={supabaseUrl}
+      data-supabase-key={supabaseKey}
+      data-supabase-table={supabaseTable}
+      novalidate
+    >
+      <div class="lead-form__progress" aria-hidden="true">
+        <div class="lead-form__progress-track">
+          <div class="lead-form__progress-meter" data-progress style={`width:${100 / totalSteps}%`}>
+            {firstPct}%
+          </div>
+        </div>
+      </div>
+
+      <div class="lead-form__steps" data-steps>
+        {formSteps.map((step, i) => (
+          <div class:list={['lead-form__step', { 'is-active': i === 0 }]} data-step={i + 1}>
+            <label
+              class:list={['lead-form__label', { 'lead-form__label--sr': 'hideLabel' in step && step.hideLabel }]}
+              for={step.name}
+            >
+              {step.label}
+            </label>
+
+            {step.type === 'select' ? (
+              <div class="lead-form__select">
+                <select id={step.name} name={step.name} required>
+                  {'options' in step && step.options?.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <input
+                class="lead-form__field"
+                type={step.type}
+                id={step.name}
+                name={step.name}
+                placeholder={'placeholder' in step ? step.placeholder : undefined}
+                autocomplete={'autocomplete' in step ? step.autocomplete : undefined}
+                inputmode={step.type === 'tel' ? 'numeric' : undefined}
+                maxlength={step.type === 'tel' ? 9 : undefined}
+                pattern={step.type === 'tel' ? '[0-9]{9}' : undefined}
+                required
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* El mensaje va debajo del campo, como en el original */}
+      <p class="lead-form__status" data-status role="status" aria-live="polite"></p>
+
+      {/* Anti-spam: invisible para personas, tentador para bots */}
+      <div class="lead-form__honeypot" aria-hidden="true">
+        <label for="empresa_web">No completar</label>
+        <input type="text" id="empresa_web" name="empresa_web" tabindex="-1" autocomplete="off" />
+      </div>
+
+      {/* Atribución: los rellena el script leyendo la URL */}
+      <input type="hidden" name="utm_source" />
+      <input type="hidden" name="utm_medium" />
+      <input type="hidden" name="utm_campaign" />
+      <input type="hidden" name="utm_content" />
+      <input type="hidden" name="utm_term" />
+      <input type="hidden" name="campaign_id" />
+      <input type="hidden" name="source_form" value="Providencia" />
+
+      <div class="lead-form__buttons" data-buttons>
+        <button class="btn-form btn-form--prev" type="button" data-prev hidden>Volver</button>
+        <button class="btn-form btn-form--next" type="button" data-next>Siguiente</button>
+        <button class="btn-form btn-form--submit" type="submit" data-submit hidden>Quiero Agendar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="lead-card__footer">
+    <p>{hero.privacy}</p>
+  </div>
+</div>
+
+<style>
+  /* En el original el panel translúcido es el cuerpo (esquinas rectas) y sólo
+     la franja oscura de abajo lleva las esquinas redondeadas. Si el fondo va en
+     el contenedor, sus esquinas rectas asoman por detrás de la franja. */
+  .lead-card__body {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.31);
+  }
+  .lead-card__intro {
+    /* 30px propios + 20px de separación entre widgets del original */
+    margin: 0 0 50px;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.4;
+    text-align: center;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  .lead-card__intro strong {
+    font-weight: 700;
+  }
+
+  .lead-card__footer {
+    padding: 20px 20px 30px;
+    background-color: var(--ink);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+  .lead-card__footer p {
+    margin: 0;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  /* ---- Formulario multi-paso ---- */
+  .lead-form__progress {
+    margin-bottom: 17px;
+  }
+  .lead-form__progress-track {
+    height: 16px;
+    background-color: rgba(255, 255, 255, 0.19);
+    overflow: hidden;
+  }
+  .lead-form__progress-meter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    min-width: 44px;
+    padding-right: 15px;
+    background-color: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: right;
+    transition: width var(--t-base);
+  }
+
+  /* Va debajo del campo (como los mensajes de Elementor) y con un aspecto
+     distinto al de un input, para que no se confundan. */
+  .lead-form__status {
+    display: none;
+    margin: 0 0 10px;
+    padding: 7px 12px;
+    border-left: 3px solid currentColor;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+  .lead-form__status.is-error {
+    display: block;
+    background: rgba(255, 255, 255, 0.92);
+    color: #a4222a;
+  }
+  .lead-form__status.is-success {
+    display: block;
+    background: var(--lime);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .lead-form__step {
+    display: none;
+    margin-bottom: 10px;
+  }
+  .lead-form__step.is-active {
+    display: block;
+  }
+
+  .lead-form__label {
+    display: block;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .lead-form__label--sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .lead-form__field,
+  .lead-form__select select {
+    width: 100%;
+    height: 42px;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background-color: var(--white);
+    color: #000;
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .lead-form__field::placeholder {
+    color: #6b6b6b;
+    opacity: 1;
+  }
+  .lead-form__field.has-error,
+  .lead-form__select select.has-error {
+    box-shadow: 0 0 0 2px #c0392b;
+  }
+
+  .lead-form__select {
+    position: relative;
+  }
+  .lead-form__select select {
+    appearance: none;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+  .lead-form__select::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    translate: 0 -50%;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 5.5px 0 5.5px;
+    border-color: var(--ink) transparent transparent transparent;
+    pointer-events: none;
+  }
+
+  .lead-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .lead-form__buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-form {
+    flex: 1 1 0;
+    padding: 8px;
+    border: 0;
+    border-radius: var(--radius-md);
+    background-color: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    line-height: 1.6;
+    cursor: pointer;
+    transition: background-color var(--t-base), color var(--t-base);
+  }
+  .btn-form:hover,
+  .btn-form:focus-visible {
+    background-color: var(--ink);
+    color: var(--cream);
+  }
+  .btn-form--prev {
+    flex: 0 0 30%;
+    background-color: var(--grey);
+    color: var(--white);
+  }
+  .btn-form--prev:hover {
+    background-color: var(--ink);
+    color: var(--white);
+  }
+  .btn-form[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+
+  @media (max-width: 767px) {
+    /* la franja oscura baja su padding inferior en móvil */
+    .lead-card__footer {
+      padding: 20px;
+    }
+  }
+</style>
+
+<script>
+  import { validateField, normalizePayload } from '../lib/validation';
+
+  const PENDING_KEY = 'tempora_pending_leads';
+  const SUCCESS_MESSAGE = '¡Listo! Recibimos tus datos y te llamaremos muy pronto.';
+  const ERROR_MESSAGE = 'No pudimos enviar tus datos. Inténtalo de nuevo en un momento.';
+
+  const form = document.querySelector<HTMLFormElement>('#lead-form');
+
+  function fieldOf(step: HTMLElement) {
+    return step.querySelector<HTMLInputElement | HTMLSelectElement>('input, select');
+  }
+
+  function readUtm(target: HTMLFormElement) {
+    const params = new URLSearchParams(window.location.search);
+    for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+      const input = target.querySelector<HTMLInputElement>(`input[name="${key}"]`);
+      if (input) input.value = params.get(key) ?? '';
+    }
+    const campaign = target.querySelector<HTMLInputElement>('input[name="campaign_id"]');
+    if (campaign) campaign.value = params.get('campaign_id') ?? params.get('gclid') ?? '';
+  }
+
+  function buildPayload(target: HTMLFormElement) {
+    const data = new FormData(target);
+    const raw: Record<string, string> = {};
+    data.forEach((value, key) => {
+      if (key === 'empresa_web') return;
+      raw[key] = typeof value === 'string' ? value.trim() : '';
+    });
+    const payload = normalizePayload(raw);
+    payload.page_url = window.location.href;
+    if (document.referrer) payload.referrer = document.referrer;
+    return { payload, honeypot: String(data.get('empresa_web') ?? '') };
+  }
+
+  /** Envía el lead: API propia -> Supabase REST -> modo demo. */
+  async function sendLead(target: HTMLFormElement, payload: Record<string, string>) {
+    const apiBase = target.dataset.apiBase ?? '';
+    const supabaseUrl = target.dataset.supabaseUrl ?? '';
+    const supabaseKey = target.dataset.supabaseKey ?? '';
+    const supabaseTable = target.dataset.supabaseTable || 'leads';
+
+    if (apiBase) {
+      return request(`${apiBase}/api/leads`, { 'Content-Type': 'application/json' }, payload);
+    }
+
+    if (supabaseUrl && supabaseKey) {
+      return request(
+        `${supabaseUrl}/rest/v1/${supabaseTable}`,
+        {
+          'Content-Type': 'application/json',
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          Prefer: 'return=minimal',
+        },
+        payload
+      );
+    }
+
+    console.info('[Témpora] Modo demo – lead capturado:', payload);
+    return { ok: true, demo: true };
+  }
+
+  async function request(url: string, headers: Record<string, string>, body: unknown) {
+    const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+    if (res.ok) return res.status === 204 ? {} : await res.json().catch(() => ({}));
+    const error = await res.json().catch(() => ({}) as Record<string, unknown>);
+    throw new Error(String(error.message ?? error.error ?? `HTTP ${res.status}`));
+  }
+
+  function queueLead(payload: Record<string, string>) {
+    try {
+      const queue = JSON.parse(localStorage.getItem(PENDING_KEY) ?? '[]');
+      queue.push({ payload, at: Date.now() });
+      localStorage.setItem(PENDING_KEY, JSON.stringify(queue.slice(-10)));
+    } catch {
+      /* localStorage bloqueado */
+    }
+  }
+
+  async function flushQueue(target: HTMLFormElement) {
+    let queue: { payload: Record<string, string> }[] = [];
+    try {
+      queue = JSON.parse(localStorage.getItem(PENDING_KEY) ?? '[]');
+    } catch {
+      return;
+    }
+    if (!queue.length) return;
+
+    const remaining: typeof queue = [];
+    for (const item of queue) {
+      try {
+        await sendLead(target, item.payload);
+      } catch {
+        remaining.push(item);
+      }
+    }
+    try {
+      localStorage.setItem(PENDING_KEY, JSON.stringify(remaining));
+    } catch {
+      /* noop */
+    }
+  }
+
+  if (form) {
+    const steps = Array.from(form.querySelectorAll<HTMLElement>('.lead-form__step'));
+    const total = steps.length;
+    const progress = form.querySelector<HTMLElement>('[data-progress]')!;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const btnPrev = form.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const btnNext = form.querySelector<HTMLButtonElement>('[data-next]')!;
+    const btnSubmit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const stepsBox = form.querySelector<HTMLElement>('[data-steps]')!;
+    const buttonsBox = form.querySelector<HTMLElement>('[data-buttons]')!;
+    let current = 0;
+
+    readUtm(form);
+
+    const setStatus = (message: string, type?: 'error' | 'success') => {
+      status.textContent = message;
+      status.className = `lead-form__status${message && type ? ` is-${type}` : ''}`;
+    };
+
+    const render = (focusField = true) => {
+      // current siempre dentro de rango: así nunca quedan 0 pasos visibles
+      current = Math.max(0, Math.min(current, total - 1));
+      steps.forEach((step, i) => step.classList.toggle('is-active', i === current));
+
+      // Si el envío había ocultado el formulario, lo devolvemos a la vida
+      stepsBox.hidden = false;
+      buttonsBox.hidden = false;
+
+      // El original muestra el porcentaje truncado (1/8 = 12%)
+      const pct = Math.floor(((current + 1) / total) * 100);
+      progress.style.width = `${pct}%`;
+      progress.textContent = `${pct}%`;
+
+      btnPrev.hidden = current === 0;
+      btnNext.hidden = current === total - 1;
+      btnSubmit.hidden = current !== total - 1;
+
+      // Al cambiar de paso el foco va al campo, también al volver atrás
+      if (focusField) fieldOf(steps[current])?.focus({ preventScroll: true });
+    };
+
+    const checkCurrentStep = () => {
+      const input = fieldOf(steps[current]);
+      const error = validateField(input);
+      input?.classList.toggle('has-error', Boolean(error));
+      if (error) {
+        setStatus(error, 'error');
+        return false;
+      }
+      setStatus('');
+      return true;
+    };
+
+    btnNext.addEventListener('click', () => {
+      if (!checkCurrentStep()) return;
+      if (current < total - 1) {
+        current++;
+        render();
+      }
+    });
+
+    btnPrev.addEventListener('click', () => {
+      if (current > 0) {
+        current--;
+        setStatus('');
+        render();
+      }
+    });
+
+    form.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      if (current < total - 1) {
+        e.preventDefault();
+        btnNext.click();
+      }
+    });
+
+    form.addEventListener('input', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('has-error')) {
+        target.classList.remove('has-error');
+        setStatus('');
+      }
+    });
+
+    const tel = form.querySelector<HTMLInputElement>('input[type="tel"]');
+    tel?.addEventListener('input', () => {
+      tel.value = tel.value.replace(/\D/g, '').slice(0, 9);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      for (let i = 0; i < total; i++) {
+        const error = validateField(fieldOf(steps[i]));
+        if (error) {
+          current = i;
+          render();
+          setStatus(error, 'error');
+          return;
+        }
+      }
+
+      const { payload, honeypot } = buildPayload(form);
+
+      // Bot: fingimos éxito sin enviar nada
+      if (honeypot) {
+        setStatus(SUCCESS_MESSAGE, 'success');
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = 'Enviando…';
+      setStatus('');
+
+      try {
+        await sendLead(form, payload);
+        window.dataLayer?.push({ event: 'lead_form_submit', form_name: 'implante_capilar_providencia' });
+        form.reset();
+        setStatus(SUCCESS_MESSAGE, 'success');
+        stepsBox.hidden = true;
+        buttonsBox.hidden = true;
+        progress.style.width = '100%';
+        progress.textContent = '100%';
+      } catch (err) {
+        console.error('[Témpora] Error enviando el lead:', err);
+        queueLead(payload);
+        setStatus(ERROR_MESSAGE, 'error');
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Quiero Agendar';
+      }
+    });
+
+    render(false);
+    void flushQueue(form);
+    window.addEventListener('online', () => void flushQueue(form));
+  }
+</script>

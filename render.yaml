@@ -1,0 +1,82 @@
+# =============================================================================
+# Blueprint de Render – https://render.com/docs/blueprint-spec
+#
+# Define los dos sitios estáticos (la versión Astro y la vanilla). Están las
+# dos para que puedas elegir; en producción normalmente dejas una sola:
+# comenta o borra la que no uses.
+#
+# Uso:
+#   1. Sube el repo a GitHub.
+#   2. En Render: New -> Blueprint -> selecciona el repo.
+#   3. Rellena las variables marcadas con sync:false (las keys de Supabase).
+#
+# Si prefieres crearlos a mano (New -> Static Site), los valores están en la
+# tabla de cada servicio más abajo y en el README.
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Versión Astro (con build)
+  #   Root Directory   : astro
+  #   Build Command    : npm ci && npm run build
+  #   Publish Directory: dist
+  # ---------------------------------------------------------------------------
+  - type: web
+    runtime: static
+    name: tempora-implante-capilar
+    rootDir: astro
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # Las keys se rellenan en el dashboard, no en el repo.
+      # Ojo: al ser un build estático quedan dentro del JS del navegador.
+      # La anon key es pública por diseño (RLS sólo permite INSERT).
+      - key: PUBLIC_SUPABASE_URL
+        sync: false
+      - key: PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: PUBLIC_SUPABASE_TABLE
+        value: leads
+    headers:
+      # Los assets con hash en el nombre pueden cachearse para siempre
+      - path: /_astro/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+
+  # ---------------------------------------------------------------------------
+  # Versión vanilla (sin build)
+  #   Root Directory   : (vacío)
+  #   Build Command    : (vacío)
+  #   Publish Directory: vanilla
+  #
+  # La configuración del formulario va en vanilla/assets/js/config.js, no en
+  # variables de entorno: sin build no hay nada que las inyecte.
+  # ---------------------------------------------------------------------------
+  - type: web
+    runtime: static
+    name: tempora-implante-capilar-vanilla
+    buildCommand: ""
+    staticPublishPath: vanilla
+    autoDeploy: true
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
