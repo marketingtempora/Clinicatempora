@@ -25,7 +25,7 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
     </main>
     <FooterVersion1 />
 
-    <a class="version1__mobile-cta" href="#form">QUIERO AGENDAR</a>
+    <a class="version1__floating-cta" href="#form">QUIERO AGENDAR</a>
   </div>
 </Layout>
 
@@ -38,8 +38,39 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
     display: none !important;
   }
 
-  .version1__mobile-cta {
-    display: none;
+  .version1__floating-cta {
+    position: fixed;
+    right: 24px;
+    bottom: 22px;
+    z-index: 50;
+    display: block;
+    padding: 15px 22px;
+    border: 1px solid rgba(248, 246, 230, 0.22);
+    border-radius: 999px;
+    background: var(--ink);
+    box-shadow: 0 12px 30px rgba(6, 26, 28, 0.28);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(18px);
+    transition: opacity 220ms ease, transform 220ms ease, background-color 220ms ease, color 220ms ease;
+  }
+
+  .version1__floating-cta:hover,
+  .version1__floating-cta:focus-visible {
+    background: var(--lime);
+    color: var(--ink);
+  }
+
+  .version1__floating-cta.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
   }
 
   @media (max-width: 767px) {
@@ -47,47 +78,51 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
       padding-bottom: 70px;
     }
 
-    .version1__mobile-cta {
-      position: fixed;
+    .version1__floating-cta {
       right: 12px;
       bottom: 10px;
       left: 12px;
-      z-index: 50;
-      display: block;
       padding: 15px 20px;
-      border: 1px solid rgba(248, 246, 230, 0.22);
-      border-radius: 999px;
-      background: var(--ink);
-      box-shadow: 0 12px 30px rgba(6, 26, 28, 0.28);
-      color: var(--cream);
-      font-family: var(--font-display);
       font-size: 0.98rem;
-      font-weight: 800;
-      line-height: 1.2;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(18px);
-      transition: opacity 220ms ease, transform 220ms ease;
-    }
-
-    .version1__mobile-cta.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: none;
     }
   }
 </style>
 
 <script>
-  const mobileCta = document.querySelector<HTMLElement>('.version1__mobile-cta');
+  const floatingCta = document.querySelector<HTMLElement>('.version1__floating-cta');
   const leadForm = document.getElementById('form');
+  const formCard = leadForm?.closest<HTMLElement>('.hero-v1__form');
 
-  if (mobileCta && leadForm && 'IntersectionObserver' in window) {
+  if (floatingCta && leadForm && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
-      ([entry]) => mobileCta.classList.toggle('is-visible', !entry.isIntersecting),
+      ([entry]) => floatingCta.classList.toggle('is-visible', !entry.isIntersecting),
       { threshold: 0.08 }
     );
     observer.observe(leadForm);
   }
+
+  let emphasisTimer: number | undefined;
+
+  const emphasizeForm = () => {
+    if (!formCard) return;
+    window.clearTimeout(emphasisTimer);
+    formCard.classList.remove('is-emphasized');
+    void formCard.offsetWidth;
+    formCard.classList.add('is-emphasized');
+    emphasisTimer = window.setTimeout(() => formCard.classList.remove('is-emphasized'), 950);
+  };
+
+  document.querySelectorAll<HTMLAnchorElement>('.version1 a[href="#form"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (!leadForm) return;
+      const rect = leadForm.getBoundingClientRect();
+      const headerHeight = document.querySelector<HTMLElement>('.v1-header')?.offsetHeight ?? 0;
+      const formIsVisible = rect.top < window.innerHeight && rect.bottom > headerHeight;
+
+      if (formIsVisible) {
+        event.preventDefault();
+        emphasizeForm();
+      }
+    });
+  });
 </script>

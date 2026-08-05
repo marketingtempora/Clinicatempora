@@ -151,6 +151,7 @@ import LeadForm from './LeadForm.astro';
   }
 
   .hero-v1__form {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -159,6 +160,35 @@ import LeadForm from './LeadForm.astro';
     border-radius: 34px;
     background: var(--teal);
     box-shadow: 0 24px 60px rgba(6, 26, 28, 0.13);
+    scroll-margin-top: 96px;
+    transform-origin: center;
+  }
+
+  .hero-v1__form.is-emphasized {
+    animation: form-emphasis 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes form-emphasis {
+    0% {
+      border-radius: 34px;
+      box-shadow: 0 24px 60px rgba(6, 26, 28, 0.13);
+      transform: scale(1);
+    }
+    32% {
+      border-radius: 42px 30px 46px 28px;
+      box-shadow: 0 0 0 6px rgba(186, 211, 5, 0.32), 0 28px 64px rgba(6, 26, 28, 0.22);
+      transform: scale(1.025);
+    }
+    62% {
+      border-radius: 29px 43px 31px 45px;
+      box-shadow: 0 0 0 3px rgba(186, 211, 5, 0.18), 0 22px 52px rgba(6, 26, 28, 0.18);
+      transform: scale(0.995);
+    }
+    100% {
+      border-radius: 34px;
+      box-shadow: 0 24px 60px rgba(6, 26, 28, 0.13);
+      transform: scale(1);
+    }
   }
 
   .hero-v1__form :global(.lead-card__body) {
@@ -305,6 +335,13 @@ import LeadForm from './LeadForm.astro';
     .hero-v1__form :global(.lead-card__intro) {
       margin-bottom: 24px;
       font-size: 1.2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-v1__form.is-emphasized {
+      animation: none;
+      box-shadow: 0 0 0 5px rgba(186, 211, 5, 0.34), 0 24px 60px rgba(6, 26, 28, 0.13);
     }
   }
 </style>

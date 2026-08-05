@@ -6,8 +6,8 @@ import YouTubeFacade from './YouTubeFacade.astro';
 <section class="process-v1" id="comofunciona">
   <div class="container">
     <div class="process-v1__head reveal" data-reveal="fade">
-      <p>ANTES DE AGENDAR</p>
-      <h2>{howItWorks.caption}</h2>
+      <p>EL PROCEDIMIENTO</p>
+      <h2>Todo claro antes de tu evaluación.</h2>
     </div>
 
     <div class="process-v1__grid">
@@ -22,7 +22,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
         />
         <div class="process-v1__video-note">
           <span aria-hidden="true">▶</span>
-          <p>Conoce el procedimiento antes de tu evaluación.</p>
+          <p>{howItWorks.caption}</p>
         </div>
       </div>
 
@@ -70,7 +70,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
 
   .process-v1 h2 {
     color: var(--cream);
-    font-size: clamp(3rem, 5vw, 5.1rem);
+    font-size: clamp(2.8rem, 4.4vw, 4.6rem);
     letter-spacing: -0.055em;
     line-height: 0.96;
   }
@@ -176,7 +176,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
   @media (max-width: 620px) {
     .process-v1 { padding: 72px 0; }
     .process-v1__head { margin-bottom: 28px; }
-    .process-v1 h2 { font-size: 3rem; }
+    .process-v1 h2 { font-size: 2.7rem; }
     .process-v1__video,
     .process-v1__facts { border-radius: 22px; }
     .process-v1__video :global(.video) { border-radius: 22px 22px 0 0; }
