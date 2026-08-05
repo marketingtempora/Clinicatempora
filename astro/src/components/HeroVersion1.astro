@@ -1,0 +1,310 @@
+---
+import { hero } from '../data/content';
+import LeadForm from './LeadForm.astro';
+---
+
+<section class="hero-v1" id="hero">
+  <div class="container hero-v1__inner">
+    <div class="hero-v1__visual reveal" data-reveal="fade">
+      <div class="hero-v1__content">
+        <p class="hero-v1__eyebrow">{hero.eyebrow}</p>
+        <h1 class="hero-v1__title">{hero.title}</h1>
+        <p class="hero-v1__subtitle">{hero.subtitle}</p>
+
+        <ul class="hero-v1__bullets">
+          {hero.bullets.map((bullet) => (
+            <li>
+              <span aria-hidden="true">✓</span>
+              {bullet}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="hero-v1__form reveal" data-reveal="fade-right" id="form">
+      <LeadForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-v1 {
+    position: relative;
+    padding: 30px 0 42px;
+    background:
+      radial-gradient(circle at 92% 8%, rgba(186, 211, 5, 0.16), transparent 30%),
+      var(--cream);
+    overflow: hidden;
+  }
+
+  .hero-v1__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+    gap: 22px;
+    align-items: stretch;
+  }
+
+  .hero-v1__visual {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 610px;
+    padding: 48px;
+    border-radius: 34px;
+    background-image:
+      linear-gradient(180deg, rgba(6, 26, 28, 0.08) 5%, rgba(6, 26, 28, 0.18) 36%, rgba(6, 26, 28, 0.94) 100%),
+      url('/assets/img/hero-desktop.webp');
+    background-position: 48% center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-shadow: 0 24px 60px rgba(6, 26, 28, 0.16);
+    overflow: hidden;
+  }
+
+  .hero-v1__visual::after {
+    content: '';
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    width: 76px;
+    height: 76px;
+    border: 2px solid rgba(186, 211, 5, 0.7);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 12px rgba(6, 26, 28, 0.34);
+  }
+
+  .hero-v1__content {
+    position: relative;
+    z-index: 1;
+    max-width: 620px;
+  }
+
+  .hero-v1__eyebrow {
+    display: inline-flex;
+    margin: 0 0 18px;
+    padding: 9px 15px;
+    border: 1px solid rgba(248, 246, 230, 0.34);
+    border-radius: 999px;
+    background: rgba(6, 26, 28, 0.45);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-v1__title {
+    max-width: 590px;
+    margin: 0;
+    color: var(--cream);
+    font-size: clamp(3.6rem, 5.7vw, 5.4rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 0.94;
+  }
+
+  .hero-v1__subtitle {
+    margin: 12px 0 28px;
+    color: var(--lime);
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 3vw, 2.7rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  .hero-v1__bullets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .hero-v1__bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    min-height: 62px;
+    padding: 13px 14px;
+    border: 1px solid rgba(248, 246, 230, 0.18);
+    border-radius: 15px;
+    background: rgba(6, 26, 28, 0.56);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.94rem;
+    line-height: 1.35;
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-v1__bullets span {
+    flex: 0 0 22px;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--ink);
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  .hero-v1__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    padding: 34px;
+    border-radius: 34px;
+    background: var(--teal);
+    box-shadow: 0 24px 60px rgba(6, 26, 28, 0.13);
+  }
+
+  .hero-v1__form :global(.lead-card__body) {
+    padding: 0;
+    background: transparent;
+  }
+
+  .hero-v1__form :global(.lead-card__intro) {
+    max-width: 430px;
+    margin: 0 auto 32px;
+    color: var(--cream);
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    line-height: 1.38;
+    text-shadow: none;
+  }
+
+  .hero-v1__form :global(.lead-card__intro > br:first-child) {
+    display: none;
+  }
+
+  .hero-v1__form :global(.lead-card__footer) {
+    margin-top: 22px;
+    padding: 20px 0 0;
+    border-top: 1px solid rgba(248, 246, 230, 0.18);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .hero-v1__form :global(.lead-card__footer p) {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .hero-v1__form :global(.lead-form__progress-track) {
+    height: 12px;
+    border-radius: 999px;
+  }
+
+  .hero-v1__form :global(.lead-form__progress-meter) {
+    border-radius: 999px;
+    font-size: 0.72rem;
+  }
+
+  .hero-v1__form :global(.lead-form__field),
+  .hero-v1__form :global(.lead-form__select select) {
+    height: 50px;
+    border: 1px solid rgba(6, 26, 28, 0.08);
+    border-radius: 12px;
+  }
+
+  .hero-v1__form :global(.btn-form) {
+    min-height: 50px;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-v1__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(390px, 0.92fr);
+      gap: 18px;
+    }
+
+    .hero-v1__visual {
+      min-height: 580px;
+      padding: 34px;
+    }
+
+    .hero-v1__form {
+      padding: 28px;
+    }
+
+    .hero-v1__bullets {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-v1__bullets li {
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero-v1 {
+      padding: 12px 0 30px;
+    }
+
+    .hero-v1__inner {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding-inline: 12px;
+    }
+
+    .hero-v1__visual {
+      min-height: 510px;
+      padding: 24px 20px;
+      border-radius: 26px;
+      background-image:
+        linear-gradient(180deg, rgba(6, 26, 28, 0.04) 5%, rgba(6, 26, 28, 0.18) 32%, rgba(6, 26, 28, 0.96) 100%),
+        url('/assets/img/hero-mobile.webp');
+      background-position: center 34%;
+      box-shadow: 0 18px 40px rgba(6, 26, 28, 0.13);
+    }
+
+    .hero-v1__visual::after {
+      top: 20px;
+      right: 20px;
+      width: 52px;
+      height: 52px;
+      border-width: 1px;
+      box-shadow: inset 0 0 0 8px rgba(6, 26, 28, 0.28);
+    }
+
+    .hero-v1__eyebrow {
+      margin-bottom: 14px;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+    }
+
+    .hero-v1__title {
+      max-width: 310px;
+      font-size: clamp(3rem, 15vw, 4rem);
+      line-height: 0.92;
+    }
+
+    .hero-v1__subtitle {
+      max-width: 300px;
+      margin: 10px 0 22px;
+      font-size: 1.9rem;
+    }
+
+    .hero-v1__bullets {
+      gap: 8px;
+    }
+
+    .hero-v1__bullets li {
+      padding: 11px 12px;
+      font-size: 0.85rem;
+    }
+
+    .hero-v1__form {
+      padding: 28px 18px 24px;
+      border-radius: 26px;
+      box-shadow: 0 18px 40px rgba(6, 26, 28, 0.12);
+    }
+
+    .hero-v1__form :global(.lead-card__intro) {
+      margin-bottom: 24px;
+      font-size: 1.2rem;
+    }
+  }
+</style>
