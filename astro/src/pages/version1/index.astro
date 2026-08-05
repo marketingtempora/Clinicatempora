@@ -1,31 +1,31 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
+import HeaderVersion1 from '../../components/HeaderVersion1.astro';
 import HeroVersion1 from '../../components/HeroVersion1.astro';
-import Claim from '../../components/Claim.astro';
+import ClaimVersion1 from '../../components/ClaimVersion1.astro';
+import ResultsVersion1 from '../../components/ResultsVersion1.astro';
 import Testimonials from '../../components/Testimonials.astro';
-import Results from '../../components/Results.astro';
 import HowItWorks from '../../components/HowItWorks.astro';
 import WhyUs from '../../components/WhyUs.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import Installments from '../../components/Installments.astro';
-import Footer from '../../components/Footer.astro';
+import FooterVersion1 from '../../components/FooterVersion1.astro';
 ---
 
 <Layout>
   <div class="version1">
-    <Header />
+    <HeaderVersion1 />
     <main>
       <HeroVersion1 />
-      <Claim />
-      <Testimonials />
-      <Results />
-      <HowItWorks />
+      <ClaimVersion1 />
+      <ResultsVersion1 />
       <WhyUs />
+      <HowItWorks />
+      <Testimonials />
       <CtaBand />
       <Installments />
     </main>
-    <Footer />
+    <FooterVersion1 />
 
     <a class="version1__mobile-cta" href="#form">QUIERO AGENDAR</a>
   </div>
@@ -33,7 +33,11 @@ import Footer from '../../components/Footer.astro';
 
 <style is:global>
   .version1 {
-    --section-y: 58px;
+    --section-y: 76px;
+  }
+
+  body > .skip-link {
+    display: none;
   }
 
   .version1 [hidden] {
@@ -42,6 +46,211 @@ import Footer from '../../components/Footer.astro';
 
   .version1__mobile-cta {
     display: none;
+  }
+
+  .version1 .why {
+    padding-block: 100px;
+    background:
+      linear-gradient(135deg, rgba(186, 211, 5, 0.08), transparent 36%),
+      #f1f2e4;
+  }
+
+  .version1 .why__inner {
+    gap: 72px;
+  }
+
+  .version1 .why__media {
+    flex-basis: 51%;
+  }
+
+  .version1 .why__copy {
+    flex-basis: 43%;
+    margin-right: 0;
+  }
+
+  .version1 .why__title {
+    margin-bottom: 28px;
+    font-size: clamp(3rem, 4.6vw, 4.8rem);
+    letter-spacing: -0.05em;
+    line-height: 0.98;
+  }
+
+  .version1 .why__text {
+    font-size: 1.04rem;
+    line-height: 1.7;
+  }
+
+  .version1 .why .carousel__viewport {
+    box-shadow: 0 22px 48px rgba(6, 26, 28, 0.14);
+  }
+
+  .version1 .stats {
+    justify-content: flex-start;
+    gap: 12px;
+    margin: -70px 18px 0;
+  }
+
+  .version1 .stat {
+    flex-basis: calc(50% - 6px);
+    padding: 20px;
+    border-color: rgba(45, 80, 87, 0.1);
+    border-radius: 20px;
+    background: rgba(248, 246, 230, 0.96);
+    box-shadow: 0 16px 30px rgba(6, 26, 28, 0.09);
+  }
+
+  .version1 .why__copy .btn {
+    padding-inline: 30px;
+    background: var(--ink);
+  }
+
+  .version1 .how {
+    padding-block: 100px;
+    background:
+      radial-gradient(circle at 90% 15%, rgba(186, 211, 5, 0.16), transparent 27%),
+      var(--teal);
+  }
+
+  .version1 .how .shape-divider {
+    display: none;
+  }
+
+  .version1 .how__inner {
+    gap: 62px;
+  }
+
+  .version1 .how__features,
+  .version1 .how__media {
+    flex-basis: calc(50% - 31px);
+  }
+
+  .version1 .feature-list {
+    gap: 8px;
+  }
+
+  .version1 .feature {
+    align-items: flex-start;
+    padding: 14px 16px;
+    border: 1px solid rgba(248, 246, 230, 0.13);
+    border-radius: 14px;
+    background: rgba(6, 26, 28, 0.2);
+  }
+
+  .version1 .feature__icon {
+    width: 23px;
+    height: 23px;
+    flex-basis: 23px;
+    margin-top: 2px;
+  }
+
+  .version1 .feature__title {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .version1 .how__media .video {
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 22px 48px rgba(6, 26, 28, 0.2);
+  }
+
+  .version1 .how__media-caption {
+    margin-top: 0;
+    border-radius: 0 0 24px 24px;
+  }
+
+  .version1 .testimonials {
+    padding-block: 100px;
+    background: var(--cream);
+  }
+
+  .version1 .testimonials__inner {
+    align-items: center;
+    gap: 64px;
+    margin-bottom: 0;
+  }
+
+  .version1 .testimonials__copy {
+    flex-basis: 31%;
+  }
+
+  .version1 .testimonials__carousel {
+    flex-basis: calc(69% - 64px);
+  }
+
+  .version1 .testimonials__title {
+    margin-top: 0;
+    padding-right: 0;
+    font-size: clamp(3rem, 4.4vw, 4.5rem);
+    letter-spacing: -0.05em;
+    line-height: 0.96;
+  }
+
+  .version1 .testimonials__text {
+    margin: 24px 0 28px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .version1 .testimonials__copy .btn {
+    margin-top: 0;
+    background: var(--ink);
+  }
+
+  .version1 .testimonials .video {
+    border-radius: 20px;
+    box-shadow: 0 18px 38px rgba(6, 26, 28, 0.13);
+  }
+
+  .version1 .cta {
+    padding-block: 82px;
+  }
+
+  .version1 .cta__title {
+    max-width: 760px;
+    font-size: clamp(3rem, 5vw, 5.2rem);
+    letter-spacing: -0.05em;
+    line-height: 0.96;
+  }
+
+  .version1 .cta .btn {
+    min-width: 210px;
+    margin-top: 0;
+    padding-block: 18px;
+    background: var(--ink);
+  }
+
+  .version1 .installments {
+    padding-block: 54px;
+    background: #eef0df;
+  }
+
+  .version1 .installments__title {
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
+  }
+
+  .version1 .installments__note {
+    margin-top: 12px;
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    font-weight: 500;
+  }
+
+  @media (max-width: 1024px) {
+    .version1 .why__inner,
+    .version1 .how__inner,
+    .version1 .testimonials__inner {
+      gap: 34px;
+    }
+
+    .version1 .stats {
+      margin-top: -48px;
+    }
+
+    .version1 .stat {
+      padding: 14px;
+    }
   }
 
   @media (max-width: 767px) {
@@ -53,16 +262,6 @@ import Footer from '../../components/Footer.astro';
       padding-bottom: 70px;
     }
 
-    .version1 .site-header {
-      padding-block: 18px;
-    }
-
-    .version1 .site-header__logo img {
-      width: 190px;
-    }
-
-    .version1 .claim__title,
-    .version1 .results__title,
     .version1 .testimonials__title,
     .version1 .why__title,
     .version1 .cta__title {
@@ -70,75 +269,79 @@ import Footer from '../../components/Footer.astro';
       line-height: 1.04;
     }
 
+    .version1 .why,
+    .version1 .how,
+    .version1 .testimonials {
+      padding-block: 68px;
+    }
+
+    .version1 .why__inner,
+    .version1 .how__inner,
     .version1 .testimonials__inner {
-      margin-bottom: 0;
+      gap: 34px;
+    }
+
+    .version1 .why__copy {
+      margin-top: 38px;
+      text-align: left;
+    }
+
+    .version1 .why__title,
+    .version1 .testimonials__title {
+      font-size: 2.85rem;
+    }
+
+    .version1 .stats {
+      gap: 10px;
+      margin: -46px 8px 0;
+    }
+
+    .version1 .stat {
+      padding: 13px;
+    }
+
+    .version1 .how {
+      padding-block: 70px;
+    }
+
+    .version1 .how__inner {
+      gap: 42px;
+    }
+
+    .version1 .feature {
+      padding: 13px 14px;
+    }
+
+    .version1 .testimonials__copy {
+      text-align: left;
+    }
+
+    .version1 .testimonials__text {
+      margin-block: 20px 24px;
     }
 
     .version1 .testimonials__carousel {
       width: 100%;
-      max-width: 300px;
+      max-width: 310px;
       margin-inline: auto;
     }
 
-    .version1 .results__inner {
-      margin-bottom: 0;
+    .version1 .cta {
+      padding-block: 64px;
     }
 
-    .version1 .timeline {
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: 82%;
-      gap: 12px;
-      padding: 8px 20px 16px;
-      margin-inline: -20px;
-      overflow-x: auto;
-      overscroll-behavior-inline: contain;
-      scroll-snap-type: inline mandatory;
-      scrollbar-width: none;
+    .version1 .cta__title {
+      font-size: 3rem;
     }
 
-    .version1 .timeline::-webkit-scrollbar {
-      display: none;
-    }
-
-    .version1 .timeline__item {
-      display: grid;
-      gap: 10px;
-      padding: 12px 12px 16px;
-      border: 1px solid rgba(45, 80, 87, 0.1);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.55);
-      scroll-snap-align: center;
-    }
-
-    .version1 .timeline__img {
+    .version1 .cta .btn {
       width: 100%;
-      max-width: none;
-      margin: 0;
-      aspect-ratio: 219 / 147;
-      object-fit: cover;
-      border-radius: 15px;
+      max-width: 280px;
+      margin-top: 22px;
     }
 
-    .version1 .timeline__label {
-      font-size: 1.5rem;
-    }
-
-    .version1 .how {
-      padding-block: 58px;
-    }
-
-    .version1 .how__inner {
-      gap: 30px;
-    }
-
-    .version1 .feature__title {
-      margin: 6px 0 12px;
-      font-size: 1rem;
-    }
-
-    .version1 .why__copy {
-      margin-top: 32px;
+    .version1 .installments__title {
+      font-size: 1.7rem;
     }
 
     .version1 .installments__note {

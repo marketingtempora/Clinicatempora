@@ -1,0 +1,138 @@
+---
+import { site } from '../data/content';
+
+const links = [
+  { label: 'Resultados', href: '#resultados' },
+  { label: 'Por qué elegirnos', href: '#elegirnos' },
+  { label: 'Cómo funciona', href: '#comofunciona' },
+  { label: 'Testimonios', href: '#testimonios' },
+];
+---
+
+<footer class="footer-v1">
+  <div class="container footer-v1__top">
+    <div class="footer-v1__brand">
+      <img
+        src="/assets/img/logo-tempora-blanco-321.webp"
+        srcset="/assets/img/logo-tempora-blanco-321.webp 1x, /assets/img/logo-tempora-blanco-642.webp 2x"
+        width="321"
+        height="55"
+        alt="Clínica Témpora"
+        loading="lazy"
+      />
+      <p>Implante capilar</p>
+    </div>
+
+    <nav class="footer-v1__nav" aria-label="Navegación del pie">
+      {links.map((link) => <a href={link.href}>{link.label}</a>)}
+    </nav>
+
+    <div class="footer-v1__contact">
+      <p>{site.address.street}, {site.address.locality}</p>
+      <p>{site.branch}</p>
+      <p>{site.hours}</p>
+      <a href="#form">QUIERO AGENDAR</a>
+    </div>
+  </div>
+
+  <div class="container footer-v1__bottom">
+    <span>Clínica Témpora</span>
+    <span>Implante capilar · Providencia</span>
+  </div>
+</footer>
+
+<style>
+  .footer-v1 {
+    padding: 72px 0 26px;
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .footer-v1__top {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr 1fr;
+    gap: 60px;
+    padding-bottom: 58px;
+  }
+
+  .footer-v1__brand img {
+    width: min(100%, 280px);
+    border-radius: 0;
+  }
+
+  .footer-v1__brand p {
+    margin: 22px 0 0;
+    color: var(--lime);
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+  }
+
+  .footer-v1__nav {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+  }
+
+  .footer-v1__nav a {
+    padding: 5px 0;
+    color: rgba(248, 246, 230, 0.76);
+    font-size: 0.93rem;
+  }
+
+  .footer-v1__nav a:hover { color: var(--lime); }
+
+  .footer-v1__contact {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+  }
+
+  .footer-v1__contact p {
+    margin: 0 0 4px;
+    color: rgba(248, 246, 230, 0.76);
+    font-size: 0.9rem;
+  }
+
+  .footer-v1__contact a {
+    display: inline-flex;
+    margin-top: 20px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .footer-v1__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(248, 246, 230, 0.12);
+    color: rgba(248, 246, 230, 0.5);
+    font-size: 0.76rem;
+  }
+
+  @media (max-width: 767px) {
+    .footer-v1 {
+      padding: 56px 0 96px;
+    }
+
+    .footer-v1__top {
+      grid-template-columns: 1fr;
+      gap: 34px;
+      padding-bottom: 38px;
+    }
+
+    .footer-v1__brand img {
+      width: 250px;
+    }
+
+    .footer-v1__bottom {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+</style>
