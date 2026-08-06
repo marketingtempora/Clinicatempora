@@ -445,33 +445,98 @@ const attributionFields = [
     return payload;
   }
 
-  /** Envía el lead: API propia -> Supabase REST -> modo demo. */
-  async function sendLead(target: HTMLFormElement, payload: Record<string, string>) {
-    const makeWebhookUrl = target.dataset.makeWebhookUrl ?? '';
-    const apiBase = target.dataset.apiBase ?? '';
+  async function persistLeadBackup(target: HTMLFormElement, payload: Record<string, string>) {
     const supabaseUrl = target.dataset.supabaseUrl ?? '';
     const supabaseKey = target.dataset.supabaseKey ?? '';
     const supabaseTable = target.dataset.supabaseTable || 'leads';
+    if (!supabaseUrl || !supabaseKey) return false;
 
-    if (makeWebhookUrl) {
-      return request(makeWebhookUrl, { 'Content-Type': 'application/json' }, payload);
-    }
+    const makeConfigured = Boolean(target.dataset.makeWebhookUrl);
+    await request(
+      `${supabaseUrl}/rest/v1/${supabaseTable}?on_conflict=submission_id`,
+      {
+        'Content-Type': 'application/json',
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        Prefer: 'resolution=ignore-duplicates,return=minimal',
+      },
+      {
+        ...payload,
+        delivery_status: 'received',
+        make_status: makeConfigured ? 'pending' : 'not_configured',
+        pipedrive_status: makeConfigured ? 'pending' : 'not_configured',
+        raw_payload: payload,
+      }
+    );
 
-    if (apiBase) {
-      return request(`${apiBase}/api/leads`, { 'Content-Type': 'application/json' }, payload);
-    }
+    await logDeliveryEvent(target, payload.submission_id, 'received').catch(() => undefined);
+    return true;
+  }
 
-    if (supabaseUrl && supabaseKey) {
-      return request(
-        `${supabaseUrl}/rest/v1/${supabaseTable}`,
-        {
-          'Content-Type': 'application/json',
-          apikey: supabaseKey,
-          Authorization: `Bearer ${supabaseKey}`,
-          Prefer: 'return=minimal',
-        },
-        payload
-      );
+  async function logDeliveryEvent(
+    target: HTMLFormElement,
+    submissionId: string,
+    eventType: 'received' | 'make_success' | 'make_failed' | 'queued_offline',
+    errorMessage = ''
+  ) {
+    const supabaseUrl = target.dataset.supabaseUrl ?? '';
+    const supabaseKey = target.dataset.supabaseKey ?? '';
+    if (!supabaseUrl || !supabaseKey || !submissionId) return;
+
+    await request(
+      `${supabaseUrl}/rest/v1/lead_delivery_events`,
+      {
+        'Content-Type': 'application/json',
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        Prefer: 'return=minimal',
+      },
+      {
+        submission_id: submissionId,
+        event_type: eventType,
+        ...(errorMessage ? { error_message: errorMessage.slice(0, 800) } : {}),
+      }
+    );
+  }
+
+  async function notifyMake(target: HTMLFormElement, payload: Record<string, string>) {
+    const makeWebhookUrl = target.dataset.makeWebhookUrl ?? '';
+    if (!makeWebhookUrl) return false;
+    await request(makeWebhookUrl, { 'Content-Type': 'application/json' }, payload);
+    return true;
+  }
+
+  /**
+   * Guarda primero el respaldo. Si Make falla después, el formulario sigue
+   * confirmado porque el lead ya está seguro y el CMS muestra el error.
+   */
+  async function sendLead(target: HTMLFormElement, payload: Record<string, string>) {
+    const apiBase = target.dataset.apiBase ?? '';
+    const supabaseUrl = target.dataset.supabaseUrl ?? '';
+    const supabaseKey = target.dataset.supabaseKey ?? '';
+    const backupConfigured = Boolean(supabaseUrl && supabaseKey);
+    let backupSaved = false;
+
+    if (backupConfigured) backupSaved = await persistLeadBackup(target, payload);
+
+    try {
+      const makeSent = await notifyMake(target, payload);
+      if (makeSent && backupSaved) {
+        await logDeliveryEvent(target, payload.submission_id, 'make_success').catch(() => undefined);
+      }
+      if (makeSent) return { ok: true, backupSaved };
+
+      if (!backupSaved && apiBase) {
+        await request(`${apiBase}/api/leads`, { 'Content-Type': 'application/json' }, payload);
+        return { ok: true, backupSaved: true };
+      }
+      if (backupSaved) return { ok: true, backupSaved };
+    } catch (error) {
+      if (!backupSaved) throw error;
+      const message = error instanceof Error ? error.message : 'Error desconocido en Make';
+      await logDeliveryEvent(target, payload.submission_id, 'make_failed', message).catch(() => undefined);
+      console.error('[Témpora] Lead respaldado, pero Make falló:', error);
+      return { ok: true, backupSaved, integrationFailed: true };
     }
 
     console.info('[Témpora] Modo demo – lead capturado:', payload);
