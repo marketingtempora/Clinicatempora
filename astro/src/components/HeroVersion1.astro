@@ -23,7 +23,12 @@ import LeadForm from './LeadForm.astro';
     </div>
 
     <div class="hero-v1__form reveal" data-reveal="fade-right" id="form">
-      <LeadForm fieldsPerStep={2} />
+      <LeadForm
+        fieldsPerStep={2}
+        stepEventNames={['form_step1', 'form_step2', 'form_step3']}
+        finalEventName="form_step4_final"
+        formVersion="v1"
+      />
     </div>
   </div>
 </section>
