@@ -182,15 +182,15 @@ const faqs = [
 
         <div class="v2-media__carousel" data-media-carousel>
           <div class="v2-media__track" data-media-track>
-            <article class="v2-media__slide is-active" data-media-slide>
+            <article class="v2-media__slide is-active" data-media-slide style="--thumb-y: 18%; --thumb-y-mobile: 25%;">
               <div class="v2-media__video"><YouTubeFacade id="gAZ2xNm--Bo" alt="Juliano contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/JULIANO.jpg" /></div>
               <div class="v2-media__copy"><span>Juliano · Rancagua</span><h3>“Los resultados superaron mis expectativas.”</h3><p>Destaca la claridad del equipo médico y el acompañamiento durante todo el proceso.</p></div>
             </article>
-            <article class="v2-media__slide" data-media-slide>
+            <article class="v2-media__slide" data-media-slide style="--thumb-y: 19%; --thumb-y-mobile: 25%;">
               <div class="v2-media__video"><YouTubeFacade id="h08RqUihV1I" alt="Pablo contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/PABLO.jpg" /></div>
               <div class="v2-media__copy"><span>Pablo · Santiago</span><h3>Una decisión para recuperar su imagen.</h3><p>Su experiencia muestra cómo se vive el procedimiento desde la mirada del paciente.</p></div>
             </article>
-            <article class="v2-media__slide" data-media-slide>
+            <article class="v2-media__slide" data-media-slide style="--thumb-y: 20%; --thumb-y-mobile: 27%;">
               <div class="v2-media__video"><YouTubeFacade id="P7t6AGGPv48" alt="Joaquín contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/JOAQUIN.jpg" /></div>
               <div class="v2-media__copy"><span>Joaquín · Valdivia</span><h3>“Fue la mejor decisión que tomé.”</h3><p>Relata un proceso profesional, acompañado y enfocado en un resultado natural.</p></div>
             </article>
@@ -389,7 +389,7 @@ const faqs = [
   .v2-media__slide.is-active { opacity: 1; }
   .v2-media__video { min-width: 0; }
   .version2 .v2-media__slide .video { height: 298px; aspect-ratio: auto; border-radius: 0; }
-  .version2 .v2-media .video img { border-radius: 0; object-position: center; }
+  .version2 .v2-media .video img { border-radius: 0; object-position: center var(--thumb-y, 20%); }
   .v2-media__copy { display: flex; flex-direction: column; justify-content: flex-end; padding: 26px; background: #102b2e; }
   .v2-media__copy span { color: var(--v2-lime); font: 700 .72rem/1 var(--font-body); letter-spacing: .13em; text-transform: uppercase; }
   .v2-media__copy h3 { margin: 12px 0; color: white; font-size: clamp(1.6rem,2.2vw,2.2rem); line-height: 1; }
@@ -506,6 +506,7 @@ const faqs = [
     .v2-media__slide { display: block; height: auto; }
     .v2-media__video { aspect-ratio: 16 / 9; }
     .version2 .v2-media__slide .video { height: 100%; aspect-ratio: 16 / 9; }
+    .version2 .v2-media .video img { object-position: center var(--thumb-y-mobile, var(--thumb-y, 25%)); }
     .v2-media__copy { padding: 20px 18px; }
     .v2-clinic__visual img:nth-child(2) { margin-top: 20px; }
     .v2-faq__intro { position: static; }
