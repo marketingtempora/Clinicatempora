@@ -6,9 +6,10 @@ import { site } from '../data/content';
 interface Props {
   title?: string;
   description?: string;
+  robots?: string;
 }
 
-const { title = site.title, description = site.description } = Astro.props;
+const { title = site.title, description = site.description, robots = 'index, follow' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 
 const schema = {
@@ -42,6 +43,7 @@ const schema = {
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
     <link rel="canonical" href={canonical} />
 
     <meta property="og:locale" content="es_CL" />
