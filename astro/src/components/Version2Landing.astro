@@ -2,16 +2,6 @@
 import LeadForm from './LeadForm.astro';
 import YouTubeFacade from './YouTubeFacade.astro';
 
-const prices = [
-  ['1.000', '$2.600.000'],
-  ['1.500', '$3.100.000'],
-  ['2.000', '$3.600.000'],
-  ['2.500', '$4.100.000'],
-  ['3.000', '$4.600.000'],
-  ['3.500', '$5.100.000'],
-  ['4.000', '$5.600.000'],
-] as const;
-
 const results = [
   { before: '001A-1.jpg', after: '001B-1.jpg', label: 'Caso 01 · línea frontal' },
   { before: '002A.jpg', after: '002B.jpg', label: 'Caso 02 · densidad superior' },
@@ -20,9 +10,9 @@ const results = [
 
 const faqs = [
   {
-    question: '¿Cuánto cuesta un implante capilar?',
+    question: '¿Cómo sé si soy candidato a un implante capilar?',
     answer:
-      'El valor depende de la cantidad de unidades foliculares que requiera tu caso. En Témpora los valores publicados comienzan en $2.600.000 para 1.000 folículos e incluyen pabellón, equipo médico, insumos, fármacos y controles postoperatorios.',
+      'La evaluación revisa tu tipo de alopecia, la calidad de la zona donante, tus antecedentes y el resultado que buscas. Con esa información el equipo puede indicarte si el implante es adecuado para ti.',
   },
   {
     question: '¿Cómo sé si necesito FUE o FUSS?',
@@ -45,9 +35,9 @@ const faqs = [
       'Sí. El formulario permite elegir evaluación presencial o a distancia. La sucursal de Santiago está en Providencia, a pasos del metro Los Leones.',
   },
   {
-    question: '¿Qué opciones de pago existen?',
+    question: '¿El procedimiento duele?',
     answer:
-      'Puedes pagar por transferencia con 5% de descuento o hasta en 12 cuotas sin interés con tarjetas de crédito, según las condiciones publicadas por la clínica.',
+      'La cirugía se realiza con anestesia local. Durante la evaluación el equipo explica cada etapa, las sensaciones esperables y los cuidados para una recuperación confortable.',
   },
 ] as const;
 ---
@@ -60,8 +50,8 @@ const faqs = [
       </a>
       <nav class="v2-nav__links" aria-label="Navegación principal">
         <a href="#resultados">Resultados</a>
+        <a href="#proceso">Proceso</a>
         <a href="#tecnicas">Técnicas</a>
-        <a href="#valores">Valores</a>
         <a href="#preguntas">Preguntas</a>
       </nav>
       <a class="v2-button v2-button--lime v2-nav__cta" href="#form">Quiero agendar</a>
@@ -80,12 +70,12 @@ const faqs = [
           </p>
           <ul class="v2-hero__checks" aria-label="Características principales">
             <li><span aria-hidden="true">✓</span> Evaluación presencial o a distancia</li>
-            <li><span aria-hidden="true">✓</span> Valor definido por unidades foliculares</li>
+            <li><span aria-hidden="true">✓</span> Seguimiento antes y después</li>
             <li><span aria-hidden="true">✓</span> Pabellones autorizados en Providencia</li>
           </ul>
           <div class="v2-hero__actions">
             <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
-            <a class="v2-text-link" href="#valores">Ver valores <span aria-hidden="true">↘</span></a>
+            <a class="v2-text-link" href="#proceso">Cómo funciona <span aria-hidden="true">↘</span></a>
           </div>
 
         </div>
@@ -106,48 +96,6 @@ const faqs = [
         <div><strong>2</strong><span>pabellones de cirugía mayor</span></div>
         <div><strong>FUE + FUSS</strong><span>la técnica la define tu diagnóstico</span></div>
         <div><strong>Los Leones</strong><span>Suecia 0142, oficina 603</span></div>
-      </div>
-    </section>
-
-    <section class="v2-pricing v2-section" id="valores">
-      <div class="v2-container">
-        <div class="v2-heading v2-heading--split">
-          <div>
-            <p class="v2-kicker v2-kicker--dark">Precio claro desde el inicio</p>
-            <h2>¿Cuánto cuesta<br />un implante capilar?</h2>
-          </div>
-          <div class="v2-heading__aside">
-            <p>
-              El precio se calcula por la cantidad de unidades foliculares que necesitas. La evaluación define esa cantidad y la técnica indicada para tu caso.
-            </p>
-            <p class="v2-price-from"><span>Desde</span><strong>$2.600.000</strong><small>por 1.000 folículos</small></p>
-          </div>
-        </div>
-
-        <div class="v2-pricing__body">
-          <div class="v2-pricing__included">
-            <h3>Tu inversión incluye</h3>
-            <ul>
-              <li>Derecho a pabellón acreditado</li>
-              <li>Honorarios del equipo médico</li>
-              <li>Insumos y fármacos de la cirugía</li>
-              <li>Controles y seguimiento postoperatorio</li>
-            </ul>
-            <div class="v2-payment-note">
-              <strong>5% de descuento</strong> por transferencia · Hasta <strong>12 cuotas sin interés*</strong>
-            </div>
-          </div>
-
-          <details class="v2-price-table">
-            <summary>Ver tabla completa de valores <span aria-hidden="true">+</span></summary>
-            <div class="v2-price-table__rows">
-              {prices.map(([follicles, price]) => (
-                <div><span>{follicles} folículos</span><strong>{price}</strong></div>
-              ))}
-            </div>
-            <p>*Las condiciones sobre 12 cuotas quedan sujetas a la entidad bancaria o comercial.</p>
-          </details>
-        </div>
       </div>
     </section>
 
@@ -202,42 +150,29 @@ const faqs = [
           <img src="/assets/img/v2/tempora-galeria6.webp" width="920" height="797" alt="Preparación de paciente para cirugía capilar" loading="lazy" />
         </div>
       </div>
-    </section>
-
-    <section class="v2-tech v2-section" id="tecnicas">
-      <div class="v2-container">
-        <div class="v2-heading v2-heading--center">
-          <p class="v2-kicker v2-kicker--dark">Dos técnicas, una recomendación médica</p>
-          <h2>FUE o FUSS: no eliges por moda.<br /><span>Eliges lo que tu caso necesita.</span></h2>
+      <div class="v2-container v2-tech-switcher" id="tecnicas">
+        <div class="v2-tech-switcher__intro">
+          <p class="v2-kicker v2-kicker--dark">La técnica se decide en evaluación</p>
+          <h3>FUE o FUSS: compara sin salir del proceso.</h3>
+          <p>No tienes que llegar sabiendo cuál elegir. Revisa sus diferencias y el equipo indicará cuál responde mejor a tu caso.</p>
+          <div class="v2-tech-switcher__tabs" role="tablist" aria-label="Comparar técnicas de implante capilar">
+            <button type="button" role="tab" aria-selected="true" aria-controls="panel-fue" id="tab-fue" data-tech-tab="fue">Técnica FUE</button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="panel-fuss" id="tab-fuss" data-tech-tab="fuss">Técnica FUSS</button>
+          </div>
         </div>
-
-        <div class="v2-tech__grid">
-          <article class="v2-tech-card v2-tech-card--dark">
-            <span class="v2-tech-card__number">01</span>
-            <p class="v2-tech-card__tag">Extracción folículo a folículo</p>
-            <h3>Técnica FUE</h3>
+        <div class="v2-tech-switcher__panels">
+          <article id="panel-fue" role="tabpanel" aria-labelledby="tab-fue" data-tech-panel="fue">
+            <span>Extracción folículo a folículo</span>
+            <h3>FUE</h3>
             <p>Procedimiento mínimamente invasivo, sin cicatriz lineal y con una recuperación más rápida y confortable.</p>
-            <ul>
-              <li>Permite llevar el cabello muy corto</li>
-              <li>Extracción individual de unidades foliculares</li>
-              <li>Indicada según calidad y capacidad de la zona donante</li>
-            </ul>
+            <ul><li>Permite llevar el cabello muy corto</li><li>Extracción individual</li><li>Depende de la capacidad de la zona donante</li></ul>
           </article>
-          <article class="v2-tech-card v2-tech-card--lime">
-            <span class="v2-tech-card__number">02</span>
-            <p class="v2-tech-card__tag">Mayor volumen de injertos</p>
-            <h3>Técnica FUSS</h3>
+          <article id="panel-fuss" role="tabpanel" aria-labelledby="tab-fuss" data-tech-panel="fuss" hidden>
+            <span>Mayor volumen de injertos</span>
+            <h3>FUSS</h3>
             <p>Alternativa eficaz para alopecias extensas o zonas donantes más pequeñas, con cierre tricofítico avanzado.</p>
-            <ul>
-              <li>Permite obtener un gran volumen de cabello</li>
-              <li>Separación de folículos bajo microscopio</li>
-              <li>Útil cuando se necesita optimizar la zona donante</li>
-            </ul>
+            <ul><li>Permite obtener gran volumen de cabello</li><li>Separación bajo microscopio</li><li>Optimiza la zona donante en casos indicados</li></ul>
           </article>
-        </div>
-        <div class="v2-tech__cta">
-          <p>No necesitas llegar sabiendo cuál técnica elegir.</p>
-          <a class="v2-button v2-button--dark" href="#form">Evaluar mi caso</a>
         </div>
       </div>
     </section>
@@ -426,27 +361,6 @@ const faqs = [
   .v2-proofbar strong { display: block; margin-bottom: 6px; color: var(--v2-ink); font: 800 1.35rem/1 var(--font-display); letter-spacing: -.025em; }
   .v2-proofbar span { color: rgba(6,26,28,.72); font: 600 .78rem/1.35 var(--font-body); }
 
-  .v2-pricing { background: var(--v2-cream); }
-  .v2-price-from { display: grid; margin-top: 28px; padding-top: 22px; border-top: 1px solid #d9dccf; }
-  .v2-price-from span, .v2-price-from small { font: 600 .74rem/1.3 var(--font-body); text-transform: uppercase; letter-spacing: .1em; }
-  .v2-price-from strong { margin: 5px 0; color: var(--v2-ink); font: 750 2.2rem/1 var(--font-display); letter-spacing: -.04em; }
-  .v2-pricing__body { display: grid; grid-template-columns: .9fr 1.1fr; gap: 18px; }
-  .v2-pricing__included, .v2-price-table { border-radius: 24px; background: var(--v2-paper); }
-  .v2-pricing__included { padding: 30px; }
-  .v2-pricing__included h3 { margin-bottom: 20px; font-size: 1.55rem; }
-  .v2-pricing__included li { position: relative; padding: 11px 0 11px 28px; border-bottom: 1px solid #e5e6dd; color: var(--v2-muted); font: 500 .88rem/1.4 var(--font-body); }
-  .v2-pricing__included li::before { content: '✓'; position: absolute; left: 0; color: #789500; font-weight: 800; }
-  .v2-payment-note { margin-top: 20px; padding: 14px 16px; border-radius: 14px; background: var(--v2-mint); color: var(--v2-ink); font: 500 .8rem/1.45 var(--font-body); }
-  .v2-price-table { align-self: start; overflow: hidden; }
-  .v2-price-table summary { display: flex; min-height: 70px; align-items: center; justify-content: space-between; padding: 0 30px; cursor: pointer; list-style: none; color: var(--v2-ink); font: 700 .98rem/1.2 var(--font-body); }
-  .v2-price-table summary::-webkit-details-marker { display: none; }
-  .v2-price-table summary span { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 50%; background: var(--v2-lime); font-size: 1.4rem; transition: rotate 180ms ease; }
-  .v2-price-table[open] summary span { rotate: 45deg; }
-  .v2-price-table__rows { padding: 0 34px 20px; }
-  .v2-price-table__rows div { display: flex; justify-content: space-between; padding: 13px 0; border-top: 1px solid #e5e6dd; color: var(--v2-muted); font: 500 .9rem/1 var(--font-body); }
-  .v2-price-table__rows strong { color: var(--v2-ink); }
-  .v2-price-table > p { margin: 0; padding: 0 34px 28px; color: #768587; font-size: .72rem; }
-
   .v2-results { background: var(--v2-ink); }
   .v2-results__grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
   .v2-case { padding: 10px; border: 1px solid rgba(255,255,255,.1); border-radius: 20px; background: rgba(255,255,255,.055); }
@@ -468,20 +382,19 @@ const faqs = [
   .v2-method__gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .v2-method__gallery img { width: 100%; height: 160px; border-radius: 16px; object-fit: cover; }
   .v2-method__gallery-main { grid-column: 1 / -1; height: 300px !important; }
-
-  .v2-tech { background: var(--v2-mint); }
-  .v2-tech__grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; }
-  .v2-tech-card { position: relative; min-height: 380px; padding: 34px; border-radius: 24px; overflow: hidden; }
-  .v2-tech-card--dark { background: var(--v2-ink); color: white; }
-  .v2-tech-card--lime { background: var(--v2-lime); color: var(--v2-ink); }
-  .v2-tech-card__number { position: absolute; right: 28px; top: 18px; opacity: .12; font: 800 5rem/1 var(--font-display); letter-spacing: -.08em; }
-  .v2-tech-card__tag { position: relative; margin-bottom: 26px; font: 700 .68rem/1 var(--font-body); letter-spacing: .13em; text-transform: uppercase; opacity: .7; }
-  .v2-tech-card h3 { position: relative; margin-bottom: 16px; color: inherit; font-size: clamp(2.65rem,3.5vw,3.75rem); line-height: .94; }
-  .v2-tech-card > p:not(.v2-tech-card__tag) { max-width: 510px; color: inherit; opacity: .74; font-size: .9rem; line-height: 1.55; }
-  .v2-tech-card ul { margin-top: 18px; }
-  .v2-tech-card li { padding: 9px 0; border-top: 1px solid currentColor; color: inherit; font: 600 .78rem/1.35 var(--font-body); opacity: .72; }
-  .v2-tech__cta { display: flex; justify-content: space-between; align-items: center; padding: 20px 8px 0; }
-  .v2-tech__cta p { margin: 0; color: var(--v2-muted); font-size: .92rem; }
+  .v2-tech-switcher { display: grid; grid-template-columns: .72fr 1.28fr; gap: 46px; margin-top: 52px; padding-top: 42px; border-top: 1px solid #dcdfd5; }
+  .v2-tech-switcher__intro h3 { max-width: 480px; color: var(--v2-ink); font-size: clamp(1.8rem, 2.7vw, 2.8rem); line-height: 1.04; }
+  .v2-tech-switcher__intro > p:not(.v2-kicker) { max-width: 520px; margin: 16px 0 22px; color: var(--v2-muted); font-size: .88rem; line-height: 1.55; }
+  .v2-tech-switcher__tabs { display: flex; gap: 7px; padding: 5px; border-radius: 999px; background: #e4e8df; }
+  .v2-tech-switcher__tabs button { min-height: 42px; flex: 1; padding: 9px 14px; border: 0; border-radius: 999px; background: transparent; color: var(--v2-muted); font: 750 .78rem/1 var(--font-body); cursor: pointer; }
+  .v2-tech-switcher__tabs button[aria-selected='true'] { background: var(--v2-ink); color: white; box-shadow: 0 5px 18px rgba(6,26,28,.14); }
+  .v2-tech-switcher__panels { min-width: 0; }
+  .v2-tech-switcher__panels article { min-height: 260px; padding: 30px 34px; border-radius: 22px; background: var(--v2-mint); }
+  .v2-tech-switcher__panels article > span { color: #617900; font: 750 .68rem/1 var(--font-body); letter-spacing: .12em; text-transform: uppercase; }
+  .v2-tech-switcher__panels h3 { margin: 12px 0 10px; color: var(--v2-ink); font-size: 2.65rem; line-height: 1; }
+  .v2-tech-switcher__panels p { max-width: 650px; color: var(--v2-muted); font-size: .88rem; line-height: 1.5; }
+  .v2-tech-switcher__panels ul { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+  .v2-tech-switcher__panels li { padding-top: 11px; border-top: 1px solid rgba(6,26,28,.18); color: var(--v2-ink); font: 650 .75rem/1.35 var(--font-body); }
 
   .v2-media { background: var(--v2-ink); }
   .v2-media__feature { display: grid; grid-template-columns: 1.35fr .65fr; height: 360px; border: 1px solid rgba(255,255,255,.1); border-radius: 24px; overflow: hidden; }
@@ -578,11 +491,6 @@ const faqs = [
     .v2-heading--split { display: block; }
     .v2-heading--split .v2-heading__aside { margin-top: 18px; }
     .v2-heading h2, .version2 h2 { font-size: clamp(2.2rem,9.8vw,3.05rem); }
-    .v2-pricing__body { grid-template-columns: 1fr; }
-    .v2-pricing__included { padding: 28px 22px; }
-    .v2-price-table summary { padding: 0 22px; font-size: .92rem; }
-    .v2-price-table__rows { padding-inline: 22px; }
-    .v2-price-table > p { padding-inline: 22px; }
     .v2-results__grid { display: grid; grid-auto-flow: column; grid-auto-columns: 90%; grid-template-columns: none; gap: 12px; margin-right: -14px; padding-right: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .v2-results__grid::-webkit-scrollbar { display: none; }
     .v2-case { margin-bottom: 0; scroll-snap-align: start; }
@@ -591,12 +499,13 @@ const faqs = [
     .v2-method__grid, .v2-clinic__grid, .v2-faq__grid { grid-template-columns: 1fr; gap: 30px; }
     .v2-method__gallery-main { height: 210px !important; }
     .v2-method__gallery img { height: 120px; }
-    .v2-tech__grid { grid-template-columns: 1fr; }
-    .v2-tech-card { min-height: 0; padding: 26px 22px; }
-    .v2-tech-card__tag { margin-bottom: 20px; }
-    .v2-tech-card h3 { font-size: 2.8rem; }
-    .v2-tech__cta { display: block; padding-top: 20px; }
-    .v2-tech__cta p { margin-bottom: 18px; }
+    .v2-tech-switcher { grid-template-columns: 1fr; gap: 24px; margin-top: 36px; padding-top: 32px; }
+    .v2-tech-switcher__intro h3 { font-size: 2rem; }
+    .v2-tech-switcher__tabs { max-width: 360px; }
+    .v2-tech-switcher__panels article { min-height: 0; padding: 24px 20px; }
+    .v2-tech-switcher__panels h3 { font-size: 2.35rem; }
+    .v2-tech-switcher__panels ul { grid-template-columns: 1fr; gap: 0; margin-top: 16px; }
+    .v2-tech-switcher__panels li { padding: 9px 0; }
     .v2-media__feature { display: block; height: auto; }
     .v2-media__video { aspect-ratio: 16 / 9; }
     .version2 .v2-media__feature .video { height: 100%; aspect-ratio: 16 / 9; }
@@ -651,6 +560,32 @@ const faqs = [
         event.preventDefault();
         emphasizeForm();
       }
+    });
+  });
+
+  const techTabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tech-tab]')];
+  const techPanels = [...document.querySelectorAll<HTMLElement>('[data-tech-panel]')];
+
+  const activateTechnique = (name: string) => {
+    techTabs.forEach((tab) => {
+      const active = tab.dataset.techTab === name;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+    techPanels.forEach((panel) => { panel.hidden = panel.dataset.techPanel !== name; });
+  };
+
+  techTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateTechnique(tab.dataset.techTab || 'fue'));
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const nextIndex = event.key === 'ArrowRight'
+        ? (index + 1) % techTabs.length
+        : (index - 1 + techTabs.length) % techTabs.length;
+      const nextTab = techTabs[nextIndex];
+      activateTechnique(nextTab.dataset.techTab || 'fue');
+      nextTab.focus();
     });
   });
 </script>
