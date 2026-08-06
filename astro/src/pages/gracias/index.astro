@@ -1,0 +1,180 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout
+  title="Formulario enviado | Clínica Témpora"
+  description="Confirmación de envío del formulario de evaluación capilar de Clínica Témpora."
+>
+  <main class="thanks" id="hero">
+    <div class="thanks__orb thanks__orb--top" aria-hidden="true"></div>
+    <div class="thanks__orb thanks__orb--bottom" aria-hidden="true"></div>
+
+    <section class="thanks__card" aria-labelledby="thanks-title">
+      <img
+        class="thanks__logo"
+        src="/assets/img/logo-tempora-blanco.webp"
+        width="321"
+        height="54"
+        alt="Clínica Témpora"
+      />
+
+      <div class="thanks__icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" role="presentation">
+          <circle cx="32" cy="32" r="30"></circle>
+          <path d="m19 33 8 8 18-20"></path>
+        </svg>
+      </div>
+
+      <p class="thanks__eyebrow">Evaluación capilar</p>
+      <h1 id="thanks-title">¡Tu formulario fue enviado!</h1>
+      <p class="thanks__message">Nos pondremos en contacto para confirmar el agendamiento.</p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  :global(body) {
+    background: var(--ink);
+  }
+
+  .thanks {
+    position: relative;
+    display: grid;
+    min-height: 100svh;
+    place-items: center;
+    padding: 32px 20px;
+    background:
+      linear-gradient(135deg, rgba(45, 80, 87, 0.58), rgba(6, 26, 28, 0.94)),
+      url('/assets/img/v2/tempora-galeria3.webp') 55% center / cover no-repeat;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .thanks::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(6, 26, 28, 0.16), rgba(6, 26, 28, 0.68));
+    content: '';
+  }
+
+  .thanks__orb {
+    position: absolute;
+    z-index: -1;
+    width: 420px;
+    height: 420px;
+    border: 1px solid rgba(186, 211, 5, 0.22);
+    border-radius: 50%;
+    box-shadow: inset 0 0 100px rgba(186, 211, 5, 0.08);
+  }
+
+  .thanks__orb--top {
+    top: -250px;
+    right: -120px;
+  }
+
+  .thanks__orb--bottom {
+    bottom: -300px;
+    left: -150px;
+  }
+
+  .thanks__card {
+    width: min(100%, 690px);
+    padding: clamp(32px, 6vw, 68px);
+    border: 1px solid rgba(248, 246, 230, 0.16);
+    border-top: 4px solid var(--lime);
+    border-radius: 32px;
+    background: rgba(6, 26, 28, 0.92);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.38);
+    color: var(--cream);
+    text-align: center;
+    backdrop-filter: blur(18px);
+  }
+
+  .thanks__logo {
+    width: min(220px, 70%);
+    margin: 0 auto clamp(30px, 5vw, 50px);
+    border-radius: 0;
+  }
+
+  .thanks__icon {
+    display: grid;
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 24px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--lime);
+    box-shadow: 0 14px 38px rgba(186, 211, 5, 0.22);
+  }
+
+  .thanks__icon svg {
+    width: 52px;
+    height: 52px;
+    fill: none;
+    stroke: var(--ink);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 4;
+  }
+
+  .thanks__eyebrow {
+    margin: 0 0 12px;
+    color: var(--lime);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .thanks h1 {
+    max-width: 560px;
+    margin: 0 auto;
+    color: var(--cream);
+    font-size: clamp(2.3rem, 6vw, 4.25rem);
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+  }
+
+  .thanks__message {
+    max-width: 500px;
+    margin: 22px auto 0;
+    color: rgba(248, 246, 230, 0.78);
+    font-size: clamp(1rem, 2.3vw, 1.25rem);
+    line-height: 1.55;
+  }
+
+  @media (max-width: 540px) {
+    .thanks {
+      align-items: center;
+      padding: 18px;
+      background-position: 62% center;
+    }
+
+    .thanks__card {
+      padding: 34px 24px 42px;
+      border-radius: 24px;
+    }
+
+    .thanks__logo {
+      margin-bottom: 32px;
+    }
+
+    .thanks__icon {
+      width: 72px;
+      height: 72px;
+    }
+
+    .thanks__icon svg {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .thanks__card {
+      backdrop-filter: none;
+    }
+  }
+</style>
