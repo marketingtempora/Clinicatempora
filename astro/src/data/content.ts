@@ -100,7 +100,7 @@ export const installments = {
   note: '*Con pago sobre 12 cuotas, interés queda sujeto a la entidad bancaria correspondiente.',
 } as const;
 
-/** Los 8 pasos del formulario, en orden. */
+/** Los 8 campos del formulario, en orden. Cada versión define cómo agruparlos. */
 export const formSteps = [
   { name: 'nombre', type: 'text', label: 'Nombre*', placeholder: 'Nombre*', hideLabel: true, autocomplete: 'given-name' },
   { name: 'apellido', type: 'text', label: 'Apellido*', placeholder: 'Apellido*', hideLabel: true, autocomplete: 'family-name' },

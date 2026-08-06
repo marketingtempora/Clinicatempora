@@ -83,9 +83,9 @@ const faqs = [
         <div class="v2-form-shell" id="form" data-form-shell>
           <div class="v2-form-shell__topline">
             <span>Evaluación capilar</span>
-            <span>8 pasos · 2 min</span>
+            <span>2 min aprox.</span>
           </div>
-          <LeadForm />
+          <LeadForm fieldsPerStep={4} />
         </div>
       </div>
     </section>
@@ -347,7 +347,8 @@ const faqs = [
   .version2 .v2-form-shell .lead-card__footer { padding: 13px 20px !important; border-radius: 0 0 16px 16px !important; background: var(--v2-ink-2) !important; }
   .version2 .v2-form-shell .lead-card__footer p { color: rgba(255,255,255,.72) !important; font-size: .78rem !important; font-weight: 500 !important; }
   .version2 .v2-form-shell .lead-form__progress-track { height: 10px !important; border-radius: 999px; background: #e1e4da !important; }
-  .version2 .v2-form-shell .lead-form__progress-meter { border-radius: 999px; font-size: 0 !important; }
+  .version2 .v2-form-shell .lead-form__progress-meter { border-radius: 999px; font-size: .72rem !important; }
+  .version2 .v2-form-shell .lead-form__step.is-active { gap: 8px; }
   .version2 .v2-form-shell .lead-form__label { margin-bottom: 5px; color: var(--v2-ink) !important; font-size: .88rem !important; font-weight: 600 !important; }
   .version2 .v2-form-shell .lead-form__field,
   .version2 .v2-form-shell .lead-form__select select { height: 48px !important; border: 1px solid #dce0d6 !important; border-radius: 10px !important; background: white !important; }

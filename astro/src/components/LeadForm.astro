@@ -1,6 +1,10 @@
 ---
 import { formSteps, hero } from '../data/content';
 
+interface Props {
+  fieldsPerStep?: number;
+}
+
 /**
  * A dónde escribe el formulario. Se resuelve en build time y viaja al
  * navegador en data-attributes (Astro inlina las variables PUBLIC_*).
@@ -15,7 +19,13 @@ const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL ?? '').replace(/\/+$/, 
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 const supabaseTable = import.meta.env.PUBLIC_SUPABASE_TABLE ?? 'leads';
 
-const totalSteps = formSteps.length;
+const requestedFieldsPerStep = Number(Astro.props.fieldsPerStep ?? 1);
+const fieldsPerStep = Math.max(1, Math.floor(requestedFieldsPerStep) || 1);
+const fieldGroups = Array.from(
+  { length: Math.ceil(formSteps.length / fieldsPerStep) },
+  (_, index) => formSteps.slice(index * fieldsPerStep, (index + 1) * fieldsPerStep),
+);
+const totalSteps = fieldGroups.length;
 const firstPct = Math.floor((1 / totalSteps) * 100);
 ---
 
@@ -44,37 +54,41 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       </div>
 
       <div class="lead-form__steps" data-steps>
-        {formSteps.map((step, i) => (
+        {fieldGroups.map((fields, i) => (
           <div class:list={['lead-form__step', { 'is-active': i === 0 }]} data-step={i + 1}>
-            <label
-              class:list={['lead-form__label', { 'lead-form__label--sr': 'hideLabel' in step && step.hideLabel }]}
-              for={step.name}
-            >
-              {step.label}
-            </label>
+            {fields.map((step) => (
+              <div class="lead-form__field-group">
+                <label
+                  class:list={['lead-form__label', { 'lead-form__label--sr': 'hideLabel' in step && step.hideLabel }]}
+                  for={step.name}
+                >
+                  {step.label}
+                </label>
 
-            {step.type === 'select' ? (
-              <div class="lead-form__select">
-                <select id={step.name} name={step.name} required>
-                  {'options' in step && step.options?.map((option) => (
-                    <option value={option}>{option}</option>
-                  ))}
-                </select>
+                {step.type === 'select' ? (
+                  <div class="lead-form__select">
+                    <select id={step.name} name={step.name} required>
+                      {'options' in step && step.options?.map((option) => (
+                        <option value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <input
+                    class="lead-form__field"
+                    type={step.type}
+                    id={step.name}
+                    name={step.name}
+                    placeholder={'placeholder' in step ? step.placeholder : undefined}
+                    autocomplete={'autocomplete' in step ? step.autocomplete : undefined}
+                    inputmode={step.type === 'tel' ? 'numeric' : undefined}
+                    maxlength={step.type === 'tel' ? 9 : undefined}
+                    pattern={step.type === 'tel' ? '[0-9]{9}' : undefined}
+                    required
+                  />
+                )}
               </div>
-            ) : (
-              <input
-                class="lead-form__field"
-                type={step.type}
-                id={step.name}
-                name={step.name}
-                placeholder={'placeholder' in step ? step.placeholder : undefined}
-                autocomplete={'autocomplete' in step ? step.autocomplete : undefined}
-                inputmode={step.type === 'tel' ? 'numeric' : undefined}
-                maxlength={step.type === 'tel' ? 9 : undefined}
-                pattern={step.type === 'tel' ? '[0-9]{9}' : undefined}
-                required
-              />
-            )}
+            ))}
           </div>
         ))}
       </div>
@@ -203,7 +217,11 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     margin-bottom: 10px;
   }
   .lead-form__step.is-active {
-    display: block;
+    display: grid;
+    gap: 10px;
+  }
+  .lead-form__field-group {
+    min-width: 0;
   }
 
   .lead-form__label {
@@ -333,8 +351,8 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
 
   const form = document.querySelector<HTMLFormElement>('#lead-form');
 
-  function fieldOf(step: HTMLElement) {
-    return step.querySelector<HTMLInputElement | HTMLSelectElement>('input, select');
+  function fieldsOf(step: HTMLElement) {
+    return Array.from(step.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select'));
   }
 
   function readUtm(target: HTMLFormElement) {
@@ -449,7 +467,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     };
 
     const render = (focusField = true) => {
-      // current siempre dentro de rango: así nunca quedan 0 pasos visibles
+      // current siempre dentro de rango: así nunca quedan 0 grupos visibles
       current = Math.max(0, Math.min(current, total - 1));
       steps.forEach((step, i) => step.classList.toggle('is-active', i === current));
 
@@ -467,15 +485,23 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       btnSubmit.hidden = current !== total - 1;
 
       // Al cambiar de paso el foco va al campo, también al volver atrás
-      if (focusField) fieldOf(steps[current])?.focus({ preventScroll: true });
+      if (focusField) fieldsOf(steps[current])[0]?.focus({ preventScroll: true });
     };
 
     const checkCurrentStep = () => {
-      const input = fieldOf(steps[current]);
-      const error = validateField(input);
-      input?.classList.toggle('has-error', Boolean(error));
-      if (error) {
-        setStatus(error, 'error');
+      let firstError = '';
+      let firstInvalid: HTMLInputElement | HTMLSelectElement | undefined;
+      for (const field of fieldsOf(steps[current])) {
+        const error = validateField(field);
+        field.classList.toggle('has-error', Boolean(error));
+        if (error && !firstError) {
+          firstError = error;
+          firstInvalid = field;
+        }
+      }
+      if (firstError) {
+        setStatus(firstError, 'error');
+        firstInvalid?.focus({ preventScroll: true });
         return false;
       }
       setStatus('');
@@ -523,11 +549,14 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       e.preventDefault();
 
       for (let i = 0; i < total; i++) {
-        const error = validateField(fieldOf(steps[i]));
-        if (error) {
+        const invalidField = fieldsOf(steps[i]).find((field) => Boolean(validateField(field)));
+        if (invalidField) {
+          const error = validateField(invalidField);
           current = i;
           render();
           setStatus(error, 'error');
+          invalidField.classList.add('has-error');
+          invalidField.focus({ preventScroll: true });
           return;
         }
       }
