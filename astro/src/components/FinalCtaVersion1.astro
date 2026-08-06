@@ -5,6 +5,10 @@ import { cta, installments } from '../data/content';
 <section class="final-v1">
   <div class="container">
     <div class="final-v1__panel reveal" data-reveal="fade">
+      <div class="final-v1__visual">
+        <img src="/assets/img/v2/SEBASTIAN.jpg" width="750" height="750" alt="Paciente de Clínica Témpora compartiendo su experiencia" loading="lazy" />
+        <span>Una evaluación permite proyectar un resultado acorde a tu caso.</span>
+      </div>
       <div class="final-v1__main">
         <p class="final-v1__eyebrow">TU PRÓXIMO PASO</p>
         <h2>{cta.title}</h2>
@@ -28,10 +32,47 @@ import { cta, installments } from '../data/content';
   }
 
   .final-v1__panel {
-    padding: 18px;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+    gap: 12px;
+    padding: 14px;
     border-radius: 36px;
     background: var(--ink);
     box-shadow: 0 28px 65px rgba(6, 26, 28, 0.16);
+  }
+
+  .final-v1__visual {
+    position: relative;
+    min-height: 450px;
+    overflow: hidden;
+    border-radius: 24px;
+  }
+
+  .final-v1__visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(6, 26, 28, 0.88));
+  }
+
+  .final-v1__visual img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    object-fit: cover;
+  }
+
+  .final-v1__visual span {
+    position: absolute;
+    z-index: 1;
+    right: 24px;
+    bottom: 24px;
+    left: 24px;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 650;
+    line-height: 1.45;
   }
 
   .final-v1__main {
@@ -39,7 +80,7 @@ import { cta, installments } from '../data/content';
     flex-direction: column;
     justify-content: center;
     min-height: 450px;
-    padding: 52px;
+    padding: 46px;
     border-radius: 24px;
     background:
       radial-gradient(circle at 86% 12%, rgba(186, 211, 5, 0.2), transparent 27%),
@@ -132,6 +173,8 @@ import { cta, installments } from '../data/content';
   }
 
   @media (max-width: 900px) {
+    .final-v1__panel { grid-template-columns: minmax(230px, 0.68fr) minmax(0, 1.32fr); }
+    .final-v1__visual { min-height: 400px; }
     .final-v1__main { min-height: 400px; }
     .final-v1__finance { grid-template-columns: auto 1fr; }
     .final-v1__finance small { grid-column: 2; }
@@ -139,8 +182,10 @@ import { cta, installments } from '../data/content';
 
   @media (max-width: 620px) {
     .final-v1 { padding: 18px 0 64px; }
-    .final-v1__panel { padding: 10px; border-radius: 28px; }
-    .final-v1__main { min-height: 510px; padding: 34px 24px; border-radius: 20px; }
+    .final-v1__panel { grid-template-columns: 1fr; padding: 9px; border-radius: 28px; }
+    .final-v1__visual { min-height: 230px; max-height: 270px; border-radius: 20px; }
+    .final-v1__visual span { right: 18px; bottom: 18px; left: 18px; }
+    .final-v1__main { min-height: 0; padding: 34px 24px; border-radius: 20px; }
     .final-v1 h2 { font-size: 2.8rem; }
     .final-v1__main > a { width: 100%; }
     .final-v1__finance { grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
