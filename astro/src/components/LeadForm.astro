@@ -13,11 +13,13 @@ interface Props {
  * A dónde escribe el formulario. Se resuelve en build time y viaja al
  * navegador en data-attributes (Astro inlina las variables PUBLIC_*).
  *
- *   1. PUBLIC_API_BASE_URL definida -> POST a la API de ../api (backend propio).
- *   2. PUBLIC_SUPABASE_URL + PUBLIC_SUPABASE_ANON_KEY -> INSERT directo en
+ *   1. PUBLIC_MAKE_WEBHOOK_URL definida -> POST directo al webhook nuevo de Make.
+ *   2. PUBLIC_API_BASE_URL definida -> POST a la API de ../api (backend propio).
+ *   3. PUBLIC_SUPABASE_URL + PUBLIC_SUPABASE_ANON_KEY -> INSERT directo en
  *      Supabase vía su API REST. Es el modo para un Static Site.
- *   3. Ninguna de las dos -> modo demo: valida y escribe en la consola.
+ *   4. Ninguna de las anteriores -> modo demo: valida y escribe en la consola.
  */
+const makeWebhookUrl = import.meta.env.PUBLIC_MAKE_WEBHOOK_URL ?? '';
 const apiBase = (import.meta.env.PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
 const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL ?? '').replace(/\/+$/, '');
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
@@ -35,6 +37,31 @@ const fieldGroups = Array.from(
 );
 const totalSteps = fieldGroups.length;
 const firstPct = Math.floor((1 / totalSteps) * 100);
+const attributionFields = [
+  'utm_id',
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_term',
+  'utm_content',
+  'utm_source_platform',
+  'utm_creative_format',
+  'utm_marketing_tactic',
+  'campaign_id',
+  'adgroup_id',
+  'ad_id',
+  'keyword',
+  'match_type',
+  'network',
+  'device',
+  'placement',
+  'gclid',
+  'gbraid',
+  'wbraid',
+  'fbclid',
+  'msclkid',
+  'ttclid',
+] as const;
 ---
 
 <div class="lead-card">
@@ -47,6 +74,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     <form
       class="lead-form"
       id="lead-form"
+      data-make-webhook-url={makeWebhookUrl}
       data-api-base={apiBase}
       data-supabase-url={supabaseUrl}
       data-supabase-key={supabaseKey}
@@ -113,14 +141,11 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
         <input type="text" id="empresa_web" name="empresa_web" tabindex="-1" autocomplete="off" />
       </div>
 
-      {/* Atribución: los rellena el script leyendo la URL */}
-      <input type="hidden" name="utm_source" />
-      <input type="hidden" name="utm_medium" />
-      <input type="hidden" name="utm_campaign" />
-      <input type="hidden" name="utm_content" />
-      <input type="hidden" name="utm_term" />
-      <input type="hidden" name="campaign_id" />
+      {/* Identidad y atribución: nombres estables para Make y Pipedrive */}
+      <input type="hidden" name="form_version" value={formVersion} />
+      <input type="hidden" name="submission_id" />
       <input type="hidden" name="source_form" value="Providencia" />
+      {attributionFields.map((name) => <input type="hidden" name={name} />)}
 
       <div class="lead-form__buttons" data-buttons>
         <button class="btn-form btn-form--prev" type="button" data-prev hidden>Volver</button>
@@ -366,17 +391,61 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     return Array.from(step.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select'));
   }
 
-  function readUtm(target: HTMLFormElement) {
+  function readAttribution(target: HTMLFormElement) {
     const params = new URLSearchParams(window.location.search);
-    for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+    const aliases: Record<string, string[]> = {
+      campaign_id: ['campaign_id', 'campaignid'],
+      adgroup_id: ['adgroup_id', 'adgroupid'],
+      ad_id: ['ad_id', 'adid', 'creative'],
+      match_type: ['match_type', 'matchtype'],
+    };
+    const fields = [
+      'utm_id',
+      'utm_source',
+      'utm_medium',
+      'utm_campaign',
+      'utm_term',
+      'utm_content',
+      'utm_source_platform',
+      'utm_creative_format',
+      'utm_marketing_tactic',
+      'campaign_id',
+      'adgroup_id',
+      'ad_id',
+      'keyword',
+      'match_type',
+      'network',
+      'device',
+      'placement',
+      'gclid',
+      'gbraid',
+      'wbraid',
+      'fbclid',
+      'msclkid',
+      'ttclid',
+    ];
+
+    for (const key of fields) {
       const input = target.querySelector<HTMLInputElement>(`input[name="${key}"]`);
-      if (input) input.value = params.get(key) ?? '';
+      if (!input) continue;
+      const candidates = aliases[key] ?? [key];
+      const value = candidates.map((candidate) => params.get(candidate)).find(Boolean);
+      if (value) input.value = value;
     }
-    const campaign = target.querySelector<HTMLInputElement>('input[name="campaign_id"]');
-    if (campaign) campaign.value = params.get('campaign_id') ?? params.get('gclid') ?? '';
+  }
+
+  function ensureSubmissionId(target: HTMLFormElement) {
+    const input = target.querySelector<HTMLInputElement>('input[name="submission_id"]');
+    if (!input) return '';
+    if (!input.value) {
+      input.value = globalThis.crypto?.randomUUID?.()
+        ?? `tempora-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+    return input.value;
   }
 
   function buildPayload(target: HTMLFormElement) {
+    ensureSubmissionId(target);
     const data = new FormData(target);
     const raw: Record<string, string> = {};
     data.forEach((value, key) => {
@@ -385,16 +454,23 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     });
     const payload = normalizePayload(raw);
     payload.page_url = window.location.href;
+    payload.page_path = window.location.pathname;
+    payload.submitted_at = new Date().toISOString();
     if (document.referrer) payload.referrer = document.referrer;
     return { payload, honeypot: String(data.get('empresa_web') ?? '') };
   }
 
   /** Envía el lead: API propia -> Supabase REST -> modo demo. */
   async function sendLead(target: HTMLFormElement, payload: Record<string, string>) {
+    const makeWebhookUrl = target.dataset.makeWebhookUrl ?? '';
     const apiBase = target.dataset.apiBase ?? '';
     const supabaseUrl = target.dataset.supabaseUrl ?? '';
     const supabaseKey = target.dataset.supabaseKey ?? '';
     const supabaseTable = target.dataset.supabaseTable || 'leads';
+
+    if (makeWebhookUrl) {
+      return request(makeWebhookUrl, { 'Content-Type': 'application/json' }, payload);
+    }
 
     if (apiBase) {
       return request(`${apiBase}/api/leads`, { 'Content-Type': 'application/json' }, payload);
@@ -483,7 +559,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       configuredStepEvents = [];
     }
 
-    readUtm(form);
+    readAttribution(form);
 
     const setStatus = (message: string, type?: 'error' | 'success') => {
       status.textContent = message;
