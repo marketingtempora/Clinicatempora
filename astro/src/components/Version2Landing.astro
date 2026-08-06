@@ -25,14 +25,14 @@ const faqs = [
       'No. Es una cirugía ambulatoria con anestesia local. Recibes indicaciones de cuidado y continúas con el programa de seguimiento de la clínica.',
   },
   {
-    question: '¿Cuándo se ven los resultados?',
+    question: '¿El cabello implantado es permanente?',
     answer:
-      'El crecimiento es progresivo. Cada evolución es distinta y el resultado se controla durante los meses posteriores a la cirugía.',
+      'Los folículos se obtienen de una zona genéticamente más resistente a la alopecia. Su permanencia y la evolución del cabello nativo se revisan en la evaluación y en los controles posteriores.',
   },
   {
-    question: '¿Puedo evaluarme si vivo fuera de Santiago?',
+    question: '¿Cómo es la recuperación?',
     answer:
-      'Sí. El formulario permite elegir evaluación presencial o a distancia. La sucursal de Santiago está en Providencia, a pasos del metro Los Leones.',
+      'Recibirás indicaciones específicas para los primeros días y controles médicos durante la evolución. Los tiempos dependen de la técnica y de las características de cada paciente.',
   },
   {
     question: '¿El procedimiento duele?',
@@ -62,22 +62,24 @@ const faqs = [
     <section class="v2-hero" id="inicio">
       <div class="v2-hero__glow" aria-hidden="true"></div>
       <div class="v2-container v2-hero__grid">
-        <div class="v2-hero__copy">
-          <p class="v2-kicker">Clínica especializada · Providencia</p>
-          <h1>Implante capilar que se planifica para <span>verse natural.</span></h1>
-          <p class="v2-hero__lead">
-            Técnicas FUE y FUSS elegidas según tu diagnóstico, con cirugía ambulatoria y seguimiento médico antes y después del procedimiento.
-          </p>
-          <ul class="v2-hero__checks" aria-label="Características principales">
-            <li><span aria-hidden="true">✓</span> Evaluación presencial o a distancia</li>
-            <li><span aria-hidden="true">✓</span> Seguimiento antes y después</li>
-            <li><span aria-hidden="true">✓</span> Pabellones autorizados en Providencia</li>
-          </ul>
-          <div class="v2-hero__actions">
-            <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
-            <a class="v2-text-link" href="#proceso">Cómo funciona <span aria-hidden="true">↘</span></a>
+        <div class="v2-hero__message">
+          <div class="v2-hero__copy">
+            <p class="v2-kicker">Clínica especializada en restauración capilar</p>
+            <h1>Implante capilar diseñado para <span>verse natural.</span></h1>
+            <ul class="v2-hero__checks" aria-label="Características principales">
+              <li><span aria-hidden="true">✓</span> FUE, FUSS o una combinación según tu diagnóstico</li>
+              <li><span aria-hidden="true">✓</span> Cirugía ambulatoria con seguimiento médico</li>
+              <li><span aria-hidden="true">✓</span> Evaluación presencial o a distancia</li>
+            </ul>
+            <div class="v2-hero__actions">
+              <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
+              <a class="v2-text-link" href="#resultados">Ver resultados <span aria-hidden="true">↘</span></a>
+            </div>
           </div>
-
+          <figure class="v2-hero__visual">
+            <img src="/assets/img/v2/tempora-galeria4.webp" width="727" height="823" alt="Especialista de Clínica Témpora realizando un implante capilar" />
+            <figcaption><strong>Planificación médica</strong><span>Diseño, técnica y seguimiento para cada caso.</span></figcaption>
+          </figure>
         </div>
 
         <div class="v2-form-shell" id="form" data-form-shell>
@@ -87,15 +89,6 @@ const faqs = [
           </div>
           <LeadForm fieldsPerStep={4} />
         </div>
-      </div>
-    </section>
-
-    <section class="v2-proofbar" aria-label="Datos de la clínica">
-      <div class="v2-container v2-proofbar__grid">
-        <div><strong>15+ años</strong><span>de experiencia en restauración capilar</span></div>
-        <div><strong>2</strong><span>pabellones de cirugía mayor</span></div>
-        <div><strong>FUE + FUSS</strong><span>la técnica la define tu diagnóstico</span></div>
-        <div><strong>Los Leones</strong><span>Suecia 0142, oficina 603</span></div>
       </div>
     </section>
 
@@ -150,28 +143,24 @@ const faqs = [
           <img src="/assets/img/v2/tempora-galeria6.webp" width="920" height="797" alt="Preparación de paciente para cirugía capilar" loading="lazy" />
         </div>
       </div>
-      <div class="v2-container v2-tech-switcher" id="tecnicas">
-        <div class="v2-tech-switcher__intro">
-          <p class="v2-kicker v2-kicker--dark">La técnica se decide en evaluación</p>
-          <h3>FUE o FUSS: compara sin salir del proceso.</h3>
-          <p>No tienes que llegar sabiendo cuál elegir. Revisa sus diferencias y el equipo indicará cuál responde mejor a tu caso.</p>
-          <div class="v2-tech-switcher__tabs" role="tablist" aria-label="Comparar técnicas de implante capilar">
-            <button type="button" role="tab" aria-selected="true" aria-controls="panel-fue" id="tab-fue" data-tech-tab="fue">Técnica FUE</button>
-            <button type="button" role="tab" aria-selected="false" aria-controls="panel-fuss" id="tab-fuss" data-tech-tab="fuss">Técnica FUSS</button>
-          </div>
+      <div class="v2-container v2-tech" id="tecnicas">
+        <div class="v2-tech__intro">
+          <p class="v2-kicker v2-kicker--dark">Indicación médica personalizada</p>
+          <h3>Trabajamos con FUE y FUSS. El equipo define cuál se adapta a tu caso.</h3>
+          <p>La elección depende de tu zona donante, el grado de alopecia y la cantidad de folículos necesarios.</p>
         </div>
-        <div class="v2-tech-switcher__panels">
-          <article id="panel-fue" role="tabpanel" aria-labelledby="tab-fue" data-tech-panel="fue">
-            <span>Extracción folículo a folículo</span>
+        <div class="v2-tech__cards">
+          <article>
+            <span>Extracción individual</span>
             <h3>FUE</h3>
-            <p>Procedimiento mínimamente invasivo, sin cicatriz lineal y con una recuperación más rápida y confortable.</p>
-            <ul><li>Permite llevar el cabello muy corto</li><li>Extracción individual</li><li>Depende de la capacidad de la zona donante</li></ul>
+            <p>Extrae las unidades foliculares una a una, sin cicatriz lineal.</p>
+            <ul><li>Recuperación más rápida</li><li>Permite llevar el cabello corto</li></ul>
           </article>
-          <article id="panel-fuss" role="tabpanel" aria-labelledby="tab-fuss" data-tech-panel="fuss" hidden>
-            <span>Mayor volumen de injertos</span>
+          <article>
+            <span>Máximo aprovechamiento donante</span>
             <h3>FUSS</h3>
-            <p>Alternativa eficaz para alopecias extensas o zonas donantes más pequeñas, con cierre tricofítico avanzado.</p>
-            <ul><li>Permite obtener gran volumen de cabello</li><li>Separación bajo microscopio</li><li>Optimiza la zona donante en casos indicados</li></ul>
+            <p>Obtiene una banda de tejido que se separa bajo microscopio.</p>
+            <ul><li>Mayor volumen de injertos</li><li>Indicada en casos seleccionados</li></ul>
           </article>
         </div>
       </div>
@@ -187,40 +176,30 @@ const faqs = [
           <p class="v2-heading__aside">Pacientes y medios han documentado el proceso, la evolución y el acompañamiento de Clínica Témpora.</p>
         </div>
 
-        <div class="v2-media__feature">
-          <div class="v2-media__video">
-            <YouTubeFacade
-              id="3YyPCaqcIXQ"
-              alt="Reportaje de 24 Horas sobre el implante capilar de Jorge Coke Hevia"
-              thumb="/assets/img/v2/youtube-3YyPCaqcIXQ.jpg"
-            />
+        <div class="v2-media__carousel" data-media-carousel>
+          <div class="v2-media__track" data-media-track>
+            <article class="v2-media__slide is-active" data-media-slide>
+              <div class="v2-media__video"><YouTubeFacade id="3YyPCaqcIXQ" alt="Reportaje de 24 Horas sobre un implante capilar" thumb="/assets/img/v2/video-reportaje-paciente.webp" /></div>
+              <div class="v2-media__copy"><span>Reportaje 24 Horas</span><h3>Un caso real seguido durante un año.</h3><p>El proceso completo, desde la evaluación hasta la evolución del resultado.</p></div>
+            </article>
+            <article class="v2-media__slide" data-media-slide>
+              <div class="v2-media__video"><YouTubeFacade id="Oth49NiG8Y0" alt="Paciente contando su experiencia con el implante capilar" thumb="/assets/img/v2/JOAQUIN.jpg" /></div>
+              <div class="v2-media__copy"><span>Testimonio de paciente</span><h3>La experiencia en primera persona.</h3><p>Un paciente relata su decisión, el procedimiento y el acompañamiento recibido.</p></div>
+            </article>
+            <article class="v2-media__slide" data-media-slide>
+              <div class="v2-media__video"><YouTubeFacade id="ybZsii5iUIE" alt="Procedimiento de implante capilar FUE" thumb="/assets/img/v2/video-procedimiento.webp" /></div>
+              <div class="v2-media__copy"><span>Proceso clínico</span><h3>Así se realiza un implante FUE.</h3><p>Una mirada al trabajo médico dentro del pabellón.</p></div>
+            </article>
           </div>
-          <div class="v2-media__copy">
-            <span>Reportaje 24 Horas</span>
-            <h3>Un caso real seguido durante un año.</h3>
-            <p>Evaluación, cirugía, evolución progresiva y una conversación transparente sobre lo que puede conseguirse en un caso de alopecia avanzada.</p>
+          <div class="v2-media__controls">
+            <button type="button" aria-label="Video anterior" data-media-prev>←</button>
+            <div class="v2-media__dots" aria-label="Seleccionar video">
+              <button type="button" class="is-active" aria-label="Ver video 1" aria-current="true" data-media-dot="0"></button>
+              <button type="button" aria-label="Ver video 2" data-media-dot="1"></button>
+              <button type="button" aria-label="Ver video 3" data-media-dot="2"></button>
+            </div>
+            <button type="button" aria-label="Video siguiente" data-media-next>→</button>
           </div>
-        </div>
-
-        <div class="v2-media__secondary">
-          <article>
-            <YouTubeFacade
-              id="Oth49NiG8Y0"
-              alt="Testimonio de paciente sobre su experiencia en Clínica Témpora"
-              thumb="/assets/img/v2/youtube-Oth49NiG8Y0.jpg"
-            />
-            <h3>“Mi experiencia con el implante capilar”</h3>
-            <p>Testimonio de paciente · Clínica Témpora</p>
-          </article>
-          <article>
-            <YouTubeFacade
-              id="ybZsii5iUIE"
-              alt="Video explicativo del proceso de implante capilar FUE"
-              thumb="/assets/img/v2/youtube-ybZsii5iUIE.jpg"
-            />
-            <h3>Así se realiza un implante FUE</h3>
-            <p>Explicación médica · Clínica Témpora</p>
-          </article>
         </div>
       </div>
     </section>
@@ -241,10 +220,6 @@ const faqs = [
             <div><strong>Dra. Jesús Díaz</strong><span>Fundadora y directora médica</span></div>
             <div><strong>Dr. Francisco Castellón</strong><span>Director de restauración capilar</span></div>
           </div>
-          <div class="v2-clinic__location">
-            <span aria-hidden="true">⌖</span>
-            <div><strong>Providencia, Santiago</strong><p>Suecia 0142, oficina 603 · A pasos del metro Los Leones</p></div>
-          </div>
         </div>
       </div>
     </section>
@@ -254,8 +229,7 @@ const faqs = [
         <div class="v2-faq__intro">
           <p class="v2-kicker v2-kicker--dark">Antes de decidir</p>
           <h2>Preguntas que merecen respuestas claras.</h2>
-          <p>Si tu duda no está aquí, déjala en tu evaluación. El objetivo no es apurarte: es ayudarte a decidir con información.</p>
-          <a class="v2-button v2-button--dark" href="#form">Quiero agendar</a>
+          <img src="/assets/img/v2/PABLO.jpg" width="750" height="750" alt="Paciente de Clínica Témpora durante su testimonio" loading="lazy" />
         </div>
         <div class="v2-faq__list">
           {faqs.map((faq) => (
@@ -270,11 +244,12 @@ const faqs = [
 
     <section class="v2-final">
       <div class="v2-container v2-final__panel">
-        <div>
+        <img src="/assets/img/v2/JULIANO.jpg" width="750" height="750" alt="Paciente de Clínica Témpora después de su tratamiento" loading="lazy" />
+        <div class="v2-final__copy">
           <p class="v2-kicker">Tu caso empieza con una evaluación</p>
           <h2>Descubre qué resultado es posible para ti.</h2>
+          <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
         </div>
-        <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
       </div>
     </section>
   </main>
@@ -328,17 +303,23 @@ const faqs = [
 
   .v2-hero { position: relative; min-height: 0; padding: 116px 0 56px; background: var(--v2-ink); color: white; }
   .v2-hero__glow { position: absolute; width: 720px; height: 720px; left: -260px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(186,211,5,.18), transparent 68%); pointer-events: none; }
-  .v2-hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(360px, .76fr); gap: 48px; align-items: center; }
+  .v2-hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 420px); gap: 38px; align-items: center; }
+  .v2-hero__message { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(230px, .72fr); gap: 24px; align-items: stretch; min-width: 0; }
   .v2-hero__copy { min-width: 0; }
-  .v2-hero h1 { max-width: 720px; margin: 0; color: white; font-size: clamp(3.4rem, 5.1vw, 5.2rem); font-weight: 750; line-height: .94; }
+  .v2-hero h1 { max-width: 560px; margin: 0; color: white; font-size: clamp(3rem, 4.25vw, 4.45rem); font-weight: 750; line-height: .94; }
   .v2-hero h1 span { display: block; color: var(--v2-lime); }
-  .v2-hero__lead { max-width: 680px; margin: 22px 0 20px; color: rgba(255,255,255,.74); font-size: clamp(1rem, 1.25vw, 1.12rem); line-height: 1.55; }
-  .v2-hero__checks { display: flex; flex-wrap: wrap; gap: 10px; }
-  .v2-hero__checks li { padding: 8px 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; color: rgba(255,255,255,.82); font: 550 .78rem/1.2 var(--font-body); }
+  .v2-hero__checks { display: grid; gap: 9px; margin-top: 22px; }
+  .v2-hero__checks li { display: flex; align-items: flex-start; color: rgba(255,255,255,.82); font: 550 .82rem/1.42 var(--font-body); }
   .v2-hero__checks span { color: var(--v2-lime); margin-right: 5px; }
   .v2-hero__actions { display: flex; align-items: center; gap: 24px; margin-top: 22px; }
   .v2-text-link { color: white; font: 600 .94rem/1 var(--font-body); }
   .v2-text-link span { color: var(--v2-lime); margin-left: 4px; }
+  .v2-hero__visual { position: relative; min-height: 390px; margin: 0; overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 24px; background: var(--v2-ink-2); }
+  .v2-hero__visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, rgba(6,26,28,.9) 100%); }
+  .v2-hero__visual img { width: 100%; height: 100%; min-height: 390px; border-radius: 0; object-fit: cover; object-position: 54% center; }
+  .v2-hero__visual figcaption { position: absolute; z-index: 1; right: 18px; bottom: 18px; left: 18px; display: grid; gap: 4px; }
+  .v2-hero__visual strong { color: white; font: 750 .86rem/1.25 var(--font-body); }
+  .v2-hero__visual span { color: rgba(255,255,255,.64); font: 500 .72rem/1.4 var(--font-body); }
   .v2-form-shell { position: sticky; top: 90px; justify-self: end; width: 100%; max-width: 420px; padding: 10px; border: 1px solid rgba(255,255,255,.15); border-radius: 24px; background: rgba(255,255,255,.07); box-shadow: 0 22px 60px rgba(0,0,0,.3); }
   .v2-form-shell__topline { display: flex; justify-content: space-between; padding: 5px 8px 15px; color: rgba(255,255,255,.66); font: 600 .72rem/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; }
   .version2 .v2-form-shell .lead-card__body { padding: 22px !important; border-radius: 16px 16px 0 0; background: var(--v2-paper) !important; }
@@ -354,13 +335,6 @@ const faqs = [
   .version2 .v2-form-shell .lead-form__select select { height: 48px !important; border: 1px solid #dce0d6 !important; border-radius: 10px !important; background: white !important; }
   .version2 .v2-form-shell .btn-form { min-height: 48px; border-radius: 999px !important; background: var(--v2-lime) !important; color: var(--v2-ink) !important; font-weight: 700 !important; }
   .version2 .v2-form-shell .btn-form--prev { background: #d9ddd4 !important; }
-
-  .v2-proofbar { background: var(--v2-lime); }
-  .v2-proofbar__grid { display: grid; grid-template-columns: repeat(4, 1fr); }
-  .v2-proofbar__grid > div { min-height: 92px; display: grid; align-content: center; padding: 18px 26px; border-left: 1px solid rgba(6,26,28,.17); }
-  .v2-proofbar__grid > div:last-child { border-right: 1px solid rgba(6,26,28,.17); }
-  .v2-proofbar strong { display: block; margin-bottom: 6px; color: var(--v2-ink); font: 800 1.35rem/1 var(--font-display); letter-spacing: -.025em; }
-  .v2-proofbar span { color: rgba(6,26,28,.72); font: 600 .78rem/1.35 var(--font-body); }
 
   .v2-results { background: var(--v2-ink); }
   .v2-results__grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
@@ -383,34 +357,38 @@ const faqs = [
   .v2-method__gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .v2-method__gallery img { width: 100%; height: 160px; border-radius: 16px; object-fit: cover; }
   .v2-method__gallery-main { grid-column: 1 / -1; height: 300px !important; }
-  .v2-tech-switcher { display: grid; grid-template-columns: .72fr 1.28fr; gap: 46px; margin-top: 52px; padding-top: 42px; border-top: 1px solid #dcdfd5; }
-  .v2-tech-switcher__intro h3 { max-width: 480px; color: var(--v2-ink); font-size: clamp(1.8rem, 2.7vw, 2.8rem); line-height: 1.04; }
-  .v2-tech-switcher__intro > p:not(.v2-kicker) { max-width: 520px; margin: 16px 0 22px; color: var(--v2-muted); font-size: .88rem; line-height: 1.55; }
-  .v2-tech-switcher__tabs { display: flex; gap: 7px; padding: 5px; border-radius: 999px; background: #e4e8df; }
-  .v2-tech-switcher__tabs button { min-height: 42px; flex: 1; padding: 9px 14px; border: 0; border-radius: 999px; background: transparent; color: var(--v2-muted); font: 750 .78rem/1 var(--font-body); cursor: pointer; }
-  .v2-tech-switcher__tabs button[aria-selected='true'] { background: var(--v2-ink); color: white; box-shadow: 0 5px 18px rgba(6,26,28,.14); }
-  .v2-tech-switcher__panels { min-width: 0; }
-  .v2-tech-switcher__panels article { min-height: 260px; padding: 30px 34px; border-radius: 22px; background: var(--v2-mint); }
-  .v2-tech-switcher__panels article > span { color: #617900; font: 750 .68rem/1 var(--font-body); letter-spacing: .12em; text-transform: uppercase; }
-  .v2-tech-switcher__panels h3 { margin: 12px 0 10px; color: var(--v2-ink); font-size: 2.65rem; line-height: 1; }
-  .v2-tech-switcher__panels p { max-width: 650px; color: var(--v2-muted); font-size: .88rem; line-height: 1.5; }
-  .v2-tech-switcher__panels ul { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-  .v2-tech-switcher__panels li { padding-top: 11px; border-top: 1px solid rgba(6,26,28,.18); color: var(--v2-ink); font: 650 .75rem/1.35 var(--font-body); }
+  .v2-tech { display: grid; grid-template-columns: .8fr 1.2fr; gap: 42px; margin-top: 46px; padding-top: 38px; border-top: 1px solid #dcdfd5; }
+  .v2-tech__intro h3 { max-width: 520px; color: var(--v2-ink); font-size: clamp(1.75rem, 2.5vw, 2.55rem); line-height: 1.04; }
+  .v2-tech__intro > p:not(.v2-kicker) { max-width: 520px; margin: 16px 0 0; color: var(--v2-muted); font-size: .88rem; line-height: 1.55; }
+  .v2-tech__cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  .v2-tech__cards article { padding: 24px; border-radius: 20px; background: var(--v2-mint); }
+  .v2-tech__cards article:nth-child(2) { background: var(--v2-ink); color: white; }
+  .v2-tech__cards article > span { color: #617900; font: 750 .65rem/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; }
+  .v2-tech__cards article:nth-child(2) > span { color: var(--v2-lime); }
+  .v2-tech__cards h3 { margin: 11px 0 9px; color: inherit; font-size: 2.35rem; line-height: 1; }
+  .v2-tech__cards p { color: var(--v2-muted); font-size: .82rem; line-height: 1.5; }
+  .v2-tech__cards article:nth-child(2) p { color: rgba(255,255,255,.64); }
+  .v2-tech__cards ul { margin-top: 16px; }
+  .v2-tech__cards li { padding: 9px 0; border-top: 1px solid rgba(6,26,28,.16); color: inherit; font: 650 .73rem/1.35 var(--font-body); }
+  .v2-tech__cards article:nth-child(2) li { border-color: rgba(255,255,255,.14); }
 
   .v2-media { background: var(--v2-ink); }
-  .v2-media__feature { display: grid; grid-template-columns: 1.35fr .65fr; height: 360px; border: 1px solid rgba(255,255,255,.1); border-radius: 24px; overflow: hidden; }
+  .v2-media__carousel { overflow: hidden; }
+  .v2-media__track { display: flex; transition: transform 420ms cubic-bezier(.22,.8,.22,1); }
+  .v2-media__slide { display: grid; grid-template-columns: 1.35fr .65fr; flex: 0 0 100%; height: 360px; border: 1px solid rgba(255,255,255,.1); border-radius: 24px; overflow: hidden; opacity: .54; transition: opacity 220ms ease; }
+  .v2-media__slide.is-active { opacity: 1; }
   .v2-media__video { min-width: 0; }
-  .version2 .v2-media__feature .video { height: 358px; aspect-ratio: auto; border-radius: 0; }
-  .version2 .v2-media .video img { border-radius: 0; }
+  .version2 .v2-media__slide .video { height: 358px; aspect-ratio: auto; border-radius: 0; }
+  .version2 .v2-media .video img { border-radius: 0; object-position: center; }
   .v2-media__copy { display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; background: #102b2e; }
   .v2-media__copy span { color: var(--v2-lime); font: 700 .72rem/1 var(--font-body); letter-spacing: .13em; text-transform: uppercase; }
   .v2-media__copy h3 { margin: 14px 0; color: white; font-size: clamp(1.8rem,2.5vw,2.6rem); line-height: 1; }
   .v2-media__copy p { margin: 0; color: rgba(255,255,255,.62); font-size: .92rem; line-height: 1.6; }
-  .v2-media__secondary { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-top: 18px; }
-  .v2-media__secondary article { padding: 10px 10px 16px; border: 1px solid rgba(255,255,255,.1); border-radius: 20px; background: rgba(255,255,255,.045); }
-  .version2 .v2-media__secondary .video { height: 155px; aspect-ratio: auto; border-radius: 12px; }
-  .v2-media__secondary h3 { margin: 14px 8px 4px; color: white; font-size: 1rem; letter-spacing: -.02em; }
-  .v2-media__secondary p { margin: 0 10px; color: rgba(255,255,255,.5); font-size: .78rem; }
+  .v2-media__controls { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 18px; }
+  .v2-media__controls > button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255,255,255,.16); border-radius: 50%; background: transparent; color: white; cursor: pointer; }
+  .v2-media__dots { display: flex; gap: 7px; }
+  .v2-media__dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.26); cursor: pointer; }
+  .v2-media__dots button.is-active { width: 24px; border-radius: 999px; background: var(--v2-lime); }
 
   .v2-clinic { background: var(--v2-cream); }
   .v2-clinic__grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 54px; align-items: center; }
@@ -421,16 +399,11 @@ const faqs = [
   .v2-clinic__doctors > div { display: grid; padding: 12px 0; border-top: 1px solid #d9dccf; }
   .v2-clinic__doctors strong { color: var(--v2-ink); font: 700 .95rem/1.35 var(--font-body); }
   .v2-clinic__doctors span { color: var(--v2-muted); font: 500 .8rem/1.4 var(--font-body); }
-  .v2-clinic__location { display: flex; gap: 14px; margin-top: 20px; padding: 16px; border-radius: 14px; background: var(--v2-lime); }
-  .v2-clinic__location > span { font-size: 1.5rem; }
-  .v2-clinic__location strong { display: block; font: 700 .92rem/1.3 var(--font-body); }
-  .v2-clinic__location p { margin: 2px 0 0; font-size: .78rem; }
-
   .v2-faq { background: var(--v2-paper); }
   .v2-faq__grid { display: grid; grid-template-columns: .72fr 1.28fr; gap: 70px; align-items: start; }
   .v2-faq__intro { position: sticky; top: 110px; }
   .v2-faq__intro h2 { font-size: clamp(2.35rem,3.6vw,3.75rem); }
-  .v2-faq__intro > p:not(.v2-kicker) { margin: 20px 0; color: var(--v2-muted); font-size: .92rem; line-height: 1.6; }
+  .v2-faq__intro img { width: 100%; max-width: 410px; margin-top: 24px; aspect-ratio: 1.55 / 1; border-radius: 18px; object-fit: cover; object-position: center 24%; }
   .v2-faq__list details { border-top: 1px solid #d9dccf; }
   .v2-faq__list details:last-child { border-bottom: 1px solid #d9dccf; }
   .v2-faq__list summary { display: flex; min-height: 68px; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; list-style: none; color: var(--v2-ink); font: 700 .96rem/1.35 var(--font-body); }
@@ -440,8 +413,11 @@ const faqs = [
   .v2-faq__list details p { max-width: 700px; margin: -2px 46px 20px 0; color: var(--v2-muted); font-size: .88rem; line-height: 1.6; }
 
   .v2-final { padding: 0 0 18px; background: var(--v2-paper); }
-  .v2-final__panel { display: flex; min-height: 290px; align-items: flex-end; justify-content: space-between; gap: 40px; padding: 40px; border-radius: 24px; background: var(--v2-ink); }
-  .v2-final h2 { max-width: 760px; color: white; font-size: clamp(2.5rem,4.2vw,4rem); }
+  .v2-final__panel { display: grid; grid-template-columns: minmax(260px,.72fr) minmax(0,1.28fr); min-height: 310px; padding: 12px; border-radius: 24px; background: var(--v2-ink); }
+  .v2-final__panel > img { width: 100%; height: 100%; min-height: 286px; border-radius: 16px; object-fit: cover; object-position: center 28%; }
+  .v2-final__copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 34px 42px; }
+  .v2-final h2 { max-width: 700px; color: white; font-size: clamp(2.4rem,3.7vw,3.65rem); }
+  .v2-final__copy .v2-button { margin-top: 26px; }
   .v2-footer { padding: 48px 0 100px; background: var(--v2-ink); color: white; }
   .v2-footer__inner { display: grid; grid-template-columns: 1fr auto auto; gap: 60px; align-items: center; padding-top: 34px; border-top: 1px solid rgba(255,255,255,.12); }
   .v2-footer img { width: 190px; border-radius: 0; }
@@ -458,8 +434,11 @@ const faqs = [
     .v2-nav__links { display: none; }
     .v2-nav__cta { margin-left: auto; }
     .v2-hero { min-height: 0; }
-    .v2-hero__grid { grid-template-columns: minmax(0,1fr) 380px; gap: 30px; }
-    .v2-hero h1 { font-size: clamp(3.6rem,7vw,5rem); }
+    .v2-hero__grid { grid-template-columns: minmax(0,1fr) 380px; gap: 28px; }
+    .v2-hero__message { grid-template-columns: 1fr; }
+    .v2-hero h1 { font-size: clamp(3.3rem,6.5vw,4.7rem); }
+    .v2-hero__visual { min-height: 210px; }
+    .v2-hero__visual img { min-height: 210px; }
     .v2-heading--split { gap: 40px; }
     .v2-method__grid, .v2-clinic__grid { gap: 42px; }
     .v2-faq__grid { gap: 60px; }
@@ -475,19 +454,13 @@ const faqs = [
     .v2-hero { padding: 92px 0 36px; }
     .v2-hero__grid { display: block; }
     .v2-hero h1 { font-size: clamp(2.75rem,12.8vw,3.6rem); line-height: .94; }
-    .v2-hero__lead { margin-top: 18px; font-size: .94rem; }
     .v2-hero__checks { display: grid; gap: 7px; }
-    .v2-hero__checks li { width: fit-content; }
     .v2-hero__actions { margin: 20px 0 28px; }
+    .v2-hero__visual { height: 220px; min-height: 0; margin-bottom: 14px; }
+    .v2-hero__visual img { height: 220px; min-height: 0; object-position: center 40%; }
     .v2-form-shell { position: relative; top: auto; padding: 8px; border-radius: 22px; }
     .version2 .v2-form-shell .lead-card__body { padding: 20px !important; }
     .version2 .v2-form-shell .lead-card__intro { font-size: 1rem !important; }
-    .v2-proofbar__grid { grid-template-columns: repeat(2, 1fr); padding-block: 8px; }
-    .v2-proofbar__grid > div, .v2-proofbar__grid > div:last-child { min-height: 72px; padding: 12px; border: 0; border-bottom: 1px solid rgba(6,26,28,.16); }
-    .v2-proofbar__grid > div:nth-child(odd) { border-right: 1px solid rgba(6,26,28,.16); }
-    .v2-proofbar__grid > div:nth-last-child(-n+2) { border-bottom: 0; }
-    .v2-proofbar strong { font-size: 1.08rem; }
-    .v2-proofbar span { font-size: .68rem; }
     .v2-heading { margin-bottom: 28px; }
     .v2-heading--split { display: block; }
     .v2-heading--split .v2-heading__aside { margin-top: 18px; }
@@ -500,26 +473,21 @@ const faqs = [
     .v2-method__grid, .v2-clinic__grid, .v2-faq__grid { grid-template-columns: 1fr; gap: 30px; }
     .v2-method__gallery-main { height: 210px !important; }
     .v2-method__gallery img { height: 120px; }
-    .v2-tech-switcher { grid-template-columns: 1fr; gap: 24px; margin-top: 36px; padding-top: 32px; }
-    .v2-tech-switcher__intro h3 { font-size: 2rem; }
-    .v2-tech-switcher__tabs { max-width: 360px; }
-    .v2-tech-switcher__panels article { min-height: 0; padding: 24px 20px; }
-    .v2-tech-switcher__panels h3 { font-size: 2.35rem; }
-    .v2-tech-switcher__panels ul { grid-template-columns: 1fr; gap: 0; margin-top: 16px; }
-    .v2-tech-switcher__panels li { padding: 9px 0; }
-    .v2-media__feature { display: block; height: auto; }
+    .v2-tech { grid-template-columns: 1fr; gap: 22px; margin-top: 36px; padding-top: 32px; }
+    .v2-tech__intro h3 { font-size: 2rem; }
+    .v2-tech__cards { gap: 9px; }
+    .v2-tech__cards article { padding: 20px 16px; }
+    .v2-tech__cards h3 { font-size: 2rem; }
+    .v2-media__slide { display: block; height: auto; }
     .v2-media__video { aspect-ratio: 16 / 9; }
-    .version2 .v2-media__feature .video { height: 100%; aspect-ratio: 16 / 9; }
+    .version2 .v2-media__slide .video { height: 100%; aspect-ratio: 16 / 9; }
     .v2-media__copy { padding: 24px 20px; }
-    .v2-media__secondary { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 10px; }
-    .v2-media__secondary article { padding: 7px 7px 12px; }
-    .version2 .v2-media__secondary .video { height: auto; aspect-ratio: 1.25 / 1; }
-    .v2-media__secondary h3 { margin: 10px 4px 4px; font-size: .76rem; line-height: 1.25; }
-    .v2-media__secondary p { margin-inline: 4px; font-size: .62rem; }
     .v2-clinic__visual img:nth-child(2) { margin-top: 20px; }
     .v2-faq__intro { position: static; }
     .v2-faq__list summary { min-height: 64px; font-size: .88rem; }
-    .v2-final__panel { min-height: 280px; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 26px 22px; }
+    .v2-final__panel { grid-template-columns: 1fr; min-height: 0; padding: 9px; }
+    .v2-final__panel > img { min-height: 220px; max-height: 270px; }
+    .v2-final__copy { padding: 26px 16px 28px; }
     .v2-footer { padding-bottom: 104px; }
     .v2-footer__inner { grid-template-columns: 1fr; gap: 24px; }
     .v2-floating { right: 12px; bottom: 10px; left: 12px; justify-content: space-between; }
@@ -564,29 +532,24 @@ const faqs = [
     });
   });
 
-  const techTabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tech-tab]')];
-  const techPanels = [...document.querySelectorAll<HTMLElement>('[data-tech-panel]')];
+  const mediaTrack = document.querySelector<HTMLElement>('[data-media-track]');
+  const mediaSlides = [...document.querySelectorAll<HTMLElement>('[data-media-slide]')];
+  const mediaDots = [...document.querySelectorAll<HTMLButtonElement>('[data-media-dot]')];
+  let activeMedia = 0;
 
-  const activateTechnique = (name: string) => {
-    techTabs.forEach((tab) => {
-      const active = tab.dataset.techTab === name;
-      tab.setAttribute('aria-selected', String(active));
-      tab.tabIndex = active ? 0 : -1;
+  const showMedia = (index: number) => {
+    if (!mediaTrack || mediaSlides.length === 0) return;
+    activeMedia = (index + mediaSlides.length) % mediaSlides.length;
+    mediaTrack.style.transform = `translateX(-${activeMedia * 100}%)`;
+    mediaSlides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === activeMedia));
+    mediaDots.forEach((dot, dotIndex) => {
+      const active = dotIndex === activeMedia;
+      dot.classList.toggle('is-active', active);
+      dot.setAttribute('aria-current', active ? 'true' : 'false');
     });
-    techPanels.forEach((panel) => { panel.hidden = panel.dataset.techPanel !== name; });
   };
 
-  techTabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => activateTechnique(tab.dataset.techTab || 'fue'));
-    tab.addEventListener('keydown', (event) => {
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-      event.preventDefault();
-      const nextIndex = event.key === 'ArrowRight'
-        ? (index + 1) % techTabs.length
-        : (index - 1 + techTabs.length) % techTabs.length;
-      const nextTab = techTabs[nextIndex];
-      activateTechnique(nextTab.dataset.techTab || 'fue');
-      nextTab.focus();
-    });
-  });
+  document.querySelector<HTMLButtonElement>('[data-media-prev]')?.addEventListener('click', () => showMedia(activeMedia - 1));
+  document.querySelector<HTMLButtonElement>('[data-media-next]')?.addEventListener('click', () => showMedia(activeMedia + 1));
+  mediaDots.forEach((dot) => dot.addEventListener('click', () => showMedia(Number(dot.dataset.mediaDot || 0))));
 </script>

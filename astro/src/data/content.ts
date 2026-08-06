@@ -26,7 +26,7 @@ export const nav = [
 ] as const;
 
 export const hero = {
-  eyebrow: 'Paga hasta 12 cuotas sin interés',
+  eyebrow: 'Evaluación capilar personalizada',
   title: 'Implante capilar',
   subtitle: 'Vuelve a tener pelo',
   bullets: [
@@ -46,9 +46,9 @@ export const testimonials = {
   text: 'Conoce a quienes ya han transformado su vida y su imagen con el implante capilar en Clínica Témpora.',
   /** thumb = miniatura servida en local (tools/optimize-assets.mjs la genera) */
   videos: [
-    { id: 'gAZ2xNm--Bo', thumb: '/assets/img/yt-testimonio-1-480.webp', alt: 'Testimonio de paciente de Clínica Témpora' },
-    { id: 'h08RqUihV1I', thumb: '/assets/img/yt-testimonio-2-480.webp', alt: 'Testimonio de paciente de Clínica Témpora' },
-    { id: 'P7t6AGGPv48', thumb: '/assets/img/yt-testimonio-3-480.webp', alt: 'Testimonio de paciente de Clínica Témpora' },
+    { id: 'gAZ2xNm--Bo', thumb: '/assets/img/v2/JULIANO.jpg', alt: 'Paciente contando su experiencia en Clínica Témpora' },
+    { id: 'h08RqUihV1I', thumb: '/assets/img/v2/PABLO.jpg', alt: 'Paciente contando su experiencia en Clínica Témpora' },
+    { id: 'P7t6AGGPv48', thumb: '/assets/img/v2/JOAQUIN.jpg', alt: 'Paciente contando su experiencia en Clínica Témpora' },
   ],
 } as const;
 
