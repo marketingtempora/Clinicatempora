@@ -32,7 +32,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
 
 <style>
   .voices-v1 {
-    padding: 104px 0;
+    padding: 60px 0 68px;
     background: var(--cream);
     overflow: hidden;
   }
@@ -41,8 +41,8 @@ import YouTubeFacade from './YouTubeFacade.astro';
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(330px, 0.55fr);
     align-items: end;
-    gap: 60px;
-    margin-bottom: 46px;
+    gap: 42px;
+    margin-bottom: 28px;
   }
 
   .voices-v1__head > div:first-child > p {
@@ -107,16 +107,19 @@ import YouTubeFacade from './YouTubeFacade.astro';
     letter-spacing: 0.12em;
   }
 
-  .voices-v1__card :global(.video) { border-radius: 17px; }
+  .voices-v1__card :global(.video) {
+    aspect-ratio: 4 / 5;
+    border-radius: 17px;
+  }
 
   @media (max-width: 767px) {
-    .voices-v1 { padding: 72px 0; }
+    .voices-v1 { padding: 42px 0 44px; }
     .voices-v1__head { grid-template-columns: 1fr; gap: 22px; margin-bottom: 30px; }
     .voices-v1 h2 { font-size: 2.7rem; }
     .voices-v1__grid {
       grid-template-columns: none;
       grid-auto-flow: column;
-      grid-auto-columns: 79%;
+      grid-auto-columns: 72%;
       gap: 12px;
       margin-inline: -20px;
       padding: 4px 20px 30px;
@@ -127,5 +130,6 @@ import YouTubeFacade from './YouTubeFacade.astro';
     .voices-v1__grid::-webkit-scrollbar { display: none; }
     .voices-v1__card { scroll-snap-align: center; border-radius: 22px; }
     .voices-v1__card:nth-child(2) { transform: none; }
+    .voices-v1__card :global(.video) { aspect-ratio: 4 / 5; }
   }
 </style>

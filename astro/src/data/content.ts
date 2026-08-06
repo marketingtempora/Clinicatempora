@@ -99,7 +99,7 @@ export const howItWorks = {
 export const whyUs = {
   title: '¿Por qué elegir a Clínica Témpora?',
   gallery: [
-    { src: '/assets/img/v2/tempora-galeria3.webp', alt: 'Consulta médica en Clínica Témpora' },
+    { src: '/assets/img/v2/tempora-galeria2.webp', alt: 'Procedimiento de implante capilar en Clínica Témpora' },
     { src: '/assets/img/v2/tempora-galeria4.webp', alt: 'Especialista realizando un implante capilar en Clínica Témpora' },
     { src: '/assets/img/v2/tempora-galeria6.webp', alt: 'Preparación de paciente en Clínica Témpora' },
   ],

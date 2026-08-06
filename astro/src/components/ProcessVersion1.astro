@@ -44,7 +44,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
 
 <style>
   .process-v1 {
-    padding: 104px 0;
+    padding: 58px 0 64px;
     background:
       radial-gradient(circle at 90% 10%, rgba(186, 211, 5, 0.14), transparent 28%),
       var(--teal);
@@ -56,7 +56,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
     grid-template-columns: 0.45fr 1.55fr;
     align-items: end;
     gap: 40px;
-    margin-bottom: 42px;
+    margin-bottom: 28px;
   }
 
   .process-v1__head > p,
@@ -124,7 +124,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
   .process-v1__facts {
     display: flex;
     flex-direction: column;
-    padding: 30px;
+    padding: 24px;
     background: rgba(6, 26, 28, 0.46);
     border: 1px solid rgba(248, 246, 230, 0.13);
   }
@@ -174,14 +174,18 @@ import YouTubeFacade from './YouTubeFacade.astro';
   }
 
   @media (max-width: 620px) {
-    .process-v1 { padding: 72px 0; }
+    .process-v1 { padding: 46px 0 50px; }
     .process-v1__head { margin-bottom: 28px; }
     .process-v1 h2 { font-size: 2.7rem; }
     .process-v1__video,
     .process-v1__facts { border-radius: 22px; }
     .process-v1__video :global(.video) { border-radius: 22px 22px 0 0; }
     .process-v1__facts { padding: 25px 20px; }
-    .process-v1__facts li { grid-template-columns: 34px 1fr; padding: 14px 0; }
+    .process-v1__facts ol { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 68%; gap: 9px; margin: 12px -20px 0 0; padding-right: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .process-v1__facts ol::-webkit-scrollbar { display: none; }
+    .process-v1__facts li { display: block; min-height: 122px; padding: 14px; border: 1px solid rgba(248, 246, 230, .12); border-radius: 14px; background: rgba(248, 246, 230, .04); scroll-snap-align: start; }
+    .process-v1__facts li > span { display: block; margin-bottom: 6px; }
+    .process-v1__facts > a { margin-top: 16px; }
     .process-v1__facts li p { font-size: 0.93rem; }
     .process-v1__facts > a { width: 100%; text-align: center; }
   }
