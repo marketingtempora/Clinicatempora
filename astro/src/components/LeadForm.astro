@@ -490,16 +490,28 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       status.className = `lead-form__status${message && type ? ` is-${type}` : ''}`;
     };
 
-    const emitConfiguredEvent = (eventName: string | undefined, formStep: number) => {
-      if (!eventName || emittedEvents.has(eventName)) return;
-      window.dataLayer ??= [];
-      window.dataLayer.push({
+    const emitConfiguredEvent = (
+      eventName: string | undefined,
+      formStep: number,
+      onProcessed?: () => void
+    ) => {
+      if (!eventName || emittedEvents.has(eventName)) return false;
+      const eventPayload: Record<string, unknown> = {
         event: eventName,
         form_name: 'implante_capilar_providencia',
         form_version: form.dataset.formVersion ?? '',
         form_step: formStep,
-      });
+      };
+
+      if (onProcessed) {
+        eventPayload.eventCallback = onProcessed;
+        eventPayload.eventTimeout = 900;
+      }
+
+      window.dataLayer ??= [];
+      window.dataLayer.push(eventPayload);
       emittedEvents.add(eventName);
+      return true;
     };
 
     const render = (focusField = true) => {
@@ -615,13 +627,21 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       try {
         await sendLead(form, payload);
         window.dataLayer?.push({ event: 'lead_form_submit', form_name: 'implante_capilar_providencia' });
-        emitConfiguredEvent(form.dataset.finalEvent, total);
         form.reset();
         setStatus(SUCCESS_MESSAGE, 'success');
         stepsBox.hidden = true;
         buttonsBox.hidden = true;
         progress.style.width = '100%';
         progress.textContent = '100%';
+
+        let redirectStarted = false;
+        const redirectToThanks = () => {
+          if (redirectStarted) return;
+          redirectStarted = true;
+          window.location.assign('/gracias/');
+        };
+        emitConfiguredEvent(form.dataset.finalEvent, total, redirectToThanks);
+        window.setTimeout(redirectToThanks, 900);
       } catch (err) {
         console.error('[Témpora] Error enviando el lead:', err);
         queueLead(payload);
