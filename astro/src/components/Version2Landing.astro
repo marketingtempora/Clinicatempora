@@ -133,41 +133,23 @@ const faqs = [
           </p>
         </div>
 
-        <div class="v2-method__gallery" aria-label="Proceso clínico en Clínica Témpora">
-          <img class="v2-method__gallery-main" src="/assets/img/v2/hero-foto.webp" width="984" height="711" alt="Procedimiento de implante capilar en Clínica Témpora" loading="lazy" />
-          <img src="/assets/img/v2/tempora-galeria2.webp" width="1106" height="878" alt="Trabajo de precisión durante un implante capilar" loading="lazy" />
-          <img src="/assets/img/v2/tempora-galeria4.webp" width="727" height="823" alt="Especialista realizando un implante capilar" loading="lazy" />
-        </div>
+        <figure class="v2-method__visual">
+          <img src="/assets/img/v2/hero-foto.webp" width="984" height="711" alt="Procedimiento de implante capilar en Clínica Témpora" loading="lazy" />
+          <figcaption>Procedimiento ambulatorio realizado por el equipo de Clínica Témpora.</figcaption>
+        </figure>
       </div>
 
       <ol class="v2-container v2-steps" aria-label="Etapas del proceso de implante capilar">
         <li><span>01</span><div><strong>Evaluación</strong><p>Revisamos alopecia, zona donante, objetivos y antecedentes.</p></div></li>
         <li><span>02</span><div><strong>Diseño</strong><p>Definimos la línea capilar y la cantidad estimada de folículos.</p></div></li>
-        <li><span>03</span><div><strong>Cirugía</strong><p>Aplicamos FUE, FUSS o ambas según la indicación médica.</p></div></li>
+        <li><span>03</span><div><strong>Cirugía</strong><p>Realizamos el implante con la técnica indicada para tu caso.</p></div></li>
         <li><span>04</span><div><strong>Seguimiento</strong><p>Acompañamos la evolución con controles postoperatorios.</p></div></li>
       </ol>
 
-      <div class="v2-container v2-tech" id="tecnicas">
-        <div class="v2-tech__intro">
-          <p class="v2-kicker v2-kicker--dark">Indicación médica personalizada</p>
-          <h3>Trabajamos con FUE y FUSS. El equipo define cuál se adapta a tu caso.</h3>
-          <p>La elección depende de tu zona donante, el grado de alopecia y la cantidad de folículos necesarios.</p>
-        </div>
-        <div class="v2-tech__cards">
-          <article>
-            <span>Extracción individual</span>
-            <h3>FUE</h3>
-            <p>Extrae las unidades foliculares una a una, sin cicatriz lineal.</p>
-            <ul><li>Recuperación más rápida</li><li>Permite llevar el cabello corto</li></ul>
-          </article>
-          <article>
-            <span>Máximo aprovechamiento donante</span>
-            <h3>FUSS</h3>
-            <p>Obtiene una banda de tejido que se separa bajo microscopio.</p>
-            <ul><li>Mayor volumen de injertos</li><li>Indicada en casos seleccionados</li></ul>
-          </article>
-        </div>
-      </div>
+      <aside class="v2-container v2-tech-note" id="tecnicas" aria-label="Técnicas de implante capilar">
+        <span>Indicación médica personalizada</span>
+        <p><strong>Trabajamos con FUE y FUSS.</strong> El equipo define la técnica según tu zona donante, grado de alopecia y cantidad de folículos necesarios.</p>
+      </aside>
     </section>
 
     <section class="v2-media v2-section" id="historias">
@@ -357,30 +339,21 @@ const faqs = [
   .v2-method__grid { display: grid; grid-template-columns: .94fr 1.06fr; gap: 42px; align-items: center; }
   .v2-method__copy h2 { font-size: clamp(2.15rem, 3vw, 3.15rem); }
   .v2-method__lead { max-width: 610px; margin: 16px 0 0; color: var(--v2-muted); font-size: .9rem; line-height: 1.55; }
-  .v2-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
-  .v2-steps li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; min-height: 104px; padding: 14px 13px; border: 1px solid #dcdfd5; border-radius: 15px; background: #f7f8f3; }
-  .v2-steps li > span { color: #789500; font: 800 .78rem/1.5 var(--font-body); }
+  .v2-steps { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 22px; }
+  .v2-steps::before { content: ''; position: absolute; top: 20px; right: 5%; left: 5%; height: 2px; background: #d9ddcf; }
+  .v2-steps li { position: relative; display: block; min-height: 112px; padding: 0 22px 0 0; }
+  .v2-steps li:last-child { padding-right: 0; }
+  .v2-steps li > span { position: relative; z-index: 1; display: grid; width: 42px; height: 42px; margin-bottom: 12px; border-radius: 50%; place-items: center; background: var(--v2-ink); box-shadow: 0 0 0 6px var(--v2-paper); color: var(--v2-lime); font: 800 .72rem/1 var(--font-body); }
+  .v2-steps li:nth-child(3) > span { background: var(--v2-lime); color: var(--v2-ink); }
   .v2-steps strong { color: var(--v2-ink); font: 750 .93rem/1.3 var(--font-body); }
   .v2-steps p { margin: 4px 0 0; color: var(--v2-muted); font-size: .86rem; line-height: 1.45; }
-  .v2-method__gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .v2-method__gallery img { width: 100%; height: 78px; border-radius: 14px; object-fit: cover; }
-  .v2-method__gallery-main { grid-column: 1 / -1; height: 165px !important; }
-  .v2-tech { display: grid; grid-template-columns: .78fr 1.22fr; gap: 18px; margin-top: 14px; padding: 18px; border-radius: 22px; background: var(--v2-ink); }
-  .v2-tech .v2-kicker { color: var(--v2-lime); }
-  .v2-tech__intro { align-self: center; padding: 0 6px; }
-  .v2-tech__intro h3 { max-width: 500px; color: white; font-size: clamp(1.55rem, 1.85vw, 1.95rem); line-height: 1.03; }
-  .v2-tech__intro > p:not(.v2-kicker) { max-width: 500px; margin: 10px 0 0; color: rgba(255,255,255,.64); font-size: .82rem; line-height: 1.48; }
-  .v2-tech__cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
-  .v2-tech__cards article { padding: 15px 17px; border-radius: 16px; background: var(--v2-mint); box-shadow: inset 0 4px 0 var(--v2-lime); }
-  .v2-tech__cards article:nth-child(2) { background: var(--v2-paper); color: var(--v2-ink); }
-  .v2-tech__cards article > span { color: #617900; font: 750 .65rem/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; }
-  .v2-tech__cards article:nth-child(2) > span { color: #617900; }
-  .v2-tech__cards h3 { margin: 8px 0 6px; color: inherit; font-size: 2rem; line-height: 1; }
-  .v2-tech__cards p { color: var(--v2-muted); font-size: .82rem; line-height: 1.5; }
-  .v2-tech__cards article:nth-child(2) p { color: var(--v2-muted); }
-  .v2-tech__cards ul { margin-top: 9px; }
-  .v2-tech__cards li { padding: 6px 0; border-top: 1px solid rgba(6,26,28,.16); color: inherit; font: 650 .71rem/1.32 var(--font-body); }
-  .v2-tech__cards article:nth-child(2) li { border-color: rgba(6,26,28,.16); }
+  .v2-method__visual { position: relative; height: 250px; margin: 0; overflow: hidden; border-radius: 20px; background: var(--v2-ink); }
+  .v2-method__visual img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .v2-method__visual figcaption { position: absolute; right: 14px; bottom: 12px; left: 14px; padding: 9px 11px; border-radius: 10px; background: rgba(6,26,28,.8); color: white; font: 650 .72rem/1.35 var(--font-body); }
+  .v2-tech-note { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; margin-top: 6px; padding: 13px 18px; border-radius: 14px; background: var(--v2-ink); color: white; }
+  .v2-tech-note > span { color: var(--v2-lime); font: 750 .65rem/1.2 var(--font-body); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+  .v2-tech-note p { margin: 0; color: rgba(255,255,255,.7); font-size: .8rem; line-height: 1.45; }
+  .v2-tech-note strong { color: white; }
 
   .v2-media { background: var(--v2-ink); }
   .v2-media__carousel { overflow: hidden; }
@@ -486,23 +459,15 @@ const faqs = [
     .v2-method__grid, .v2-clinic__grid, .v2-faq__grid { grid-template-columns: 1fr; gap: 20px; }
     .v2-method__copy h2 { font-size: 1.9rem; }
     .v2-method__lead { margin: 12px 0 14px; }
-    .v2-steps { width: auto; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 78%; gap: 9px; margin: 14px 0 0 14px; padding-right: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-    .v2-steps::-webkit-scrollbar { display: none; }
-    .v2-steps li { display: block; min-height: 102px; padding: 11px; border: 1px solid #dcdfd5; border-radius: 14px; background: #f7f8f3; scroll-snap-align: start; }
-    .v2-steps li > span { display: block; margin-bottom: 5px; }
-    .v2-method__gallery { display: block; }
-    .v2-method__gallery-main { display: block; height: 100px !important; }
-    .v2-method__gallery img:not(.v2-method__gallery-main) { display: none; }
-    .v2-tech { grid-template-columns: 1fr; gap: 14px; margin-top: 14px; padding: 16px; }
-    .v2-tech__intro { padding: 0; }
-    .v2-tech__intro h3 { font-size: 1.45rem; }
-    .v2-tech__intro > p:not(.v2-kicker) { margin-top: 8px; font-size: .8rem; line-height: 1.38; }
-    .v2-tech__cards { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 88%; gap: 9px; margin-right: -16px; padding-right: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-    .v2-tech__cards::-webkit-scrollbar { display: none; }
-    .v2-tech__cards article { min-height: 130px; padding: 13px; scroll-snap-align: start; }
-    .v2-tech__cards h3 { font-size: 1.75rem; }
-    .v2-tech__cards p { font-size: .76rem; line-height: 1.35; }
-    .v2-tech__cards h3 { font-size: 2rem; }
+    .v2-steps { grid-template-columns: 1fr; grid-auto-flow: row; gap: 0; width: auto; margin: 16px 14px 0; padding: 0; overflow: visible; scroll-snap-type: none; }
+    .v2-steps::before { top: 20px; right: auto; bottom: 30px; left: 20px; width: 2px; height: auto; }
+    .v2-steps li { display: grid; grid-template-columns: 42px 1fr; gap: 13px; min-height: 68px; padding: 0 0 8px; }
+    .v2-steps li > span { display: grid; margin: 0; box-shadow: 0 0 0 5px var(--v2-paper); }
+    .v2-steps p { margin-top: 2px; font-size: .8rem; line-height: 1.38; }
+    .v2-method__visual { height: 150px; }
+    .v2-tech-note { grid-template-columns: 1fr; gap: 5px; margin-top: 2px; padding: 10px 14px; }
+    .v2-tech-note > span { white-space: normal; }
+    .v2-tech-note p { font-size: .74rem; line-height: 1.35; }
     .v2-media__slide { display: block; height: auto; }
     .v2-media__video { aspect-ratio: 16 / 9; }
     .version2 .v2-media__slide .video { height: 100%; aspect-ratio: 16 / 9; }
