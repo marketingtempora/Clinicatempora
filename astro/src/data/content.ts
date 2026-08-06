@@ -57,10 +57,30 @@ export const results = {
   titleLine2: '100% efectivos!',
   text: 'Un antes y un después que te mostrarán el poder de un implante capilar bien hecho',
   steps: [
-    { label: '1 mes', img: '/assets/img/resultado-1-mes-219.webp', alt: 'Resultado del implante capilar al primer mes' },
-    { label: '6 meses', img: '/assets/img/resultado-6-meses-219.webp', alt: 'Resultado del implante capilar a los 6 meses' },
-    { label: '9 meses', img: '/assets/img/resultado-9-meses-219.webp', alt: 'Resultado del implante capilar a los 9 meses' },
-    { label: '12 meses', img: '/assets/img/resultado-12-meses-219.webp', alt: 'Resultado del implante capilar a los 12 meses' },
+    {
+      label: '1 mes',
+      text: 'El cabello implantado puede caer: la raíz permanece.',
+      img: '/assets/img/resultado-1-mes-219.webp',
+      alt: 'Resultado del implante capilar al primer mes',
+    },
+    {
+      label: '6 meses',
+      text: 'El crecimiento ya es visible y comienza a ganar densidad.',
+      img: '/assets/img/resultado-6-meses-219.webp',
+      alt: 'Resultado del implante capilar a los 6 meses',
+    },
+    {
+      label: '9 meses',
+      text: 'La cobertura y el aspecto natural se consolidan.',
+      img: '/assets/img/resultado-9-meses-219.webp',
+      alt: 'Resultado del implante capilar a los 9 meses',
+    },
+    {
+      label: '12 meses',
+      text: 'Resultado final: cabello natural y permanente.',
+      img: '/assets/img/resultado-12-meses-219.webp',
+      alt: 'Resultado del implante capilar a los 12 meses',
+    },
   ],
 } as const;
 
@@ -78,11 +98,10 @@ export const howItWorks = {
 
 export const whyUs = {
   title: '¿Por qué elegir a Clínica Témpora?',
-  /** base = el archivo grande; el srcset lo arma el componente con -400 y -768 */
   gallery: [
-    { base: 'clinica-consulta-1', alt: 'Consulta médica en Clínica Témpora' },
-    { base: 'clinica-precirugia', alt: 'Precirugía de implante capilar en Clínica Témpora' },
-    { base: 'clinica-consulta-2', alt: 'Especialistas de Clínica Témpora en consulta' },
+    { src: '/assets/img/v2/tempora-galeria3.webp', alt: 'Consulta médica en Clínica Témpora' },
+    { src: '/assets/img/v2/tempora-galeria4.webp', alt: 'Especialista realizando un implante capilar en Clínica Témpora' },
+    { src: '/assets/img/v2/tempora-galeria6.webp', alt: 'Preparación de paciente en Clínica Témpora' },
   ],
   stats: [
     { kicker: 'Experiencia', title: 'realizando implantes capilares', to: 10, suffix: '+ años' },
