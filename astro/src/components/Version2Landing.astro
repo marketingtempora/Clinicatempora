@@ -190,21 +190,33 @@ const faqs = [
     </section>
 
     <section class="v2-clinic v2-section" id="clinica">
-      <div class="v2-container v2-clinic__grid">
-        <div class="v2-clinic__visual">
-          <img src="/assets/img/v2/JESUS-1_00000000-2.jpg" width="600" height="600" alt="Dra. Jesús Díaz, fundadora y directora médica de Clínica Témpora" loading="lazy" />
-          <img src="/assets/img/v2/FRANCISCO-1_00000000.jpg" width="600" height="600" alt="Dr. Francisco Castellón, director de restauración capilar" loading="lazy" />
-        </div>
-        <div class="v2-clinic__copy">
+      <div class="v2-container">
+        <div class="v2-clinic__head">
+          <div>
           <p class="v2-kicker v2-kicker--dark">Equipo médico especializado</p>
           <h2>Tu resultado comienza con quién evalúa y opera.</h2>
+          </div>
           <p>
             Clínica Témpora reúne profesionales dedicados a restauración capilar FUE y FUSS, con formación internacional y actualización continua.
           </p>
-          <div class="v2-clinic__doctors">
+        </div>
+        <div class="v2-clinic__doctors" aria-label="Equipo médico de Clínica Témpora">
+          <article>
+            <img src="/assets/img/v2/JESUS-1_00000000-2.jpg" width="700" height="700" alt="Dra. Jesús Díaz, fundadora y directora médica de Clínica Témpora" loading="lazy" />
             <div><strong>Dra. Jesús Díaz</strong><span>Fundadora y directora médica</span></div>
+          </article>
+          <article>
+            <img src="/assets/img/v2/FRANCISCO-1_00000000.jpg" width="700" height="700" alt="Dr. Francisco Castellón, director de restauración capilar" loading="lazy" />
             <div><strong>Dr. Francisco Castellón</strong><span>Director de restauración capilar</span></div>
-          </div>
+          </article>
+          <article>
+            <img src="/assets/img/v2/SOFIA-1_00000000.jpg" width="700" height="700" alt="Dra. Sofía Viaux, directora de Investigación y Desarrollo" loading="lazy" />
+            <div><strong>Dra. Sofía Viaux</strong><span>Directora de Investigación y Desarrollo</span></div>
+          </article>
+          <article>
+            <img src="/assets/img/v2/NICOLAS-1_00000000.jpg" width="700" height="700" alt="Dr. Nicolás Herrera, director de evaluaciones" loading="lazy" />
+            <div><strong>Dr. Nicolás Herrera</strong><span>Director de evaluaciones</span></div>
+          </article>
         </div>
       </div>
     </section>
@@ -374,14 +386,16 @@ const faqs = [
   .v2-media__dots button.is-active { width: 24px; border-radius: 999px; background: var(--v2-lime); }
 
   .v2-clinic { background: var(--v2-cream); }
-  .v2-clinic__grid { display: grid; grid-template-columns: .72fr 1.28fr; gap: 42px; align-items: center; }
-  .v2-clinic__visual { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
-  .v2-clinic__visual img { width: 100%; max-height: 250px; border-radius: 18px; background: var(--v2-ink); object-fit: cover; object-position: top; }
-  .v2-clinic__visual img:nth-child(2) { margin-top: 18px; }
-  .v2-clinic__copy > p:not(.v2-kicker) { margin: 14px 0 16px; color: var(--v2-muted); font-size: .88rem; line-height: 1.55; }
-  .v2-clinic__doctors > div { display: grid; padding: 9px 0; border-top: 1px solid #d9dccf; }
-  .v2-clinic__doctors strong { color: var(--v2-ink); font: 700 .95rem/1.35 var(--font-body); }
-  .v2-clinic__doctors span { color: var(--v2-muted); font: 500 .8rem/1.4 var(--font-body); }
+  .v2-clinic__head { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 46px; align-items: end; margin-bottom: 22px; }
+  .v2-clinic__head h2 { max-width: 790px; font-size: clamp(2rem, 3vw, 3rem); }
+  .v2-clinic__head > p { margin: 0 0 3px; color: var(--v2-muted); font-size: .86rem; line-height: 1.55; }
+  .v2-clinic__doctors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .v2-clinic__doctors article { position: relative; min-width: 0; height: 285px; overflow: hidden; border-radius: 18px; background: var(--v2-ink); }
+  .v2-clinic__doctors img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; transition: transform .35s ease; }
+  .v2-clinic__doctors article:hover img { transform: scale(1.025); }
+  .v2-clinic__doctors article > div { position: absolute; right: 10px; bottom: 10px; left: 10px; display: grid; gap: 2px; padding: 11px 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(6,26,28,.82); backdrop-filter: blur(10px); }
+  .v2-clinic__doctors strong { color: white; font: 700 .9rem/1.25 var(--font-body); }
+  .v2-clinic__doctors span { color: rgba(255,255,255,.7); font: 500 .7rem/1.3 var(--font-body); }
   .v2-faq { background: var(--v2-paper); }
   .v2-faq__grid { display: grid; grid-template-columns: .68fr 1.32fr; gap: 56px; align-items: start; }
   .v2-faq__intro { position: sticky; top: 110px; }
@@ -418,7 +432,7 @@ const faqs = [
     .v2-hero__grid { grid-template-columns: minmax(0,1fr) 380px; gap: 48px; }
     .v2-hero h1 { font-size: clamp(3.2rem,6vw,4.4rem); }
     .v2-heading--split { gap: 40px; }
-    .v2-method__grid, .v2-clinic__grid { gap: 42px; }
+    .v2-method__grid { gap: 42px; }
     .v2-faq__grid { gap: 60px; }
   }
 
@@ -456,7 +470,7 @@ const faqs = [
     .v2-case { margin-bottom: 0; scroll-snap-align: start; }
     .v2-case--wide { grid-column: auto; }
     .v2-case__compare { aspect-ratio: 1.28 / 1; }
-    .v2-method__grid, .v2-clinic__grid, .v2-faq__grid { grid-template-columns: 1fr; gap: 20px; }
+    .v2-method__grid, .v2-faq__grid { grid-template-columns: 1fr; gap: 20px; }
     .v2-method__copy h2 { font-size: 1.9rem; }
     .v2-method__lead { margin: 12px 0 14px; }
     .v2-steps { grid-template-columns: 1fr; grid-auto-flow: row; gap: 0; width: auto; margin: 16px 14px 0; padding: 0; overflow: visible; scroll-snap-type: none; }
@@ -473,7 +487,12 @@ const faqs = [
     .version2 .v2-media__slide .video { height: 100%; aspect-ratio: 16 / 9; }
     .version2 .v2-media .video img { object-position: center var(--thumb-y-mobile, var(--thumb-y, 25%)); }
     .v2-media__copy { padding: 20px 18px; }
-    .v2-clinic__visual img:nth-child(2) { margin-top: 20px; }
+    .v2-clinic__head { display: block; margin-bottom: 16px; }
+    .v2-clinic__head h2 { font-size: 1.9rem; }
+    .v2-clinic__head > p { margin-top: 10px; font-size: .8rem; line-height: 1.45; }
+    .v2-clinic__doctors { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 72%; gap: 10px; margin-right: -14px; padding-right: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .v2-clinic__doctors::-webkit-scrollbar { display: none; }
+    .v2-clinic__doctors article { height: 300px; scroll-snap-align: start; }
     .v2-faq__intro { position: static; }
     .v2-faq__list summary { min-height: 56px; font-size: .84rem; }
     .v2-final__panel { grid-template-columns: 1fr; min-height: 0; padding: 9px; }
