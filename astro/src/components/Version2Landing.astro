@@ -70,6 +70,16 @@ const faqs = [
             <li><span aria-hidden="true">✓</span> Procedimiento ambulatorio con seguimiento médico</li>
             <li><span aria-hidden="true">✓</span> Resultados naturales diseñados para tu rostro</li>
           </ul>
+          <figure class="v2-hero__mobile-visual">
+            <img
+              src="/assets/img/v2/tempora-galeria4.webp"
+              width="728"
+              height="827"
+              alt="Especialista de Clínica Témpora realizando un implante capilar"
+              loading="eager"
+            />
+            <figcaption>Procedimiento realizado por equipo médico especializado</figcaption>
+          </figure>
           <div class="v2-hero__actions">
             <a class="v2-button v2-button--lime" href="#form">Quiero agendar</a>
             <a class="v2-text-link" href="#resultados">Ver resultados <span aria-hidden="true">↘</span></a>
@@ -303,6 +313,7 @@ const faqs = [
   .v2-hero__checks { display: grid; gap: 9px; margin-top: 24px; }
   .v2-hero__checks li { display: flex; align-items: flex-start; color: rgba(255,255,255,.88); font: 600 .84rem/1.42 var(--font-body); }
   .v2-hero__checks span { color: var(--v2-lime); margin-right: 5px; }
+  .v2-hero__mobile-visual { display: none; }
   .v2-hero__actions { display: flex; align-items: center; gap: 24px; margin-top: 22px; }
   .v2-text-link { color: white; font: 600 .94rem/1 var(--font-body); }
   .v2-text-link span { color: var(--v2-lime); margin-left: 4px; }
@@ -448,11 +459,15 @@ const faqs = [
     .v2-hero__copy { max-width: 100%; padding: 12px 0 18px; }
     .v2-hero h1 { font-size: clamp(2.65rem,12vw,3.4rem); line-height: .92; }
     .v2-hero__checks { display: grid; gap: 7px; }
+    .v2-hero__mobile-visual { position: relative; display: block; height: 210px; margin: 20px 0 0; border: 1px solid rgba(255,255,255,.2); border-radius: 20px; overflow: hidden; box-shadow: 0 18px 44px rgba(0,0,0,.28); }
+    .v2-hero__mobile-visual::after { content: ''; position: absolute; inset: 46% 0 0; background: linear-gradient(180deg, transparent, rgba(6,26,28,.9)); pointer-events: none; }
+    .v2-hero__mobile-visual img { width: 100%; height: 100%; border-radius: 0; object-fit: cover; object-position: center 43%; }
+    .v2-hero__mobile-visual figcaption { position: absolute; z-index: 1; right: 16px; bottom: 14px; left: 16px; color: white; font: 650 .76rem/1.35 var(--font-body); }
     .v2-hero__actions { margin: 18px 0 20px; }
     .v2-form-shell { position: relative; top: auto; border-radius: 20px; }
     .version2 .v2-form-shell .lead-card__body { padding: 13px 16px 15px !important; }
     .version2 .v2-form-shell .lead-card__intro { font-size: .9rem !important; }
-    .version2 .v2-form-shell .lead-form__step.is-active { gap: 8px; }
+    .version2 .v2-form-shell .lead-form__step.is-active { grid-template-columns: 1fr; gap: 8px; }
     .version2 .v2-form-shell .lead-form__label { font-size: .68rem !important; }
     .version2 .v2-form-shell .lead-form__field,
     .version2 .v2-form-shell .lead-form__select select { height: 44px !important; font-size: .75rem !important; }
