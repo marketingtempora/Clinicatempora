@@ -135,12 +135,6 @@ const attributionFields = [
       {/* El mensaje va debajo del campo, como en el original */}
       <p class="lead-form__status" data-status role="status" aria-live="polite"></p>
 
-      {/* Anti-spam: invisible para personas, tentador para bots */}
-      <div class="lead-form__honeypot" aria-hidden="true">
-        <label for="empresa_web">No completar</label>
-        <input type="text" id="empresa_web" name="empresa_web" tabindex="-1" autocomplete="off" />
-      </div>
-
       {/* Identidad y atribución: nombres estables para Make y Pipedrive */}
       <input type="hidden" name="form_version" value={formVersion} />
       <input type="hidden" name="submission_id" />
@@ -324,14 +318,6 @@ const attributionFields = [
     pointer-events: none;
   }
 
-  .lead-form__honeypot {
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-  }
-
   .lead-form__buttons {
     display: flex;
     gap: 10px;
@@ -449,7 +435,6 @@ const attributionFields = [
     const data = new FormData(target);
     const raw: Record<string, string> = {};
     data.forEach((value, key) => {
-      if (key === 'empresa_web') return;
       raw[key] = typeof value === 'string' ? value.trim() : '';
     });
     const payload = normalizePayload(raw);
@@ -457,7 +442,7 @@ const attributionFields = [
     payload.page_path = window.location.pathname;
     payload.submitted_at = new Date().toISOString();
     if (document.referrer) payload.referrer = document.referrer;
-    return { payload, honeypot: String(data.get('empresa_web') ?? '') };
+    return payload;
   }
 
   /** Envía el lead: API propia -> Supabase REST -> modo demo. */
@@ -688,13 +673,7 @@ const attributionFields = [
         }
       }
 
-      const { payload, honeypot } = buildPayload(form);
-
-      // Bot: fingimos éxito sin enviar nada
-      if (honeypot) {
-        setStatus(SUCCESS_MESSAGE, 'success');
-        return;
-      }
+      const payload = buildPayload(form);
 
       btnSubmit.disabled = true;
       btnSubmit.textContent = 'Enviando…';
