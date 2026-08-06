@@ -4,8 +4,9 @@ import { formSteps, hero } from '../data/content';
 interface Props {
   fieldsPerStep?: number;
   compactPhonePrompt?: boolean;
-  stepEventName?: string;
+  stepEventNames?: string[];
   finalEventName?: string;
+  formVersion?: string;
 }
 
 /**
@@ -24,8 +25,9 @@ const supabaseTable = import.meta.env.PUBLIC_SUPABASE_TABLE ?? 'leads';
 
 const requestedFieldsPerStep = Number(Astro.props.fieldsPerStep ?? 1);
 const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
-const stepEventName = Astro.props.stepEventName ?? '';
+const stepEventNames = Astro.props.stepEventNames ?? [];
 const finalEventName = Astro.props.finalEventName ?? '';
+const formVersion = Astro.props.formVersion ?? '';
 const fieldsPerStep = Math.max(1, Math.floor(requestedFieldsPerStep) || 1);
 const fieldGroups = Array.from(
   { length: Math.ceil(formSteps.length / fieldsPerStep) },
@@ -49,8 +51,9 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       data-supabase-url={supabaseUrl}
       data-supabase-key={supabaseKey}
       data-supabase-table={supabaseTable}
-      data-step-event={stepEventName}
+      data-step-events={JSON.stringify(stepEventNames)}
       data-final-event={finalEventName}
+      data-form-version={formVersion}
       novalidate
     >
       <div class="lead-form__progress" aria-hidden="true">
@@ -466,7 +469,19 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     const stepsBox = form.querySelector<HTMLElement>('[data-steps]')!;
     const buttonsBox = form.querySelector<HTMLElement>('[data-buttons]')!;
     const emittedEvents = new Set<string>();
+    let configuredStepEvents: string[] = [];
     let current = 0;
+
+    try {
+      const parsedStepEvents = JSON.parse(form.dataset.stepEvents ?? '[]');
+      if (Array.isArray(parsedStepEvents)) {
+        configuredStepEvents = parsedStepEvents.filter(
+          (eventName): eventName is string => typeof eventName === 'string' && eventName.length > 0
+        );
+      }
+    } catch {
+      configuredStepEvents = [];
+    }
 
     readUtm(form);
 
@@ -481,7 +496,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       window.dataLayer.push({
         event: eventName,
         form_name: 'implante_capilar_providencia',
-        form_version: 'v2',
+        form_version: form.dataset.formVersion ?? '',
         form_step: formStep,
       });
       emittedEvents.add(eventName);
@@ -533,9 +548,10 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       if (!checkCurrentStep()) return;
       if (current < total - 1) {
         const confirmedStep = current + 1;
+        const stepEventName = configuredStepEvents[current];
         current++;
         render();
-        emitConfiguredEvent(form.dataset.stepEvent, confirmedStep);
+        emitConfiguredEvent(stepEventName, confirmedStep);
       }
     });
 

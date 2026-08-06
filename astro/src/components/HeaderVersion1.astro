@@ -109,6 +109,18 @@ const links = [
     color: var(--ink);
   }
 
+  .v1-header__cta.is-muted {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.76);
+  }
+
+  .v1-header__cta.is-muted:hover,
+  .v1-header__cta.is-muted:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+  }
+
   .v1-header__cta--mobile,
   .v1-header__toggle {
     display: none;

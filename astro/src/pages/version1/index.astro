@@ -105,12 +105,17 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
 
 <script>
   const floatingCta = document.querySelector<HTMLElement>('.version1__floating-cta');
+  const headerCtas = document.querySelectorAll<HTMLElement>('.v1-header__cta');
   const leadForm = document.getElementById('form');
   const formCard = leadForm?.closest<HTMLElement>('.hero-v1__form');
 
   if (floatingCta && leadForm && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
-      ([entry]) => floatingCta.classList.toggle('is-visible', !entry.isIntersecting),
+      ([entry]) => {
+        const floatingIsVisible = !entry.isIntersecting;
+        floatingCta.classList.toggle('is-visible', floatingIsVisible);
+        headerCtas.forEach((cta) => cta.classList.toggle('is-muted', floatingIsVisible));
+      },
       { threshold: 0.08 }
     );
     observer.observe(leadForm);
