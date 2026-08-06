@@ -90,7 +90,12 @@ const faqs = [
           <div class="v2-form-shell__topline">
             <span>Evaluación capilar</span>
           </div>
-          <LeadForm fieldsPerStep={4} compactPhonePrompt />
+          <LeadForm
+            fieldsPerStep={4}
+            compactPhonePrompt
+            stepEventName="form_step1"
+            finalEventName="formstep2_final"
+          />
         </div>
       </div>
     </section>

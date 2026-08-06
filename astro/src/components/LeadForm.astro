@@ -4,6 +4,8 @@ import { formSteps, hero } from '../data/content';
 interface Props {
   fieldsPerStep?: number;
   compactPhonePrompt?: boolean;
+  stepEventName?: string;
+  finalEventName?: string;
 }
 
 /**
@@ -22,6 +24,8 @@ const supabaseTable = import.meta.env.PUBLIC_SUPABASE_TABLE ?? 'leads';
 
 const requestedFieldsPerStep = Number(Astro.props.fieldsPerStep ?? 1);
 const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
+const stepEventName = Astro.props.stepEventName ?? '';
+const finalEventName = Astro.props.finalEventName ?? '';
 const fieldsPerStep = Math.max(1, Math.floor(requestedFieldsPerStep) || 1);
 const fieldGroups = Array.from(
   { length: Math.ceil(formSteps.length / fieldsPerStep) },
@@ -45,6 +49,8 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       data-supabase-url={supabaseUrl}
       data-supabase-key={supabaseKey}
       data-supabase-table={supabaseTable}
+      data-step-event={stepEventName}
+      data-final-event={finalEventName}
       novalidate
     >
       <div class="lead-form__progress" aria-hidden="true">
@@ -459,6 +465,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     const btnSubmit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
     const stepsBox = form.querySelector<HTMLElement>('[data-steps]')!;
     const buttonsBox = form.querySelector<HTMLElement>('[data-buttons]')!;
+    const emittedEvents = new Set<string>();
     let current = 0;
 
     readUtm(form);
@@ -466,6 +473,18 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     const setStatus = (message: string, type?: 'error' | 'success') => {
       status.textContent = message;
       status.className = `lead-form__status${message && type ? ` is-${type}` : ''}`;
+    };
+
+    const emitConfiguredEvent = (eventName: string | undefined, formStep: number) => {
+      if (!eventName || emittedEvents.has(eventName)) return;
+      window.dataLayer ??= [];
+      window.dataLayer.push({
+        event: eventName,
+        form_name: 'implante_capilar_providencia',
+        form_version: 'v2',
+        form_step: formStep,
+      });
+      emittedEvents.add(eventName);
     };
 
     const render = (focusField = true) => {
@@ -513,8 +532,10 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
     btnNext.addEventListener('click', () => {
       if (!checkCurrentStep()) return;
       if (current < total - 1) {
+        const confirmedStep = current + 1;
         current++;
         render();
+        emitConfiguredEvent(form.dataset.stepEvent, confirmedStep);
       }
     });
 
@@ -578,6 +599,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
       try {
         await sendLead(form, payload);
         window.dataLayer?.push({ event: 'lead_form_submit', form_name: 'implante_capilar_providencia' });
+        emitConfiguredEvent(form.dataset.finalEvent, total);
         form.reset();
         setStatus(SUCCESS_MESSAGE, 'success');
         stepsBox.hidden = true;
