@@ -27,7 +27,7 @@ import { cta, installments } from '../data/content';
 
 <style>
   .final-v1 {
-    padding: 28px 0 88px;
+    padding: 18px 0 52px;
     background: var(--cream);
   }
 
@@ -43,7 +43,7 @@ import { cta, installments } from '../data/content';
 
   .final-v1__visual {
     position: relative;
-    min-height: 450px;
+    min-height: 320px;
     overflow: hidden;
     border-radius: 24px;
   }
@@ -79,8 +79,8 @@ import { cta, installments } from '../data/content';
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 450px;
-    padding: 46px;
+    min-height: 320px;
+    padding: 32px;
     border-radius: 24px;
     background:
       radial-gradient(circle at 86% 12%, rgba(186, 211, 5, 0.2), transparent 27%),
@@ -174,22 +174,24 @@ import { cta, installments } from '../data/content';
 
   @media (max-width: 900px) {
     .final-v1__panel { grid-template-columns: minmax(230px, 0.68fr) minmax(0, 1.32fr); }
-    .final-v1__visual { min-height: 400px; }
-    .final-v1__main { min-height: 400px; }
+    .final-v1__visual { min-height: 310px; }
+    .final-v1__main { min-height: 310px; }
     .final-v1__finance { grid-template-columns: auto 1fr; }
     .final-v1__finance small { grid-column: 2; }
   }
 
   @media (max-width: 620px) {
-    .final-v1 { padding: 18px 0 64px; }
+    .final-v1 { padding: 14px 0 44px; }
     .final-v1__panel { grid-template-columns: 1fr; padding: 9px; border-radius: 28px; }
-    .final-v1__visual { min-height: 230px; max-height: 270px; border-radius: 20px; }
+    .final-v1__visual { min-height: 170px; max-height: 200px; border-radius: 20px; }
     .final-v1__visual span { right: 18px; bottom: 18px; left: 18px; }
-    .final-v1__main { min-height: 0; padding: 34px 24px; border-radius: 20px; }
-    .final-v1 h2 { font-size: 2.8rem; }
+    .final-v1__main { min-height: 0; padding: 24px 20px; border-radius: 20px; }
+    .final-v1__eyebrow { margin-bottom: 12px; }
+    .final-v1 h2 { font-size: 2.25rem; line-height: .98; }
+    .final-v1__main > p:not(.final-v1__eyebrow) { margin: 14px 0 18px; }
     .final-v1__main > a { width: 100%; }
-    .final-v1__finance { grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
+    .final-v1__finance { grid-template-columns: auto 1fr; gap: 8px 12px; margin-top: 20px; padding-top: 16px; }
     .final-v1__finance strong { justify-self: start; }
-    .final-v1__finance small { grid-column: auto; }
+    .final-v1__finance small { grid-column: 1 / -1; }
   }
 </style>

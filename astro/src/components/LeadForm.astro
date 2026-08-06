@@ -3,6 +3,7 @@ import { formSteps, hero } from '../data/content';
 
 interface Props {
   fieldsPerStep?: number;
+  compactPhonePrompt?: boolean;
 }
 
 /**
@@ -20,6 +21,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 const supabaseTable = import.meta.env.PUBLIC_SUPABASE_TABLE ?? 'leads';
 
 const requestedFieldsPerStep = Number(Astro.props.fieldsPerStep ?? 1);
+const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
 const fieldsPerStep = Math.max(1, Math.floor(requestedFieldsPerStep) || 1);
 const fieldGroups = Array.from(
   { length: Math.ceil(formSteps.length / fieldsPerStep) },
@@ -62,7 +64,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
                   class:list={['lead-form__label', { 'lead-form__label--sr': 'hideLabel' in step && step.hideLabel }]}
                   for={step.name}
                 >
-                  {step.label}
+                  {compactPhonePrompt && step.name === 'telefono' ? 'Teléfono*' : step.label}
                 </label>
 
                 {step.type === 'select' ? (
@@ -79,7 +81,7 @@ const firstPct = Math.floor((1 / totalSteps) * 100);
                     type={step.type}
                     id={step.name}
                     name={step.name}
-                    placeholder={'placeholder' in step ? step.placeholder : undefined}
+                    placeholder={compactPhonePrompt && step.name === 'telefono' ? 'Teléfono*' : ('placeholder' in step ? step.placeholder : undefined)}
                     autocomplete={'autocomplete' in step ? step.autocomplete : undefined}
                     inputmode={step.type === 'tel' ? 'numeric' : undefined}
                     maxlength={step.type === 'tel' ? 9 : undefined}

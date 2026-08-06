@@ -55,7 +55,7 @@ import { whyUs } from '../data/content';
 
 <style>
   .clinic-v1 {
-    padding: 104px 0;
+    padding: 56px 0 62px;
     background:
       linear-gradient(135deg, rgba(186, 211, 5, 0.09), transparent 34%),
       #eef0df;
@@ -66,8 +66,8 @@ import { whyUs } from '../data/content';
     display: grid;
     grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.72fr);
     align-items: end;
-    gap: 60px;
-    margin-bottom: 46px;
+    gap: 42px;
+    margin-bottom: 28px;
   }
 
   .clinic-v1__eyebrow,
@@ -108,13 +108,15 @@ import { whyUs } from '../data/content';
     grid-row: 1;
     display: grid;
     grid-template-columns: 1.45fr 0.75fr;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     gap: 12px;
-    min-height: 520px;
+    height: 360px;
+    min-height: 0;
   }
 
   .clinic-v1__photo {
     min-width: 0;
+    min-height: 0;
     margin: 0;
     overflow: hidden;
   }
@@ -144,9 +146,9 @@ import { whyUs } from '../data/content';
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 390px;
-    margin-bottom: 28px;
-    padding: 30px;
+    min-height: 286px;
+    margin-bottom: 18px;
+    padding: 22px;
     border-radius: 30px;
     background: var(--ink);
     color: var(--cream);
@@ -167,12 +169,12 @@ import { whyUs } from '../data/content';
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
-    margin-top: 24px;
+    margin-top: 14px;
   }
 
   .clinic-v1__stat {
     position: relative;
-    padding: 18px 14px 16px;
+    padding: 12px 12px 10px;
     border-top: 1px solid rgba(248, 246, 230, 0.16);
     border-radius: 16px;
     background: rgba(248, 246, 230, 0.06);
@@ -210,8 +212,8 @@ import { whyUs } from '../data/content';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 20px;
-    padding-top: 18px;
+    margin-top: 12px;
+    padding-top: 12px;
     border-top: 1px solid rgba(248, 246, 230, 0.16);
     color: var(--cream);
     font-family: var(--font-display);
@@ -232,28 +234,41 @@ import { whyUs } from '../data/content';
   @media (max-width: 900px) {
     .clinic-v1__head { grid-template-columns: 1fr; gap: 22px; }
     .clinic-v1__story { display: block; }
-    .clinic-v1__proof { min-height: 330px; max-width: 680px; margin: -34px auto 0; }
+    .clinic-v1__proof { min-height: 280px; max-width: 680px; margin: -26px auto 0; }
     .clinic-v1__stats { gap: 14px; }
   }
 
   @media (max-width: 620px) {
-    .clinic-v1 { padding: 72px 0; }
-    .clinic-v1__head { margin-bottom: 30px; }
-    .clinic-v1 h2 { font-size: 2.7rem; }
+    .clinic-v1 { padding: 46px 0 50px; }
+    .clinic-v1__head { gap: 12px; margin-bottom: 22px; }
+    .clinic-v1 h2 { font-size: 2.25rem; }
+    .clinic-v1__head > p { font-size: .9rem; line-height: 1.5; }
     .clinic-v1__gallery {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: 310px 150px;
+      display: grid;
+      grid-template-columns: none;
+      grid-template-rows: 190px;
+      grid-auto-flow: column;
+      grid-auto-columns: 84%;
       gap: 8px;
+      height: auto;
+      margin-right: -20px;
+      padding-right: 20px;
       min-height: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
     }
+    .clinic-v1__gallery::-webkit-scrollbar { display: none; }
     .clinic-v1__photo--1 {
-      grid-column: 1 / -1;
+      grid-column: auto;
       grid-row: 1;
-      border-radius: 24px 24px 10px 10px;
+      border-radius: 22px;
     }
-    .clinic-v1__photo--2 { border-radius: 10px 10px 10px 24px; }
-    .clinic-v1__photo--3 { border-radius: 10px 10px 24px 10px; }
-    .clinic-v1__proof { min-height: 0; margin-top: 10px; padding: 26px 22px; border-radius: 24px; }
+    .clinic-v1__photo--2,
+    .clinic-v1__photo--3 { grid-row: 1; border-radius: 22px; }
+    .clinic-v1__photo { scroll-snap-align: start; }
+    .clinic-v1__proof { min-height: 0; margin-top: 10px; padding: 22px 20px; border-radius: 24px; }
+    .clinic-v1__proof > a { display: none; }
     .clinic-v1__stats { gap: 12px; }
     .clinic-v1__stat strong { font-size: 2rem; }
   }
