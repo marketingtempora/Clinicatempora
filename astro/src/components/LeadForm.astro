@@ -30,6 +30,9 @@ const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
 const stepEventNames = Astro.props.stepEventNames ?? [];
 const finalEventName = Astro.props.finalEventName ?? '';
 const formVersion = Astro.props.formVersion ?? '';
+const contactCopy = formVersion === 'v2'
+  ? { action: 'te contactaremos', procedure: 'implante' }
+  : { action: 'te llamaremos', procedure: 'injerto' };
 const fieldsPerStep = Math.max(1, Math.floor(requestedFieldsPerStep) || 1);
 const fieldGroups = Array.from(
   { length: Math.ceil(formSteps.length / fieldsPerStep) },
@@ -67,8 +70,8 @@ const attributionFields = [
 <div class="lead-card">
   <div class="lead-card__body">
     <p class="lead-card__intro">
-      <br />Déjanos tus datos y te llamaremos para<br />
-      <strong>agendar tu evaluación</strong> de injerto capilar
+      <br />Déjanos tus datos y {contactCopy.action} para<br />
+      <strong>agendar tu evaluación</strong> de {contactCopy.procedure} capilar
     </p>
 
     <form

@@ -3,21 +3,21 @@ import LeadForm from './LeadForm.astro';
 import YouTubeFacade from './YouTubeFacade.astro';
 
 const results = [
-  { before: '001A-1.jpg', after: '001B-1.jpg', label: 'Caso 01 · 3.000 folículos' },
-  { before: '002A.jpg', after: '002B.jpg', label: 'Caso 02 · 2.900 folículos' },
-  { before: '006A.jpg', after: '006B.jpg', label: 'Caso 03 · 2.000 folículos' },
+  { before: '001A-1.jpg', after: '001B-1.jpg', label: 'Caso 1 · 3.000 folículos' },
+  { before: '002A.jpg', after: '002B.jpg', label: 'Caso 2 · 2.900 folículos' },
+  { before: '006A.jpg', after: '006B.jpg', label: 'Caso 3 · 2.000 folículos' },
 ] as const;
 
 const faqs = [
   {
     question: '¿Cómo sé si soy candidato a un implante capilar?',
     answer:
-      'La evaluación revisa tu tipo de alopecia, la calidad de la zona donante, tus antecedentes y el resultado que buscas. Con esa información el equipo puede indicarte si el implante es adecuado para ti.',
+      'Durante la evaluación, tu médico analizará el tipo de alopecia, la calidad de la zona donante, tus antecedentes médicos y el resultado que deseas alcanzar. Con esta información, podremos determinar si el implante capilar es adecuado para tu caso.',
   },
   {
     question: '¿Cómo sé si necesito FUE o FUSS?',
     answer:
-      'No tienes que decidirlo antes. El equipo evalúa tu tipo de alopecia, zona donante, cantidad de folículos y objetivos para recomendar FUE, FUSS o una combinación de ambas.',
+      'Tu médico evaluará el tipo de alopecia, las características de la zona donante, la cantidad de folículos que necesitas y tus objetivos particulares. A partir de este análisis, te recomendará la técnica más adecuada: FUE, FUSS o una combinación de ambas.',
   },
   {
     question: '¿Es necesario internarse?',
@@ -27,17 +27,17 @@ const faqs = [
   {
     question: '¿El cabello implantado es permanente?',
     answer:
-      'Los folículos se obtienen de una zona genéticamente más resistente a la alopecia. Su permanencia y la evolución del cabello nativo se revisan en la evaluación y en los controles posteriores.',
+      'Sí. Los folículos que se implantan se obtienen de la nuca y los laterales de la cabeza, zonas genéticamente más resistentes a la alopecia androgenética. Por esta razón, el cabello implantado conserva esa resistencia y no debería verse afectado por la patología en el futuro.',
   },
   {
     question: '¿Cómo es la recuperación?',
     answer:
-      'Recibirás indicaciones específicas para los primeros días y controles médicos durante la evolución. Los tiempos dependen de la técnica y de las características de cada paciente.',
+      'La recuperación requiere algunos cuidados específicos, principalmente durante el primer mes. Recibirás indicaciones detalladas para los primeros días y tendrás controles médicos para acompañar tu evolución hasta el alta, que generalmente se entrega a los 12 meses.',
   },
   {
     question: '¿El procedimiento duele?',
     answer:
-      'La cirugía se realiza con anestesia local. Durante la evaluación el equipo explica cada etapa, las sensaciones esperables y los cuidados para una recuperación confortable.',
+      'No. La cirugía se realiza con anestesia local, por lo que no deberías sentir dolor durante el procedimiento. Es posible experimentar una leve molestia al aplicar la anestesia, como ocurre con cualquier inyección.',
   },
 ] as const;
 ---
@@ -68,7 +68,7 @@ const faqs = [
           <ul class="v2-hero__checks" aria-label="Características principales">
             <li><span aria-hidden="true">✓</span> Diagnóstico preciso y plan personalizado</li>
             <li><span aria-hidden="true">✓</span> Implante capilar ambulatorio y seguimiento médico</li>
-            <li><span aria-hidden="true">✓</span> La primera clínica especializada en Chile</li>
+            <li><span aria-hidden="true">✓</span> La primera clínica chilena dedicada exclusivamente a implante capilar</li>
           </ul>
           <figure class="v2-hero__mobile-visual">
             <img
@@ -106,7 +106,7 @@ const faqs = [
         <div class="v2-heading v2-heading--center v2-heading--light">
           <p class="v2-kicker">Documentados en controles clínicos</p>
           <h2>Resultados reales de<br /><span>implante capilar.</span></h2>
-          <p>Casos publicados por la clínica. El resultado y la evolución pueden variar entre pacientes.</p>
+          <p>El resultado y la evolución pueden variar entre pacientes.</p>
         </div>
 
         <div class="v2-results__grid">
@@ -135,7 +135,7 @@ const faqs = [
           <p class="v2-kicker v2-kicker--dark">Un plan diseñado para tu caso</p>
           <h2>Naturalidad, densidad y una línea capilar hecha para ti.</h2>
           <p class="v2-method__lead">
-            Cada implante capilar se planifica según tu rostro, tu alopecia y tu zona donante para definir la técnica y el resultado posible en tu caso.
+            Cada implante capilar se planifica según tu rostro, tu alopecia y tu zona donante. Luego de una evaluación podemos definir la técnica y el resultado esperable en tu caso.
           </p>
         </div>
 
@@ -154,7 +154,7 @@ const faqs = [
 
       <aside class="v2-container v2-tech-note" id="tecnicas" aria-label="Técnicas de implante capilar">
         <span>Indicación médica personalizada</span>
-        <p><strong>Trabajamos con FUE y FUSS.</strong> El equipo define la técnica según tu zona donante, grado de alopecia y cantidad de folículos necesarios.</p>
+        <p><strong>Trabajamos con técnicas FUE y FUSS.</strong> Nuestro equipo médico define la técnica según tu zona donante, grado de alopecia y cantidad de folículos necesarios.</p>
       </aside>
     </section>
 
@@ -162,24 +162,24 @@ const faqs = [
       <div class="v2-container">
         <div class="v2-heading v2-heading--stories v2-heading--light">
           <div>
-            <p class="v2-kicker">Casos, no promesas</p>
+            <p class="v2-kicker">Casos reales, no promesas</p>
             <h2>La experiencia contada por quienes la vivieron.</h2>
           </div>
         </div>
 
         <div class="v2-media__carousel" data-media-carousel>
           <div class="v2-media__track" data-media-track>
-            <article class="v2-media__slide is-active" data-media-slide style="--thumb-y: 18%; --thumb-y-mobile: 25%;">
-              <div class="v2-media__video"><YouTubeFacade id="gAZ2xNm--Bo" alt="Juliano contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/JULIANO.jpg" /></div>
-              <div class="v2-media__copy"><span>Juliano · Rancagua</span><h3>“Los resultados superaron mis expectativas.”</h3><p>Destaca la claridad del equipo médico y el acompañamiento durante todo el proceso.</p></div>
-            </article>
-            <article class="v2-media__slide" data-media-slide style="--thumb-y: 19%; --thumb-y-mobile: 25%;">
+            <article class="v2-media__slide is-active" data-media-slide style="--thumb-y: 19%; --thumb-y-mobile: 25%;">
               <div class="v2-media__video"><YouTubeFacade id="h08RqUihV1I" alt="Pablo contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/PABLO.jpg" /></div>
-              <div class="v2-media__copy"><span>Pablo · Santiago</span><h3>Una decisión para recuperar su imagen.</h3><p>Su experiencia muestra cómo se vive el procedimiento desde la mirada del paciente.</p></div>
+              <div class="v2-media__copy"><span>Pablo · Santiago</span><h3>La experiencia de Pablo con el implante capilar.</h3><p>Pablo Salinas cuenta cómo vivió su proceso en Clínica Témpora.</p></div>
             </article>
             <article class="v2-media__slide" data-media-slide style="--thumb-y: 20%; --thumb-y-mobile: 27%;">
               <div class="v2-media__video"><YouTubeFacade id="P7t6AGGPv48" alt="Joaquín contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/JOAQUIN.jpg" /></div>
-              <div class="v2-media__copy"><span>Joaquín · Valdivia</span><h3>“Fue la mejor decisión que tomé.”</h3><p>Relata un proceso profesional, acompañado y enfocado en un resultado natural.</p></div>
+              <div class="v2-media__copy"><span>Joaquín · Valdivia</span><h3>La experiencia de Joaquín con el implante capilar.</h3><p>Joaquín relata su experiencia como paciente de Clínica Témpora.</p></div>
+            </article>
+            <article class="v2-media__slide" data-media-slide style="--thumb-y: 18%; --thumb-y-mobile: 25%;">
+              <div class="v2-media__video"><YouTubeFacade id="gAZ2xNm--Bo" alt="Juliano contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/JULIANO.jpg" /></div>
+              <div class="v2-media__copy"><span>Juliano · Rancagua</span><h3>La experiencia de Juliano con el implante capilar.</h3><p>Juliano comparte su experiencia durante el proceso en Clínica Témpora.</p></div>
             </article>
           </div>
           <div class="v2-media__controls">
