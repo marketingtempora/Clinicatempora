@@ -103,9 +103,10 @@ const schema = {
       function animateCounter(el: HTMLElement) {
         const to = Number(el.dataset.to ?? '0');
         const duration = Number(el.dataset.duration ?? '2000');
+        const format = (value: number) => value.toLocaleString('es-CL');
 
         if (reducedMotion) {
-          el.textContent = String(to);
+          el.textContent = format(to);
           return;
         }
 
@@ -114,7 +115,7 @@ const schema = {
           if (start === null) start = ts;
           const progress = Math.min((ts - start) / duration, 1);
           const eased = 1 - (1 - progress) * (1 - progress); // easeOutQuad
-          el.textContent = String(Math.round(to * eased));
+          el.textContent = format(Math.round(to * eased));
           if (progress < 1) requestAnimationFrame(frame);
         };
         requestAnimationFrame(frame);

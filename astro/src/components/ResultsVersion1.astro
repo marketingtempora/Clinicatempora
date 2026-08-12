@@ -15,7 +15,7 @@ import { results } from '../data/content';
         <li class:list={['results-v1__card', { 'is-final': index === results.steps.length - 1 }]}>
           <div class="results-v1__moment">
             <span class="results-v1__dot" aria-hidden="true"></span>
-            <span>Etapa {String(index + 1).padStart(2, '0')}</span>
+            <span>Etapa {index + 1}</span>
           </div>
           <div class="results-v1__image">
             <img src={step.img} alt={step.alt} loading="lazy" width="219" height="147" />

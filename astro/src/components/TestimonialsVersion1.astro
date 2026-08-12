@@ -17,11 +17,11 @@ import YouTubeFacade from './YouTubeFacade.astro';
     </div>
 
     <ol class="voices-v1__grid" aria-label="Testimonios de pacientes">
-      {testimonials.videos.map((video, index) => (
+      {testimonials.videos.map((video) => (
         <li class="voices-v1__card reveal" data-reveal="fade-up">
           <div class="voices-v1__meta">
             <span>TESTIMONIO</span>
-            <span>{String(index + 1).padStart(2, '0')}</span>
+            <span>{video.name}</span>
           </div>
           <YouTubeFacade id={video.id} thumb={video.thumb} alt={video.alt} ratio="vertical" />
         </li>

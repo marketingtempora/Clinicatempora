@@ -31,7 +31,7 @@ export const hero = {
   subtitle: 'Vuelve a tener pelo',
   bullets: [
     'Somos la primera clínica especializada en Chile.',
-    'Agenda tu evaluación con especialistas.',
+    'Agenda tu evaluación con médicos especialistas.',
   ],
   privacy: 'Garantizamos la privacidad de tus datos personales.',
 } as const;
@@ -46,9 +46,9 @@ export const testimonials = {
   text: 'Conoce a quienes ya han transformado su vida y su imagen con el implante capilar en Clínica Témpora.',
   /** thumb = miniatura servida en local (tools/optimize-assets.mjs la genera) */
   videos: [
-    { id: 'gAZ2xNm--Bo', thumb: '/assets/img/v2/JULIANO.jpg', alt: 'Paciente contando su experiencia en Clínica Témpora' },
-    { id: 'h08RqUihV1I', thumb: '/assets/img/v2/PABLO.jpg', alt: 'Paciente contando su experiencia en Clínica Témpora' },
-    { id: 'P7t6AGGPv48', thumb: '/assets/img/v2/JOAQUIN.jpg', alt: 'Paciente contando su experiencia en Clínica Témpora' },
+    { name: 'Joaquín', id: 'P7t6AGGPv48', thumb: '/assets/img/v2/JOAQUIN.jpg', alt: 'Joaquín contando su experiencia en Clínica Témpora' },
+    { name: 'Pablo', id: 'h08RqUihV1I', thumb: '/assets/img/v2/PABLO.jpg', alt: 'Pablo contando su experiencia en Clínica Témpora' },
+    { name: 'Juliano', id: 'gAZ2xNm--Bo', thumb: '/assets/img/v2/JULIANO.jpg', alt: 'Juliano contando su experiencia en Clínica Témpora' },
   ],
 } as const;
 
@@ -105,7 +105,7 @@ export const whyUs = {
   ],
   stats: [
     { kicker: 'Experiencia', title: 'realizando implantes capilares', to: 10, suffix: '+ años' },
-    { kicker: 'Pacientes', title: 'cirugías realizadas', to: 2, suffix: 'k +' },
+    { kicker: 'Pacientes', title: 'cirugías realizadas', to: 2500, suffix: '+' },
   ],
 } as const;
 

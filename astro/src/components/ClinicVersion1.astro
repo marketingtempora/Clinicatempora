@@ -36,9 +36,8 @@ import { whyUs } from '../data/content';
         <p class="clinic-v1__proof-label">RESPALDO</p>
         <h3>Experiencia que se demuestra.</h3>
         <div class="clinic-v1__stats">
-          {whyUs.stats.map((stat, index) => (
+          {whyUs.stats.map((stat) => (
             <article class="clinic-v1__stat">
-              <span class="clinic-v1__stat-index">0{index + 1}</span>
               <p>{stat.kicker}</p>
               <strong>
                 <span class="counter" data-to={stat.to} data-duration="2000">0</span>{stat.suffix}
@@ -178,15 +177,6 @@ import { whyUs } from '../data/content';
     border-top: 1px solid rgba(248, 246, 230, 0.16);
     border-radius: 16px;
     background: rgba(248, 246, 230, 0.06);
-  }
-
-  .clinic-v1__stat-index {
-    position: absolute;
-    top: 14px;
-    right: 12px;
-    color: rgba(248, 246, 230, 0.34);
-    font-size: 0.72rem;
-    font-weight: 800;
   }
 
   .clinic-v1__stat p,
