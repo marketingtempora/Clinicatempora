@@ -1,0 +1,265 @@
+---
+import { whyUs } from '../data/content';
+---
+
+<section class="clinic-v1" id="elegirnos">
+  <div class="container">
+    <div class="clinic-v1__head reveal" data-reveal="fade">
+      <div>
+        <p class="clinic-v1__eyebrow">EXPERIENCIA CLÍNICA</p>
+        <h2>{whyUs.title}</h2>
+      </div>
+      <p>
+        Somos especialistas en implante capilar, con profesionales reconocidos internacionalmente.
+        Además, somos los <strong>primeros en Chile</strong> en tener el Dermatoscopio Leviacam,
+        tecnología que nos permite realizar un diagnóstico absolutamente objetivo y certero.
+      </p>
+    </div>
+
+    <div class="clinic-v1__story">
+      <div class="clinic-v1__gallery reveal" data-reveal="fade-right">
+        {whyUs.gallery.map((photo, index) => (
+          <figure class:list={['clinic-v1__photo', `clinic-v1__photo--${index + 1}`]}>
+            <img
+              src={photo.src}
+              sizes={index === 0 ? '(max-width: 767px) calc(100vw - 40px), 680px' : '(max-width: 767px) 48vw, 330px'}
+              alt={photo.alt}
+              loading="lazy"
+              width="768"
+              height="513"
+            />
+          </figure>
+        ))}
+      </div>
+
+      <aside class="clinic-v1__proof reveal" data-reveal="fade">
+        <p class="clinic-v1__proof-label">RESPALDO</p>
+        <h3>Experiencia que se demuestra.</h3>
+        <div class="clinic-v1__stats">
+          {whyUs.stats.map((stat) => (
+            <article class="clinic-v1__stat">
+              <p>{stat.kicker}</p>
+              <strong>
+                <span class="counter" data-to={stat.to} data-duration="2000">0</span>{stat.suffix}
+              </strong>
+              <small>{stat.title}</small>
+            </article>
+          ))}
+        </div>
+        <a href="#form">QUIERO AGENDAR <span aria-hidden="true">↗</span></a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .clinic-v1 {
+    padding: 56px 0 62px;
+    background:
+      linear-gradient(135deg, rgba(186, 211, 5, 0.09), transparent 34%),
+      #eef0df;
+    overflow: hidden;
+  }
+
+  .clinic-v1__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.72fr);
+    align-items: end;
+    gap: 42px;
+    margin-bottom: 28px;
+  }
+
+  .clinic-v1__eyebrow,
+  .clinic-v1__proof-label {
+    margin: 0 0 16px;
+    color: var(--teal);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+  }
+
+  .clinic-v1 h2 {
+    max-width: 720px;
+    color: var(--teal);
+    font-size: clamp(2.8rem, 4.4vw, 4.6rem);
+    letter-spacing: -0.055em;
+    line-height: 0.96;
+  }
+
+  .clinic-v1__head > p {
+    margin: 0 0 5px;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.72;
+  }
+
+  .clinic-v1__head strong { color: var(--ink); }
+
+  .clinic-v1__story {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+    gap: 0;
+  }
+
+  .clinic-v1__gallery {
+    grid-column: 1 / 10;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: 1.45fr 0.75fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    height: 360px;
+    min-height: 0;
+  }
+
+  .clinic-v1__photo {
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .clinic-v1__photo--1 {
+    grid-row: 1 / 3;
+    border-radius: 30px 12px 12px 30px;
+  }
+
+  .clinic-v1__photo--2 { border-radius: 12px 30px 12px 12px; }
+  .clinic-v1__photo--3 { border-radius: 12px 12px 30px 12px; }
+
+  .clinic-v1__photo img {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+    transition: transform 500ms ease;
+  }
+
+  .clinic-v1__photo:hover img { transform: scale(1.035); }
+
+  .clinic-v1__proof {
+    grid-column: 9 / 13;
+    grid-row: 1;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 286px;
+    margin-bottom: 18px;
+    padding: 22px;
+    border-radius: 30px;
+    background: var(--ink);
+    color: var(--cream);
+    box-shadow: 0 24px 54px rgba(6, 26, 28, 0.24);
+  }
+
+  .clinic-v1__proof-label { color: var(--lime); }
+
+  .clinic-v1__proof h3 {
+    max-width: 260px;
+    color: var(--cream);
+    font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+  }
+
+  .clinic-v1__stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .clinic-v1__stat {
+    position: relative;
+    padding: 12px 12px 10px;
+    border-top: 1px solid rgba(248, 246, 230, 0.16);
+    border-radius: 16px;
+    background: rgba(248, 246, 230, 0.06);
+  }
+
+  .clinic-v1__stat p,
+  .clinic-v1__stat small {
+    display: block;
+    margin: 0;
+    color: rgba(248, 246, 230, 0.65);
+    font-size: 0.74rem;
+    line-height: 1.35;
+  }
+
+  .clinic-v1__stat strong {
+    display: block;
+    margin: 4px 0;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .clinic-v1__proof > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(248, 246, 230, 0.16);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  .clinic-v1__proof > a span {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--ink);
+  }
+
+  @media (max-width: 900px) {
+    .clinic-v1__head { grid-template-columns: 1fr; gap: 22px; }
+    .clinic-v1__story { display: block; }
+    .clinic-v1__proof { min-height: 280px; max-width: 680px; margin: -26px auto 0; }
+    .clinic-v1__stats { gap: 14px; }
+  }
+
+  @media (max-width: 620px) {
+    .clinic-v1 { padding: 46px 0 50px; }
+    .clinic-v1__head { gap: 12px; margin-bottom: 22px; }
+    .clinic-v1 h2 { font-size: 2.25rem; }
+    .clinic-v1__head > p { font-size: .9rem; line-height: 1.5; }
+    .clinic-v1__gallery {
+      display: grid;
+      grid-template-columns: none;
+      grid-template-rows: 190px;
+      grid-auto-flow: column;
+      grid-auto-columns: 84%;
+      gap: 8px;
+      height: auto;
+      margin-right: -20px;
+      padding-right: 20px;
+      min-height: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .clinic-v1__gallery::-webkit-scrollbar { display: none; }
+    .clinic-v1__photo--1 {
+      grid-column: auto;
+      grid-row: 1;
+      border-radius: 22px;
+    }
+    .clinic-v1__photo--2,
+    .clinic-v1__photo--3 { grid-row: 1; border-radius: 22px; }
+    .clinic-v1__photo { scroll-snap-align: start; }
+    .clinic-v1__proof { min-height: 0; margin-top: 10px; padding: 22px 20px; border-radius: 24px; }
+    .clinic-v1__proof > a { display: none; }
+    .clinic-v1__stats { gap: 12px; }
+    .clinic-v1__stat strong { font-size: 2rem; }
+  }
+</style>

@@ -1,0 +1,782 @@
+---
+import { formSteps, hero } from '../data/content';
+
+interface Props {
+  fieldsPerStep?: number;
+  compactPhonePrompt?: boolean;
+  stepEventNames?: string[];
+  finalEventName?: string;
+  formVersion?: string;
+}
+
+/**
+ * A dónde escribe el formulario. Se resuelve en build time y viaja al
+ * navegador en data-attributes (Astro inlina las variables PUBLIC_*).
+ *
+ *   1. PUBLIC_MAKE_WEBHOOK_URL definida -> POST directo al webhook nuevo de Make.
+ *   2. PUBLIC_API_BASE_URL definida -> POST a la API de ../api (backend propio).
+ *   3. PUBLIC_SUPABASE_URL + PUBLIC_SUPABASE_ANON_KEY -> INSERT directo en
+ *      Supabase vía su API REST. Es el modo para un Static Site.
+ *   4. Ninguna de las anteriores -> modo demo: valida y escribe en la consola.
+ */
+const makeWebhookUrl = import.meta.env.PUBLIC_MAKE_WEBHOOK_URL ?? '';
+const apiBase = (import.meta.env.PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
+const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL ?? '').replace(/\/+$/, '');
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+const supabaseTable = import.meta.env.PUBLIC_SUPABASE_TABLE ?? 'leads';
+
+const requestedFieldsPerStep = Number(Astro.props.fieldsPerStep ?? 1);
+const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
+const stepEventNames = Astro.props.stepEventNames ?? [];
+const finalEventName = Astro.props.finalEventName ?? '';
+const formVersion = Astro.props.formVersion ?? '';
+const contactCopy = formVersion === 'v2'
+  ? { action: 'te contactaremos', procedure: 'implante' }
+  : { action: 'te contactaremos', procedure: 'injerto' };
+const fieldsPerStep = Math.max(1, Math.floor(requestedFieldsPerStep) || 1);
+const fieldGroups = Array.from(
+  { length: Math.ceil(formSteps.length / fieldsPerStep) },
+  (_, index) => formSteps.slice(index * fieldsPerStep, (index + 1) * fieldsPerStep),
+);
+const totalSteps = fieldGroups.length;
+const firstPct = Math.floor((1 / totalSteps) * 100);
+const attributionFields = [
+  'utm_id',
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_term',
+  'utm_content',
+  'utm_source_platform',
+  'utm_creative_format',
+  'utm_marketing_tactic',
+  'campaign_id',
+  'adgroup_id',
+  'ad_id',
+  'keyword',
+  'match_type',
+  'network',
+  'device',
+  'placement',
+  'gclid',
+  'gbraid',
+  'wbraid',
+  'fbclid',
+  'msclkid',
+  'ttclid',
+] as const;
+---
+
+<div class="lead-card">
+  <div class="lead-card__body">
+    <p class="lead-card__intro">
+      <br />Déjanos tus datos y {contactCopy.action} para<br />
+      <strong>agendar tu evaluación</strong> de {contactCopy.procedure} capilar
+    </p>
+
+    <form
+      class="lead-form"
+      id="lead-form"
+      data-make-webhook-url={makeWebhookUrl}
+      data-api-base={apiBase}
+      data-supabase-url={supabaseUrl}
+      data-supabase-key={supabaseKey}
+      data-supabase-table={supabaseTable}
+      data-step-events={JSON.stringify(stepEventNames)}
+      data-final-event={finalEventName}
+      data-form-version={formVersion}
+      novalidate
+    >
+      <div class="lead-form__progress" aria-hidden="true">
+        <div class="lead-form__progress-track">
+          <div class="lead-form__progress-meter" data-progress style={`width:${100 / totalSteps}%`}>
+            {firstPct}%
+          </div>
+        </div>
+      </div>
+
+      <div class="lead-form__steps" data-steps>
+        {fieldGroups.map((fields, i) => (
+          <div class:list={['lead-form__step', { 'is-active': i === 0 }]} data-step={i + 1}>
+            {fields.map((step) => (
+              <div class="lead-form__field-group">
+                <label
+                  class:list={['lead-form__label', { 'lead-form__label--sr': 'hideLabel' in step && step.hideLabel }]}
+                  for={step.name}
+                >
+                  {compactPhonePrompt && step.name === 'telefono' ? 'Teléfono*' : step.label}
+                </label>
+
+                {step.type === 'select' ? (
+                  <div class="lead-form__select">
+                    <select id={step.name} name={step.name} required>
+                      {'options' in step && step.options?.map((option) => (
+                        <option value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <input
+                    class="lead-form__field"
+                    type={step.type}
+                    id={step.name}
+                    name={step.name}
+                    placeholder={compactPhonePrompt && step.name === 'telefono' ? 'Teléfono*' : ('placeholder' in step ? step.placeholder : undefined)}
+                    autocomplete={'autocomplete' in step ? step.autocomplete : undefined}
+                    inputmode={step.type === 'tel' ? 'numeric' : undefined}
+                    maxlength={step.type === 'tel' ? 9 : undefined}
+                    pattern={step.type === 'tel' ? '[0-9]{9}' : undefined}
+                    required
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* El mensaje va debajo del campo, como en el original */}
+      <p class="lead-form__status" data-status role="status" aria-live="polite"></p>
+
+      {/* Identidad y atribución: nombres estables para Make y Pipedrive */}
+      <input type="hidden" name="form_version" value={formVersion} />
+      <input type="hidden" name="submission_id" />
+      <input type="hidden" name="source_form" value="Providencia" />
+      {attributionFields.map((name) => <input type="hidden" name={name} />)}
+
+      <div class="lead-form__buttons" data-buttons>
+        <button class="btn-form btn-form--prev" type="button" data-prev hidden>Volver</button>
+        <button class="btn-form btn-form--next" type="button" data-next>Siguiente</button>
+        <button class="btn-form btn-form--submit" type="submit" data-submit hidden>Quiero Agendar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="lead-card__footer">
+    <p>{hero.privacy}</p>
+  </div>
+</div>
+
+<style>
+  /* En el original el panel translúcido es el cuerpo (esquinas rectas) y sólo
+     la franja oscura de abajo lleva las esquinas redondeadas. Si el fondo va en
+     el contenedor, sus esquinas rectas asoman por detrás de la franja. */
+  .lead-card__body {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.31);
+  }
+  .lead-card__intro {
+    /* 30px propios + 20px de separación entre widgets del original */
+    margin: 0 0 50px;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.4;
+    text-align: center;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  .lead-card__intro strong {
+    font-weight: 700;
+  }
+
+  .lead-card__footer {
+    padding: 20px 20px 30px;
+    background-color: var(--ink);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+  .lead-card__footer p {
+    margin: 0;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  /* ---- Formulario multi-paso ---- */
+  .lead-form__progress {
+    margin-bottom: 17px;
+  }
+  .lead-form__progress-track {
+    height: 16px;
+    background-color: rgba(255, 255, 255, 0.19);
+    overflow: hidden;
+  }
+  .lead-form__progress-meter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    min-width: 44px;
+    padding-right: 15px;
+    background-color: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: right;
+    transition: width var(--t-base);
+  }
+
+  /* Va debajo del campo (como los mensajes de Elementor) y con un aspecto
+     distinto al de un input, para que no se confundan. */
+  .lead-form__status {
+    display: none;
+    margin: 0 0 10px;
+    padding: 7px 12px;
+    border-left: 3px solid currentColor;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+  .lead-form__status.is-error {
+    display: block;
+    background: rgba(255, 255, 255, 0.92);
+    color: #a4222a;
+  }
+  .lead-form__status.is-success {
+    display: block;
+    background: var(--lime);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .lead-form__step {
+    display: none;
+    margin-bottom: 10px;
+  }
+  .lead-form__step.is-active {
+    display: grid;
+    gap: 10px;
+  }
+  .lead-form__field-group {
+    min-width: 0;
+  }
+
+  .lead-form__label {
+    display: block;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .lead-form__label--sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .lead-form__field,
+  .lead-form__select select {
+    width: 100%;
+    height: 42px;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background-color: var(--white);
+    color: #000;
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .lead-form__field::placeholder {
+    color: #6b6b6b;
+    opacity: 1;
+  }
+  .lead-form__field.has-error,
+  .lead-form__select select.has-error {
+    box-shadow: 0 0 0 2px #c0392b;
+  }
+
+  .lead-form__select {
+    position: relative;
+  }
+  .lead-form__select select {
+    appearance: none;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+  .lead-form__select::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    translate: 0 -50%;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 5.5px 0 5.5px;
+    border-color: var(--ink) transparent transparent transparent;
+    pointer-events: none;
+  }
+
+  .lead-form__buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-form {
+    flex: 1 1 0;
+    padding: 8px;
+    border: 0;
+    border-radius: var(--radius-md);
+    background-color: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    line-height: 1.6;
+    cursor: pointer;
+    transition: background-color var(--t-base), color var(--t-base);
+  }
+  .btn-form:hover,
+  .btn-form:focus-visible {
+    background-color: var(--ink);
+    color: var(--cream);
+  }
+  .btn-form--prev {
+    flex: 0 0 30%;
+    background-color: var(--grey);
+    color: var(--white);
+  }
+  .btn-form--prev:hover {
+    background-color: var(--ink);
+    color: var(--white);
+  }
+  .btn-form[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+
+  @media (max-width: 767px) {
+    /* la franja oscura baja su padding inferior en móvil */
+    .lead-card__footer {
+      padding: 20px;
+    }
+  }
+</style>
+
+<script>
+  import { validateField, normalizePayload } from '../lib/validation';
+
+  const PENDING_KEY = 'tempora_pending_leads';
+  const SUCCESS_MESSAGE = '¡Listo! Recibimos tus datos y te llamaremos muy pronto.';
+  const ERROR_MESSAGE = 'No pudimos enviar tus datos. Inténtalo de nuevo en un momento.';
+
+  const form = document.querySelector<HTMLFormElement>('#lead-form');
+
+  function fieldsOf(step: HTMLElement) {
+    return Array.from(step.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select'));
+  }
+
+  function readAttribution(target: HTMLFormElement) {
+    const params = new URLSearchParams(window.location.search);
+    const aliases: Record<string, string[]> = {
+      campaign_id: ['campaign_id', 'campaignid'],
+      adgroup_id: ['adgroup_id', 'adgroupid'],
+      ad_id: ['ad_id', 'adid', 'creative'],
+      match_type: ['match_type', 'matchtype'],
+    };
+    const fields = [
+      'utm_id',
+      'utm_source',
+      'utm_medium',
+      'utm_campaign',
+      'utm_term',
+      'utm_content',
+      'utm_source_platform',
+      'utm_creative_format',
+      'utm_marketing_tactic',
+      'campaign_id',
+      'adgroup_id',
+      'ad_id',
+      'keyword',
+      'match_type',
+      'network',
+      'device',
+      'placement',
+      'gclid',
+      'gbraid',
+      'wbraid',
+      'fbclid',
+      'msclkid',
+      'ttclid',
+    ];
+
+    for (const key of fields) {
+      const input = target.querySelector<HTMLInputElement>(`input[name="${key}"]`);
+      if (!input) continue;
+      const candidates = aliases[key] ?? [key];
+      const value = candidates.map((candidate) => params.get(candidate)).find(Boolean);
+      if (value) input.value = value;
+    }
+  }
+
+  function ensureSubmissionId(target: HTMLFormElement) {
+    const input = target.querySelector<HTMLInputElement>('input[name="submission_id"]');
+    if (!input) return '';
+    if (!input.value) {
+      input.value = globalThis.crypto?.randomUUID?.()
+        ?? `tempora-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+    return input.value;
+  }
+
+  function buildPayload(target: HTMLFormElement) {
+    ensureSubmissionId(target);
+    const data = new FormData(target);
+    const raw: Record<string, string> = {};
+    data.forEach((value, key) => {
+      raw[key] = typeof value === 'string' ? value.trim() : '';
+    });
+    const payload = normalizePayload(raw);
+    payload.page_url = window.location.href;
+    payload.page_path = window.location.pathname;
+    payload.submitted_at = new Date().toISOString();
+    if (document.referrer) payload.referrer = document.referrer;
+    return payload;
+  }
+
+  async function persistLeadBackup(target: HTMLFormElement, payload: Record<string, string>) {
+    const supabaseUrl = target.dataset.supabaseUrl ?? '';
+    const supabaseKey = target.dataset.supabaseKey ?? '';
+    const supabaseTable = target.dataset.supabaseTable || 'leads';
+    if (!supabaseUrl || !supabaseKey) return false;
+
+    const makeConfigured = Boolean(target.dataset.makeWebhookUrl);
+    await request(
+      `${supabaseUrl}/rest/v1/${supabaseTable}?on_conflict=submission_id`,
+      {
+        'Content-Type': 'application/json',
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        Prefer: 'resolution=ignore-duplicates,return=minimal',
+      },
+      {
+        ...payload,
+        delivery_status: 'received',
+        make_status: makeConfigured ? 'pending' : 'not_configured',
+        pipedrive_status: makeConfigured ? 'pending' : 'not_configured',
+        raw_payload: payload,
+      }
+    );
+
+    await logDeliveryEvent(target, payload.submission_id, 'received').catch(() => undefined);
+    return true;
+  }
+
+  async function logDeliveryEvent(
+    target: HTMLFormElement,
+    submissionId: string,
+    eventType: 'received' | 'make_success' | 'make_failed' | 'queued_offline',
+    errorMessage = ''
+  ) {
+    const supabaseUrl = target.dataset.supabaseUrl ?? '';
+    const supabaseKey = target.dataset.supabaseKey ?? '';
+    if (!supabaseUrl || !supabaseKey || !submissionId) return;
+
+    await request(
+      `${supabaseUrl}/rest/v1/lead_delivery_events`,
+      {
+        'Content-Type': 'application/json',
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        Prefer: 'return=minimal',
+      },
+      {
+        submission_id: submissionId,
+        event_type: eventType,
+        ...(errorMessage ? { error_message: errorMessage.slice(0, 800) } : {}),
+      }
+    );
+  }
+
+  async function notifyMake(target: HTMLFormElement, payload: Record<string, string>) {
+    const makeWebhookUrl = target.dataset.makeWebhookUrl ?? '';
+    if (!makeWebhookUrl) return false;
+    await request(makeWebhookUrl, { 'Content-Type': 'application/json' }, payload);
+    return true;
+  }
+
+  /**
+   * Guarda primero el respaldo. Si Make falla después, el formulario sigue
+   * confirmado porque el lead ya está seguro y el CMS muestra el error.
+   */
+  async function sendLead(target: HTMLFormElement, payload: Record<string, string>) {
+    const apiBase = target.dataset.apiBase ?? '';
+    const supabaseUrl = target.dataset.supabaseUrl ?? '';
+    const supabaseKey = target.dataset.supabaseKey ?? '';
+    const backupConfigured = Boolean(supabaseUrl && supabaseKey);
+    let backupSaved = false;
+
+    if (backupConfigured) backupSaved = await persistLeadBackup(target, payload);
+
+    try {
+      const makeSent = await notifyMake(target, payload);
+      if (makeSent && backupSaved) {
+        await logDeliveryEvent(target, payload.submission_id, 'make_success').catch(() => undefined);
+      }
+      if (makeSent) return { ok: true, backupSaved };
+
+      if (!backupSaved && apiBase) {
+        await request(`${apiBase}/api/leads`, { 'Content-Type': 'application/json' }, payload);
+        return { ok: true, backupSaved: true };
+      }
+      if (backupSaved) return { ok: true, backupSaved };
+    } catch (error) {
+      if (!backupSaved) throw error;
+      const message = error instanceof Error ? error.message : 'Error desconocido en Make';
+      await logDeliveryEvent(target, payload.submission_id, 'make_failed', message).catch(() => undefined);
+      console.error('[Témpora] Lead respaldado, pero Make falló:', error);
+      return { ok: true, backupSaved, integrationFailed: true };
+    }
+
+    console.info('[Témpora] Modo demo – lead capturado:', payload);
+    return { ok: true, demo: true };
+  }
+
+  async function request(url: string, headers: Record<string, string>, body: unknown) {
+    const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+    if (res.ok) return res.status === 204 ? {} : await res.json().catch(() => ({}));
+    const error = await res.json().catch(() => ({}) as Record<string, unknown>);
+    throw new Error(String(error.message ?? error.error ?? `HTTP ${res.status}`));
+  }
+
+  function queueLead(payload: Record<string, string>) {
+    try {
+      const queue = JSON.parse(localStorage.getItem(PENDING_KEY) ?? '[]');
+      queue.push({ payload, at: Date.now() });
+      localStorage.setItem(PENDING_KEY, JSON.stringify(queue.slice(-10)));
+    } catch {
+      /* localStorage bloqueado */
+    }
+  }
+
+  async function flushQueue(target: HTMLFormElement) {
+    let queue: { payload: Record<string, string> }[] = [];
+    try {
+      queue = JSON.parse(localStorage.getItem(PENDING_KEY) ?? '[]');
+    } catch {
+      return;
+    }
+    if (!queue.length) return;
+
+    const remaining: typeof queue = [];
+    for (const item of queue) {
+      try {
+        await sendLead(target, item.payload);
+      } catch {
+        remaining.push(item);
+      }
+    }
+    try {
+      localStorage.setItem(PENDING_KEY, JSON.stringify(remaining));
+    } catch {
+      /* noop */
+    }
+  }
+
+  if (form) {
+    const steps = Array.from(form.querySelectorAll<HTMLElement>('.lead-form__step'));
+    const total = steps.length;
+    const progress = form.querySelector<HTMLElement>('[data-progress]')!;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const btnPrev = form.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const btnNext = form.querySelector<HTMLButtonElement>('[data-next]')!;
+    const btnSubmit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const stepsBox = form.querySelector<HTMLElement>('[data-steps]')!;
+    const buttonsBox = form.querySelector<HTMLElement>('[data-buttons]')!;
+    const emittedEvents = new Set<string>();
+    let configuredStepEvents: string[] = [];
+    let current = 0;
+
+    try {
+      const parsedStepEvents = JSON.parse(form.dataset.stepEvents ?? '[]');
+      if (Array.isArray(parsedStepEvents)) {
+        configuredStepEvents = parsedStepEvents.filter(
+          (eventName): eventName is string => typeof eventName === 'string' && eventName.length > 0
+        );
+      }
+    } catch {
+      configuredStepEvents = [];
+    }
+
+    readAttribution(form);
+
+    const setStatus = (message: string, type?: 'error' | 'success') => {
+      status.textContent = message;
+      status.className = `lead-form__status${message && type ? ` is-${type}` : ''}`;
+    };
+
+    const emitConfiguredEvent = (
+      eventName: string | undefined,
+      formStep: number,
+      onProcessed?: () => void
+    ) => {
+      if (!eventName || emittedEvents.has(eventName)) return false;
+      const eventPayload: Record<string, unknown> = {
+        event: eventName,
+        form_name: 'implante_capilar_providencia',
+        form_version: form.dataset.formVersion ?? '',
+        form_step: formStep,
+      };
+
+      if (onProcessed) {
+        eventPayload.eventCallback = onProcessed;
+        eventPayload.eventTimeout = 900;
+      }
+
+      window.dataLayer ??= [];
+      window.dataLayer.push(eventPayload);
+      emittedEvents.add(eventName);
+      return true;
+    };
+
+    const render = (focusField = true) => {
+      // current siempre dentro de rango: así nunca quedan 0 grupos visibles
+      current = Math.max(0, Math.min(current, total - 1));
+      steps.forEach((step, i) => step.classList.toggle('is-active', i === current));
+
+      // Si el envío había ocultado el formulario, lo devolvemos a la vida
+      stepsBox.hidden = false;
+      buttonsBox.hidden = false;
+
+      // El original muestra el porcentaje truncado (1/8 = 12%)
+      const pct = Math.floor(((current + 1) / total) * 100);
+      progress.style.width = `${pct}%`;
+      progress.textContent = `${pct}%`;
+
+      btnPrev.hidden = current === 0;
+      btnNext.hidden = current === total - 1;
+      btnSubmit.hidden = current !== total - 1;
+
+      // Al cambiar de paso el foco va al campo, también al volver atrás
+      if (focusField) fieldsOf(steps[current])[0]?.focus({ preventScroll: true });
+    };
+
+    const checkCurrentStep = () => {
+      let firstError = '';
+      let firstInvalid: HTMLInputElement | HTMLSelectElement | undefined;
+      for (const field of fieldsOf(steps[current])) {
+        const error = validateField(field);
+        field.classList.toggle('has-error', Boolean(error));
+        if (error && !firstError) {
+          firstError = error;
+          firstInvalid = field;
+        }
+      }
+      if (firstError) {
+        setStatus(firstError, 'error');
+        firstInvalid?.focus({ preventScroll: true });
+        return false;
+      }
+      setStatus('');
+      return true;
+    };
+
+    btnNext.addEventListener('click', () => {
+      if (!checkCurrentStep()) return;
+      if (current < total - 1) {
+        const confirmedStep = current + 1;
+        const stepEventName = configuredStepEvents[current];
+        current++;
+        render();
+        emitConfiguredEvent(stepEventName, confirmedStep);
+      }
+    });
+
+    btnPrev.addEventListener('click', () => {
+      if (current > 0) {
+        current--;
+        setStatus('');
+        render();
+      }
+    });
+
+    form.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      if (current < total - 1) {
+        e.preventDefault();
+        btnNext.click();
+      }
+    });
+
+    form.addEventListener('input', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('has-error')) {
+        target.classList.remove('has-error');
+        setStatus('');
+      }
+    });
+
+    const tel = form.querySelector<HTMLInputElement>('input[type="tel"]');
+    tel?.addEventListener('input', () => {
+      tel.value = tel.value.replace(/\D/g, '').slice(0, 9);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      for (let i = 0; i < total; i++) {
+        const invalidField = fieldsOf(steps[i]).find((field) => Boolean(validateField(field)));
+        if (invalidField) {
+          const error = validateField(invalidField);
+          current = i;
+          render();
+          setStatus(error, 'error');
+          invalidField.classList.add('has-error');
+          invalidField.focus({ preventScroll: true });
+          return;
+        }
+      }
+
+      const payload = buildPayload(form);
+
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = 'Enviando…';
+      setStatus('');
+
+      try {
+        await sendLead(form, payload);
+        window.dataLayer?.push({ event: 'lead_form_submit', form_name: 'implante_capilar_providencia' });
+        form.reset();
+        setStatus(SUCCESS_MESSAGE, 'success');
+        stepsBox.hidden = true;
+        buttonsBox.hidden = true;
+        progress.style.width = '100%';
+        progress.textContent = '100%';
+
+        let redirectStarted = false;
+        const redirectToThanks = () => {
+          if (redirectStarted) return;
+          redirectStarted = true;
+          window.location.assign('/gracias/');
+        };
+        emitConfiguredEvent(form.dataset.finalEvent, total, redirectToThanks);
+        window.setTimeout(redirectToThanks, 900);
+      } catch (err) {
+        console.error('[Témpora] Error enviando el lead:', err);
+        queueLead(payload);
+        setStatus(ERROR_MESSAGE, 'error');
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Quiero Agendar';
+      }
+    });
+
+    render(false);
+    void flushQueue(form);
+    window.addEventListener('online', () => void flushQueue(form));
+  }
+</script>

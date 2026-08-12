@@ -1,0 +1,142 @@
+---
+import '../styles/fonts.css';
+import '../styles/global.css';
+import { site } from '../data/content';
+
+interface Props {
+  title?: string;
+  description?: string;
+  robots?: string;
+}
+
+const { title = site.title, description = site.description, robots = 'index, follow' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalClinic',
+  name: 'Clínica Témpora – Implante Capilar',
+  url: site.url,
+  medicalSpecialty: 'Dermatology',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.locality,
+    addressRegion: site.address.region,
+    addressCountry: site.address.country,
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    opens: '09:00',
+    closes: '18:00',
+  },
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:image" content={`${site.url}/assets/img/hero-desktop.webp`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#F8F6E6" />
+
+    <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" />
+    <link rel="icon" href="/assets/img/isotipo.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/assets/img/isotipo.png" />
+
+    {/* Fuentes autoalojadas (ver tools/optimize-assets.mjs): sin terceros.
+        Se precargan las dos caras que se ven en la primera pantalla. */}
+    <link rel="preload" href="/assets/fonts/lato-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/inter-400_600.woff2" as="font" type="font/woff2" crossorigin />
+
+    <link rel="preload" as="image" href="/assets/img/hero-desktop.webp" media="(min-width: 768px)" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#hero">Ir al contenido</a>
+    <slot />
+
+    <script>
+      /* ---------------------------------------------------------------------
+         Animaciones de entrada + contadores.
+         Se ejecuta en todas las páginas que usen este layout.
+      --------------------------------------------------------------------- */
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // --- Reveal on scroll ---
+      const revealTargets = document.querySelectorAll<HTMLElement>('.reveal');
+      if (reducedMotion || !('IntersectionObserver' in window)) {
+        revealTargets.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-visible');
+              revealObserver.unobserve(entry.target);
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+        );
+        revealTargets.forEach((el) => revealObserver.observe(el));
+      }
+
+      // --- Contadores ---
+      function animateCounter(el: HTMLElement) {
+        const to = Number(el.dataset.to ?? '0');
+        const duration = Number(el.dataset.duration ?? '2000');
+        const format = (value: number) => value.toLocaleString('es-CL');
+
+        if (reducedMotion) {
+          el.textContent = format(to);
+          return;
+        }
+
+        let start: number | null = null;
+        const frame = (ts: number) => {
+          if (start === null) start = ts;
+          const progress = Math.min((ts - start) / duration, 1);
+          const eased = 1 - (1 - progress) * (1 - progress); // easeOutQuad
+          el.textContent = format(Math.round(to * eased));
+          if (progress < 1) requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      }
+
+      const counters = document.querySelectorAll<HTMLElement>('.counter');
+      if (!('IntersectionObserver' in window)) {
+        counters.forEach(animateCounter);
+      } else {
+        const counterObserver = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              animateCounter(entry.target as HTMLElement);
+              counterObserver.unobserve(entry.target);
+            }
+          },
+          { threshold: 0.5 }
+        );
+        counters.forEach((el) => counterObserver.observe(el));
+      }
+    </script>
+  </body>
+</html>
