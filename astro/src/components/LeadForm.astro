@@ -69,10 +69,16 @@ const attributionFields = [
 
 <div class="lead-card">
   <div class="lead-card__body">
-    <p class="lead-card__intro">
-      <br />Déjanos tus datos y {contactCopy.action} para<br />
-      <strong>agendar tu evaluación</strong> de {contactCopy.procedure} capilar
-    </p>
+    {formVersion === 'v1' ? (
+      <p class="lead-card__intro lead-card__intro--v1">
+        Déjanos tus datos y te contactaremos para <strong>agendar tu evaluación</strong> de injerto capilar.
+      </p>
+    ) : (
+      <p class="lead-card__intro">
+        <br />Déjanos tus datos y {contactCopy.action} para<br />
+        <strong>agendar tu evaluación</strong> de {contactCopy.procedure} capilar
+      </p>
+    )}
 
     <form
       class="lead-form"
@@ -178,6 +184,11 @@ const attributionFields = [
   }
   .lead-card__intro strong {
     font-weight: 700;
+  }
+  .lead-card__intro--v1 {
+    max-width: 31ch;
+    margin-inline: auto;
+    text-wrap: balance;
   }
 
   .lead-card__footer {
@@ -360,6 +371,12 @@ const attributionFields = [
 
 
   @media (max-width: 767px) {
+    .lead-card__intro--v1 {
+      max-width: 29ch;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      line-height: 1.35;
+    }
+
     /* la franja oscura baja su padding inferior en móvil */
     .lead-card__footer {
       padding: 20px;
