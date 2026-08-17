@@ -90,7 +90,7 @@ export const howItWorks = {
     'Procedimiento ambulatorio e indoloro.',
     'El procedimiento dura entre 5 y 8 horas.',
     'Resultados visibles desde el 6to mes.',
-    'Dirigido a personas con alopecia androgenética o cicatricial, y otra según indicación médica.',
+    'Dirigido a personas con alopecia androgenética, cicatricial u otras condiciones, según indicación médica.',
   ],
   videoId: 'BW9bjbc_21U',
   caption: 'Así funciona el implante capilar.',

@@ -137,6 +137,39 @@ const schema = {
         );
         counters.forEach((el) => counterObserver.observe(el));
       }
+
+      // --- Medición de CTAs ---
+      document.querySelectorAll<HTMLAnchorElement>('[data-cta-event]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const eventName = link.dataset.ctaEvent;
+          if (!eventName) return;
+
+          const externalNavigation = link.origin !== window.location.origin;
+          let navigationStarted = false;
+          const continueNavigation = () => {
+            if (!externalNavigation || navigationStarted) return;
+            navigationStarted = true;
+            window.location.assign(link.href);
+          };
+
+          const eventPayload: Record<string, unknown> = {
+            event: eventName,
+            cta_action: link.dataset.ctaAction ?? '',
+            cta_location: link.dataset.ctaLocation ?? '',
+            form_version: link.dataset.formVersion ?? '',
+          };
+
+          if (externalNavigation) {
+            event.preventDefault();
+            eventPayload.eventCallback = continueNavigation;
+            eventPayload.eventTimeout = 600;
+            window.setTimeout(continueNavigation, 650);
+          }
+
+          window.dataLayer ??= [];
+          window.dataLayer.push(eventPayload);
+        });
+      });
     </script>
   </body>
 </html>

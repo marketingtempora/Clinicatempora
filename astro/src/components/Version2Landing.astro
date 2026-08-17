@@ -8,6 +8,33 @@ const results = [
   { before: '006A.jpg', after: '006B.jpg', caseLabel: 'Caso 3', follicles: '2.000 folículos' },
 ] as const;
 
+const doctors = [
+  {
+    name: 'Dra. Jesús Díaz',
+    role: 'Fundadora y directora médica',
+    image: 'JESUS-1_00000000-2.jpg',
+    bio: 'Especialista en implante capilar FUE y FUSS, formada en centros de Argentina y España. Participa activamente en congresos internacionales y sociedades dedicadas a la restauración capilar.',
+  },
+  {
+    name: 'Dr. Francisco Castellón',
+    role: 'Director de restauración capilar',
+    image: 'FRANCISCO-1_00000000.jpg',
+    bio: 'Especialista en microtrasplante capilar FUE y FUSS, formado en Barcelona y con experiencia internacional en tricología. Integra organizaciones médicas nacionales e internacionales de restauración capilar.',
+  },
+  {
+    name: 'Dra. Sofía Viaux',
+    role: 'Directora de Investigación y Desarrollo',
+    image: 'SOFIA-1_00000000.jpg',
+    bio: 'Especialista en microtrasplante capilar FUE y FUSS. Lidera proyectos de investigación orientados a optimizar los procedimientos y participa en sociedades médicas y congresos internacionales.',
+  },
+  {
+    name: 'Dr. Nicolás Herrera',
+    role: 'Director de evaluaciones',
+    image: 'NICOLAS-1_00000000.jpg',
+    bio: 'Especialista en microtrasplante capilar FUE y FUSS y magíster en Ciencias de la Salud. Lidera la evaluación médica de cada caso y la planificación previa al procedimiento.',
+  },
+] as const;
+
 const faqs = [
   {
     question: '¿Cómo sé si soy candidato a un implante capilar?',
@@ -170,15 +197,15 @@ const faqs = [
           <div class="v2-media__track" data-media-track>
             <article class="v2-media__slide is-active" data-media-slide style="--thumb-y: 19%; --thumb-y-mobile: 25%;">
               <div class="v2-media__video"><YouTubeFacade id="h08RqUihV1I" alt="Pablo contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/PABLO.jpg" /></div>
-              <div class="v2-media__copy"><span>Pablo · Santiago</span><h3>«El cambio real lo vi cuando comparé mis fotos antiguas»</h3><p>Pablo Salinas cuenta cómo vivió su proceso en Clínica Témpora.</p></div>
+              <div class="v2-media__copy"><span>Pablo · Santiago</span><h3>La experiencia de Pablo con el implante capilar.</h3><p>Pablo Salinas cuenta cómo vivió su proceso en Clínica Témpora.</p></div>
             </article>
             <article class="v2-media__slide" data-media-slide style="--thumb-y: 20%; --thumb-y-mobile: 27%;">
               <div class="v2-media__video"><YouTubeFacade id="P7t6AGGPv48" alt="Joaquín contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/JOAQUIN.jpg" /></div>
-              <div class="v2-media__copy"><span>Joaquín · Valdivia</span><h3>«Prefiero andar en bicicleta pero con pelo, a andar en auto pero pelado»</h3><p>Joaquín relata su experiencia como paciente de Clínica Témpora.</p></div>
+              <div class="v2-media__copy"><span>Joaquín · Valdivia</span><h3>La experiencia de Joaquín con el implante capilar.</h3><p>Joaquín relata su experiencia como paciente de Clínica Témpora.</p></div>
             </article>
             <article class="v2-media__slide" data-media-slide style="--thumb-y: 18%; --thumb-y-mobile: 25%;">
               <div class="v2-media__video"><YouTubeFacade id="gAZ2xNm--Bo" alt="Juliano contando su experiencia en Clínica Témpora" thumb="/assets/img/v2/JULIANO.jpg" /></div>
-              <div class="v2-media__copy"><span>Juliano · Rancagua</span><h3>«Llegó un momento en que ya no me podía mirar al espejo»</h3><p>Juliano comparte su experiencia durante el proceso en Clínica Témpora.</p></div>
+              <div class="v2-media__copy"><span>Juliano · Rancagua</span><h3>La experiencia de Juliano con el implante capilar.</h3><p>Juliano comparte su experiencia durante el proceso en Clínica Témpora.</p></div>
             </article>
           </div>
           <div class="v2-media__controls">
@@ -206,22 +233,18 @@ const faqs = [
           </p>
         </div>
         <div class="v2-clinic__doctors" aria-label="Equipo médico de Clínica Témpora">
-          <article>
-            <img src="/assets/img/v2/JESUS-1_00000000-2.jpg" width="700" height="700" alt="Dra. Jesús Díaz, fundadora y directora médica de Clínica Témpora" loading="lazy" />
-            <div><strong>Dra. Jesús Díaz</strong><span>Fundadora y directora médica</span></div>
-          </article>
-          <article>
-            <img src="/assets/img/v2/FRANCISCO-1_00000000.jpg" width="700" height="700" alt="Dr. Francisco Castellón, director de restauración capilar" loading="lazy" />
-            <div><strong>Dr. Francisco Castellón</strong><span>Director de restauración capilar</span></div>
-          </article>
-          <article>
-            <img src="/assets/img/v2/SOFIA-1_00000000.jpg" width="700" height="700" alt="Dra. Sofía Viaux, directora de Investigación y Desarrollo" loading="lazy" />
-            <div><strong>Dra. Sofía Viaux</strong><span>Directora de Investigación y Desarrollo</span></div>
-          </article>
-          <article>
-            <img src="/assets/img/v2/NICOLAS-1_00000000.jpg" width="700" height="700" alt="Dr. Nicolás Herrera, director de evaluaciones" loading="lazy" />
-            <div><strong>Dr. Nicolás Herrera</strong><span>Director de evaluaciones</span></div>
-          </article>
+          {doctors.map((doctor) => (
+            <article>
+              <img src={`/assets/img/v2/${doctor.image}`} width="700" height="700" alt={`${doctor.name}, ${doctor.role} de Clínica Témpora`} loading="lazy" />
+              <details>
+                <summary>
+                  <span><strong>{doctor.name}</strong><small>{doctor.role}</small></span>
+                  <i aria-hidden="true">+</i>
+                </summary>
+                <p>{doctor.bio}</p>
+              </details>
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -249,7 +272,14 @@ const faqs = [
         <div class="v2-final__copy">
           <p class="v2-kicker">Tu caso empieza con una evaluación</p>
           <h2>Descubre qué resultado es posible para ti.</h2>
-          <a class="v2-button v2-button--lime" href="#form">Agenda tu evaluación de implante capilar</a>
+          <a
+            class="v2-button v2-button--lime"
+            href="https://ff.healthatom.io/vkFeJP"
+            data-cta-event="tempora_v2_final_autoagenda_click"
+            data-cta-action="autoagenda"
+            data-cta-location="final"
+            data-form-version="v2"
+          >Autoagendar mi evaluación</a>
         </div>
       </div>
     </section>
@@ -263,7 +293,24 @@ const faqs = [
     </div>
   </footer>
 
-  <a class="v2-floating" href="#form" data-floating>Quiero agendar <span aria-hidden="true">→</span></a>
+  <div class="v2-floating" data-floating aria-label="Opciones para agendar">
+    <a
+      class="v2-floating__action v2-floating__action--contact"
+      href="#form"
+      data-cta-event="tempora_v2_floating_contact_click"
+      data-cta-action="contacto"
+      data-cta-location="floating"
+      data-form-version="v2"
+    >Que me contacten</a>
+    <a
+      class="v2-floating__action v2-floating__action--auto"
+      href="https://ff.healthatom.io/vkFeJP"
+      data-cta-event="tempora_v2_floating_autoagenda_click"
+      data-cta-action="autoagenda"
+      data-cta-location="floating"
+      data-form-version="v2"
+    >Autoagendar <span aria-hidden="true">↗</span></a>
+  </div>
 </div>
 
 <style is:global>
@@ -403,9 +450,16 @@ const faqs = [
   .v2-clinic__doctors article { position: relative; min-width: 0; height: 285px; overflow: hidden; border-radius: 18px; background: var(--v2-ink); }
   .v2-clinic__doctors img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; transition: transform .35s ease; }
   .v2-clinic__doctors article:hover img { transform: scale(1.025); }
-  .v2-clinic__doctors article > div { position: absolute; right: 10px; bottom: 10px; left: 10px; display: grid; gap: 2px; padding: 11px 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(6,26,28,.82); backdrop-filter: blur(10px); }
-  .v2-clinic__doctors strong { color: white; font: 700 .9rem/1.25 var(--font-body); }
-  .v2-clinic__doctors span { color: rgba(255,255,255,.7); font: 500 .7rem/1.3 var(--font-body); }
+  .v2-clinic__doctors details { position: absolute; z-index: 2; right: 10px; bottom: 10px; left: 10px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(6,26,28,.88); backdrop-filter: blur(12px); color: white; transition: inset 180ms ease, background-color 180ms ease; }
+  .v2-clinic__doctors details[open] { top: 10px; display: flex; flex-direction: column; overflow-y: auto; background: rgba(6,26,28,.97); }
+  .v2-clinic__doctors summary { display: grid; grid-template-columns: minmax(0, 1fr) 28px; gap: 8px; align-items: center; padding: 10px 11px; cursor: pointer; list-style: none; }
+  .v2-clinic__doctors summary::-webkit-details-marker { display: none; }
+  .v2-clinic__doctors summary > span { display: grid; gap: 2px; min-width: 0; }
+  .v2-clinic__doctors strong { color: white; font: 700 .86rem/1.25 var(--font-body); }
+  .v2-clinic__doctors small { color: rgba(255,255,255,.7); font: 500 .66rem/1.3 var(--font-body); }
+  .v2-clinic__doctors summary i { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--v2-lime); color: var(--v2-ink); font: 800 1rem/1 var(--font-body); transition: rotate 180ms ease; }
+  .v2-clinic__doctors details[open] summary i { rotate: 45deg; }
+  .v2-clinic__doctors details > p { margin: 0; padding: 1px 12px 14px; color: rgba(255,255,255,.78); font-size: .7rem; line-height: 1.5; }
   .v2-faq { background: var(--v2-paper); }
   .v2-faq__grid { display: grid; grid-template-columns: .68fr 1.32fr; gap: 56px; align-items: start; }
   .v2-faq__intro { position: sticky; top: 110px; }
@@ -430,8 +484,11 @@ const faqs = [
   .v2-footer__inner > div { display: grid; }
   .v2-footer strong { font: 700 .82rem/1.4 var(--font-body); }
   .v2-footer span { color: rgba(255,255,255,.55); font: 500 .74rem/1.4 var(--font-body); }
-  .v2-floating { position: fixed; z-index: 70; right: 22px; bottom: 20px; display: flex; align-items: center; gap: 18px; padding: 15px 18px 15px 22px; border: 1px solid rgba(255,255,255,.15); border-radius: 999px; background: var(--v2-lime); box-shadow: 0 18px 50px rgba(6,26,28,.3); color: var(--v2-ink); font: 800 .86rem/1 var(--font-body); opacity: 0; pointer-events: none; translate: 0 18px; transition: opacity 180ms ease, translate 180ms ease; }
-  .v2-floating span { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--v2-ink); color: white; }
+  .v2-floating { position: fixed; z-index: 70; right: 22px; bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 7px; border: 1px solid rgba(255,255,255,.18); border-radius: 22px; background: rgba(6,26,28,.94); box-shadow: 0 18px 50px rgba(6,26,28,.3); backdrop-filter: blur(16px); opacity: 0; pointer-events: none; translate: 0 18px; transition: opacity 180ms ease, translate 180ms ease; }
+  .v2-floating__action { display: flex; min-height: 46px; padding: 12px 16px; align-items: center; justify-content: center; border-radius: 16px; font: 800 .8rem/1.2 var(--font-body); text-align: center; }
+  .v2-floating__action--contact { color: white; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
+  .v2-floating__action--auto { gap: 10px; background: var(--v2-lime); color: var(--v2-ink); }
+  .v2-floating__action span { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--v2-ink); color: white; }
   .v2-floating.is-visible { opacity: 1; pointer-events: auto; translate: 0; }
   .v2-form-shell.is-emphasized { animation: v2-form-pulse 760ms cubic-bezier(.2,.8,.2,1); }
   @keyframes v2-form-pulse { 0%,100% { transform: scale(1); } 34% { transform: scale(1.025); box-shadow: 0 0 0 8px rgba(186,211,5,.18), 0 28px 80px rgba(0,0,0,.35); } }
@@ -482,8 +539,9 @@ const faqs = [
     .v2-case--wide { grid-column: auto; }
     .v2-case__compare { aspect-ratio: 1.28 / 1; }
     .v2-method__grid, .v2-faq__grid { grid-template-columns: 1fr; gap: 20px; }
+    .v2-method__grid { gap: 16px; }
     .v2-method__copy h2 { font-size: 1.9rem; }
-    .v2-method__lead { margin: 12px 0 14px; }
+    .v2-method__lead { margin: 12px 0 0; }
     .v2-steps { grid-template-columns: 1fr; grid-auto-flow: row; gap: 0; width: auto; margin: 16px 14px 0; padding: 0; overflow: visible; scroll-snap-type: none; }
     .v2-steps::before { top: 20px; right: auto; bottom: 30px; left: 20px; width: 2px; height: auto; }
     .v2-steps li { display: grid; grid-template-columns: 42px 1fr; gap: 13px; min-height: 68px; padding: 0 0 8px; }
@@ -512,7 +570,8 @@ const faqs = [
     .v2-final__copy .v2-button { width: 100%; padding-inline: 14px; font-size: .82rem; }
     .v2-footer { padding-bottom: 104px; }
     .v2-footer__inner { grid-template-columns: 1fr; gap: 24px; }
-    .v2-floating { right: 12px; bottom: 10px; left: 12px; justify-content: space-between; }
+    .v2-floating { right: 12px; bottom: 10px; left: 12px; display: grid; grid-template-columns: 1fr 1fr; padding: 6px; }
+    .v2-floating__action { min-width: 0; padding-inline: 9px; font-size: .76rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
