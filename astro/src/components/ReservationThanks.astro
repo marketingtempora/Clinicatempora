@@ -15,7 +15,7 @@ const eventName = `tempora_${landing}_autoagenda_completed`;
   robots="noindex, nofollow"
 >
   <main
-    class="reservation-thanks"
+    class:list={['reservation-thanks', `reservation-thanks--${landing}`]}
     id="hero"
     data-reservation-event={eventName}
     data-landing-version={landing}
@@ -57,11 +57,24 @@ const eventName = `tempora_${landing}_autoagenda_completed`;
     min-height: 100svh;
     place-items: center;
     padding: 32px 20px;
-    background:
-      linear-gradient(135deg, rgba(45, 80, 87, 0.58), rgba(6, 26, 28, 0.94)),
-      url('/assets/img/v2/tempora-galeria3.webp') 55% center / cover no-repeat;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     isolation: isolate;
     overflow: hidden;
+  }
+
+  .reservation-thanks--lp1 {
+    background-image:
+      linear-gradient(135deg, rgba(45, 80, 87, 0.58), rgba(6, 26, 28, 0.94)),
+      url('/assets/img/v2/tempora-galeria3.webp');
+    background-position: 58% center;
+  }
+
+  .reservation-thanks--lp2 {
+    background-image:
+      linear-gradient(135deg, rgba(45, 80, 87, 0.58), rgba(6, 26, 28, 0.94)),
+      url('/assets/img/v2/tempora-galeria6.webp');
   }
 
   .reservation-thanks::before {
@@ -180,7 +193,14 @@ const eventName = `tempora_${landing}_autoagenda_completed`;
   @media (max-width: 540px) {
     .reservation-thanks {
       padding: 18px;
-      background-position: 62% center;
+    }
+
+    .reservation-thanks--lp1 {
+      background-position: 58% center;
+    }
+
+    .reservation-thanks--lp2 {
+      background-position: 46% center;
     }
 
     .reservation-thanks__card {
