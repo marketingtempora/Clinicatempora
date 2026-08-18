@@ -332,6 +332,8 @@ const faqs = [
       aria-expanded="false"
       aria-controls="version2-floating-menu"
       data-floating-toggle
+      data-floating-event="tempora_v2_floating_launcher_click"
+      data-form-version="v2"
     >
       <span>Agendar</span>
       <span class="v2-floating__toggle-icon" aria-hidden="true">
@@ -624,7 +626,17 @@ const faqs = [
   };
 
   floatingToggle?.addEventListener('click', () => {
-    setFloatingOpen(floatingToggle.getAttribute('aria-expanded') !== 'true');
+    const willOpen = floatingToggle.getAttribute('aria-expanded') !== 'true';
+    if (willOpen && floatingToggle.dataset.floatingEvent) {
+      window.dataLayer ??= [];
+      window.dataLayer.push({
+        event: floatingToggle.dataset.floatingEvent,
+        cta_action: 'abrir_opciones',
+        cta_location: 'floating',
+        form_version: floatingToggle.dataset.formVersion ?? 'v2',
+      });
+    }
+    setFloatingOpen(willOpen);
   });
 
   floating?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setFloatingOpen(false)));
