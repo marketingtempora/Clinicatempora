@@ -25,23 +25,51 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
     </main>
     <FooterVersion1 />
 
-    <div class="version1__floating-actions" data-floating-actions aria-label="Opciones para agendar">
-      <a
-        class="version1__floating-action version1__floating-action--contact"
-        href="#form"
-        data-cta-event="tempora_v1_floating_contact_click"
-      data-cta-action="contacto"
-      data-cta-location="floating"
-      data-form-version="v1"
-      >Que me contacten <span aria-hidden="true">→</span></a>
-      <a
-        class="version1__floating-action version1__floating-action--auto"
-        href="https://ff.healthatom.io/xVvfZu"
-        data-cta-event="tempora_v1_floating_autoagenda_click"
-        data-cta-action="autoagenda"
-        data-cta-location="floating"
-        data-form-version="v1"
-      >Autoagendar <span aria-hidden="true">↗</span></a>
+    <div class="version1__floating-actions" data-floating-actions>
+      <div class="version1__floating-menu" id="version1-floating-menu" role="menu" aria-label="Opciones para agendar" aria-hidden="true">
+        <a
+          class="version1__floating-action"
+          href="#form"
+          role="menuitem"
+          data-cta-event="tempora_v1_floating_contact_click"
+          data-cta-action="contacto"
+          data-cta-location="floating"
+          data-form-version="v1"
+        >
+          <span class="version1__floating-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M7 10h10M7 14h6M5 19l-2 2v-5.5A8 8 0 0 1 4 4.7 9.7 9.7 0 0 1 12 2c5 0 9 3.6 9 8s-4 8-9 8a11 11 0 0 1-3.2-.5L5 19Z" /></svg>
+          </span>
+          <span>Que me contacten</span>
+        </a>
+        <a
+          class="version1__floating-action"
+          href="https://ff.healthatom.io/xVvfZu"
+          role="menuitem"
+          data-cta-event="tempora_v1_floating_autoagenda_click"
+          data-cta-action="autoagenda"
+          data-cta-location="floating"
+          data-form-version="v1"
+        >
+          <span class="version1__floating-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm4 9 2 2 4-5" /></svg>
+          </span>
+          <span>Autoagendar</span>
+        </a>
+      </div>
+      <button
+        class="version1__floating-toggle"
+        type="button"
+        aria-label="Abrir opciones para agendar"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        aria-controls="version1-floating-menu"
+        data-floating-toggle
+      >
+        <span>Agendar</span>
+        <span class="version1__floating-toggle-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M12 6v12M6 12h12" /></svg>
+        </span>
+      </button>
     </div>
   </div>
 </Layout>
@@ -64,47 +92,114 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
     right: 24px;
     bottom: 22px;
     z-index: 50;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: min(440px, calc(100% - 48px));
-    gap: 8px;
-    padding: 7px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 22px;
-    background: rgba(6, 26, 28, 0.94);
-    box-shadow: 0 18px 50px rgba(6, 26, 28, 0.3);
-    backdrop-filter: blur(16px);
+    display: flex;
+    width: min(230px, calc(100% - 48px));
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
     opacity: 0;
     pointer-events: none;
     translate: 0 18px;
     transition: opacity 180ms ease, translate 180ms ease;
   }
 
+  .version1__floating-menu {
+    display: grid;
+    width: 100%;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.96);
+    transform-origin: right bottom;
+    visibility: hidden;
+    transition: opacity 160ms ease, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 160ms;
+  }
+
   .version1__floating-action {
     display: flex;
-    min-height: 46px;
-    padding: 12px 16px;
+    min-height: 54px;
+    padding: 8px 14px 8px 9px;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    border-radius: 16px;
-    background: var(--lime);
-    color: var(--ink);
+    gap: 11px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 17px;
+    background: rgba(6, 26, 28, 0.96);
+    box-shadow: 0 12px 34px rgba(6, 26, 28, 0.24);
+    color: white;
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 800;
     line-height: 1.2;
-    text-align: center;
+    text-align: left;
+    backdrop-filter: blur(14px);
+    transition: transform 160ms ease, background 160ms ease;
   }
 
-  .version1__floating-action span {
+  .version1__floating-action:hover {
+    background: #0d2a2d;
+    transform: translateX(-3px);
+  }
+
+  .version1__floating-action-icon {
     display: grid;
-    width: 24px;
-    height: 24px;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--ink);
+  }
+
+  .version1__floating-action-icon svg,
+  .version1__floating-toggle-icon svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.9;
+  }
+
+  .version1__floating-toggle {
+    display: flex;
+    min-height: 56px;
+    padding: 8px 9px 8px 20px;
+    align-items: center;
+    gap: 14px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--lime);
+    box-shadow: 0 14px 38px rgba(6, 26, 28, 0.3);
+    color: var(--ink);
+    cursor: pointer;
+    font: 800 0.88rem/1 var(--font-body);
+  }
+
+  .version1__floating-toggle-icon {
+    display: grid;
+    width: 40px;
+    height: 40px;
     place-items: center;
     border-radius: 50%;
     background: var(--ink);
     color: white;
+  }
+
+  .version1__floating-toggle-icon svg {
+    transition: transform 180ms ease;
+  }
+
+  .version1__floating-actions.is-open .version1__floating-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    visibility: visible;
+  }
+
+  .version1__floating-actions.is-open .version1__floating-toggle-icon svg {
+    transform: rotate(45deg);
   }
 
   .version1__floating-actions.is-visible {
@@ -124,32 +219,59 @@ import FooterVersion1 from '../../components/FooterVersion1.astro';
 
     .version1__floating-actions {
       right: 12px;
-      bottom: 10px;
-      left: 12px;
-      width: auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      padding: 6px;
+      bottom: 12px;
+      left: auto;
+      width: min(220px, calc(100% - 24px));
     }
+  }
 
-    .version1__floating-action {
-      min-width: 0;
-      padding-inline: 9px;
-      font-size: 0.76rem;
+  @media (prefers-reduced-motion: reduce) {
+    .version1__floating-actions,
+    .version1__floating-menu,
+    .version1__floating-action,
+    .version1__floating-toggle-icon svg {
+      transition: none;
     }
   }
 </style>
 
 <script>
   const floatingCta = document.querySelector<HTMLElement>('[data-floating-actions]');
+  const floatingToggle = floatingCta?.querySelector<HTMLButtonElement>('[data-floating-toggle]');
+  const floatingMenu = floatingCta?.querySelector<HTMLElement>('[role="menu"]');
   const leadForm = document.getElementById('form');
   const formCard = leadForm?.closest<HTMLElement>('.hero-v1__form');
+
+  const setFloatingOpen = (open: boolean) => {
+    if (!floatingCta || !floatingToggle || !floatingMenu) return;
+    floatingCta.classList.toggle('is-open', open);
+    floatingToggle.setAttribute('aria-expanded', String(open));
+    floatingToggle.setAttribute('aria-label', `${open ? 'Cerrar' : 'Abrir'} opciones para agendar`);
+    floatingMenu.setAttribute('aria-hidden', String(!open));
+  };
+
+  floatingToggle?.addEventListener('click', () => {
+    setFloatingOpen(floatingToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  floatingCta?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setFloatingOpen(false)));
+
+  document.addEventListener('click', (event) => {
+    if (floatingCta && !floatingCta.contains(event.target as Node)) setFloatingOpen(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || floatingToggle?.getAttribute('aria-expanded') !== 'true') return;
+    setFloatingOpen(false);
+    floatingToggle.focus();
+  });
 
   if (floatingCta && leadForm && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         const floatingIsVisible = !entry.isIntersecting;
         floatingCta.classList.toggle('is-visible', floatingIsVisible);
+        if (!floatingIsVisible) setFloatingOpen(false);
       },
       { threshold: 0.08 }
     );

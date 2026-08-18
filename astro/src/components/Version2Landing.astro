@@ -293,23 +293,51 @@ const faqs = [
     </div>
   </footer>
 
-  <div class="v2-floating" data-floating aria-label="Opciones para agendar">
-    <a
-      class="v2-floating__action v2-floating__action--contact"
-      href="#form"
-      data-cta-event="tempora_v2_floating_contact_click"
-      data-cta-action="contacto"
-      data-cta-location="floating"
-      data-form-version="v2"
-    >Que me contacten <span aria-hidden="true">→</span></a>
-    <a
-      class="v2-floating__action v2-floating__action--auto"
-      href="https://ff.healthatom.io/vkFeJP"
-      data-cta-event="tempora_v2_floating_autoagenda_click"
-      data-cta-action="autoagenda"
-      data-cta-location="floating"
-      data-form-version="v2"
-    >Autoagendar <span aria-hidden="true">↗</span></a>
+  <div class="v2-floating" data-floating>
+    <div class="v2-floating__menu" id="version2-floating-menu" role="menu" aria-label="Opciones para agendar" aria-hidden="true">
+      <a
+        class="v2-floating__action"
+        href="#form"
+        role="menuitem"
+        data-cta-event="tempora_v2_floating_contact_click"
+        data-cta-action="contacto"
+        data-cta-location="floating"
+        data-form-version="v2"
+      >
+        <span class="v2-floating__action-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M7 10h10M7 14h6M5 19l-2 2v-5.5A8 8 0 0 1 4 4.7 9.7 9.7 0 0 1 12 2c5 0 9 3.6 9 8s-4 8-9 8a11 11 0 0 1-3.2-.5L5 19Z" /></svg>
+        </span>
+        <span>Que me contacten</span>
+      </a>
+      <a
+        class="v2-floating__action"
+        href="https://ff.healthatom.io/vkFeJP"
+        role="menuitem"
+        data-cta-event="tempora_v2_floating_autoagenda_click"
+        data-cta-action="autoagenda"
+        data-cta-location="floating"
+        data-form-version="v2"
+      >
+        <span class="v2-floating__action-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm4 9 2 2 4-5" /></svg>
+        </span>
+        <span>Autoagendar</span>
+      </a>
+    </div>
+    <button
+      class="v2-floating__toggle"
+      type="button"
+      aria-label="Abrir opciones para agendar"
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-controls="version2-floating-menu"
+      data-floating-toggle
+    >
+      <span>Agendar</span>
+      <span class="v2-floating__toggle-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false"><path d="M12 6v12M6 12h12" /></svg>
+      </span>
+    </button>
   </div>
 </div>
 
@@ -482,9 +510,17 @@ const faqs = [
   .v2-footer__inner > div { display: grid; }
   .v2-footer strong { font: 700 .82rem/1.4 var(--font-body); }
   .v2-footer span { color: rgba(255,255,255,.55); font: 500 .74rem/1.4 var(--font-body); }
-  .v2-floating { position: fixed; z-index: 70; right: 22px; bottom: 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(440px, calc(100% - 48px)); gap: 8px; padding: 7px; border: 1px solid rgba(255,255,255,.18); border-radius: 22px; background: rgba(6,26,28,.94); box-shadow: 0 18px 50px rgba(6,26,28,.3); backdrop-filter: blur(16px); opacity: 0; pointer-events: none; translate: 0 18px; transition: opacity 180ms ease, translate 180ms ease; }
-  .v2-floating__action { display: flex; min-height: 46px; padding: 12px 16px; align-items: center; justify-content: center; gap: 10px; border-radius: 16px; background: var(--v2-lime); color: var(--v2-ink); font: 800 .8rem/1.2 var(--font-body); text-align: center; }
-  .v2-floating__action span { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--v2-ink); color: white; }
+  .v2-floating { position: fixed; z-index: 70; right: 22px; bottom: 20px; display: flex; width: min(230px, calc(100% - 48px)); flex-direction: column; align-items: flex-end; gap: 10px; opacity: 0; pointer-events: none; translate: 0 18px; transition: opacity 180ms ease, translate 180ms ease; }
+  .v2-floating__menu { display: grid; width: 100%; gap: 8px; opacity: 0; pointer-events: none; transform: translateY(10px) scale(.96); transform-origin: right bottom; visibility: hidden; transition: opacity 160ms ease, transform 180ms cubic-bezier(.2,.8,.2,1), visibility 160ms; }
+  .v2-floating__action { display: flex; min-height: 54px; padding: 8px 14px 8px 9px; align-items: center; gap: 11px; border: 1px solid rgba(255,255,255,.18); border-radius: 17px; background: rgba(6,26,28,.96); box-shadow: 0 12px 34px rgba(6,26,28,.24); color: white; font: 800 .8rem/1.2 var(--font-body); text-align: left; backdrop-filter: blur(14px); transition: transform 160ms ease, background 160ms ease; }
+  .v2-floating__action:hover { background: var(--v2-ink-2); transform: translateX(-3px); }
+  .v2-floating__action-icon { display: grid; width: 36px; height: 36px; flex: 0 0 36px; place-items: center; border-radius: 50%; background: var(--v2-lime); color: var(--v2-ink); }
+  .v2-floating__action-icon svg, .v2-floating__toggle-icon svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
+  .v2-floating__toggle { display: flex; min-height: 56px; padding: 8px 9px 8px 20px; align-items: center; gap: 14px; border: 0; border-radius: 999px; background: var(--v2-lime); box-shadow: 0 14px 38px rgba(6,26,28,.3); color: var(--v2-ink); cursor: pointer; font: 800 .88rem/1 var(--font-body); }
+  .v2-floating__toggle-icon { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: var(--v2-ink); color: white; }
+  .v2-floating__toggle-icon svg { transition: transform 180ms ease; }
+  .v2-floating.is-open .v2-floating__menu { opacity: 1; pointer-events: auto; transform: none; visibility: visible; }
+  .v2-floating.is-open .v2-floating__toggle-icon svg { transform: rotate(45deg); }
   .v2-floating.is-visible { opacity: 1; pointer-events: auto; translate: 0; }
   .v2-form-shell.is-emphasized { animation: v2-form-pulse 760ms cubic-bezier(.2,.8,.2,1); }
   @keyframes v2-form-pulse { 0%,100% { transform: scale(1); } 34% { transform: scale(1.025); box-shadow: 0 0 0 8px rgba(186,211,5,.18), 0 28px 80px rgba(0,0,0,.35); } }
@@ -564,19 +600,44 @@ const faqs = [
     .v2-final__copy .v2-button { width: 100%; padding-inline: 14px; font-size: .82rem; }
     .v2-footer { padding-bottom: 104px; }
     .v2-footer__inner { grid-template-columns: 1fr; gap: 24px; }
-    .v2-floating { right: 12px; bottom: 10px; left: 12px; width: auto; display: grid; grid-template-columns: 1fr 1fr; padding: 6px; }
-    .v2-floating__action { min-width: 0; padding-inline: 9px; font-size: .76rem; }
+    .v2-floating { right: 12px; bottom: 12px; left: auto; width: min(220px, calc(100% - 24px)); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .v2-button, .v2-floating, .v2-form-shell { transition: none; animation: none !important; }
+    .v2-button, .v2-floating, .v2-floating__menu, .v2-floating__action, .v2-floating__toggle-icon svg, .v2-form-shell { transition: none; animation: none !important; }
   }
 </style>
 
 <script>
   const formShell = document.querySelector<HTMLElement>('[data-form-shell]');
   const floating = document.querySelector<HTMLElement>('[data-floating]');
+  const floatingToggle = floating?.querySelector<HTMLButtonElement>('[data-floating-toggle]');
+  const floatingMenu = floating?.querySelector<HTMLElement>('[role="menu"]');
   let pulseTimer: number | undefined;
+
+  const setFloatingOpen = (open: boolean) => {
+    if (!floating || !floatingToggle || !floatingMenu) return;
+    floating.classList.toggle('is-open', open);
+    floatingToggle.setAttribute('aria-expanded', String(open));
+    floatingToggle.setAttribute('aria-label', `${open ? 'Cerrar' : 'Abrir'} opciones para agendar`);
+    floatingMenu.setAttribute('aria-hidden', String(!open));
+  };
+
+  floatingToggle?.addEventListener('click', () => {
+    setFloatingOpen(floatingToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  floating?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setFloatingOpen(false)));
+
+  document.addEventListener('click', (event) => {
+    if (floating && !floating.contains(event.target as Node)) setFloatingOpen(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || floatingToggle?.getAttribute('aria-expanded') !== 'true') return;
+    setFloatingOpen(false);
+    floatingToggle.focus();
+  });
 
   const emphasizeForm = () => {
     if (!formShell) return;
@@ -592,6 +653,7 @@ const faqs = [
       ([entry]) => {
         const floatingIsVisible = !entry.isIntersecting;
         floating.classList.toggle('is-visible', floatingIsVisible);
+        if (!floatingIsVisible) setFloatingOpen(false);
       },
       { threshold: 0.08 }
     );
