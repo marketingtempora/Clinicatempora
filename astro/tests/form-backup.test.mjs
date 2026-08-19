@@ -22,3 +22,10 @@ test('cada landing identifica inequívocamente el origen del formulario', () => 
   assert.match(source, /const sourceForm = formVersion === 'v2' \? 'lp2' : 'lp1'/);
   assert.match(source, /name="source_form" value=\{sourceForm\}/);
 });
+
+test('el respaldo público inserta sin exigir lectura y acepta un reintento duplicado', () => {
+  assert.doesNotMatch(source, /on_conflict=submission_id/);
+  assert.doesNotMatch(source, /resolution=ignore-duplicates/);
+  assert.match(source, /acceptedErrorCodes/);
+  assert.match(source, /'23505'/);
+});
