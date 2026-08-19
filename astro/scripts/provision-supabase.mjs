@@ -39,10 +39,6 @@ async function provisionSupabase() {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(cmsEmail)) {
     throw new Error('TEMPORA_CMS_EMAIL no tiene un formato válido.');
   }
-  if (cmsPassword.length < 12) {
-    throw new Error('TEMPORA_CMS_PASSWORD debe tener al menos 12 caracteres.');
-  }
-
   const projectUrl = `https://${projectRef}.supabase.co`;
   const schema = await readFile(new URL('../supabase/schema.sql', import.meta.url), 'utf8');
 
