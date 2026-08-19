@@ -30,6 +30,7 @@ const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
 const stepEventNames = Astro.props.stepEventNames ?? [];
 const finalEventName = Astro.props.finalEventName ?? '';
 const formVersion = Astro.props.formVersion ?? '';
+const sourceForm = formVersion === 'v2' ? 'lp2' : 'lp1';
 const contactCopy = formVersion === 'v2'
   ? { action: 'te contactaremos', procedure: 'implante' }
   : { action: 'te contactaremos', procedure: 'injerto' };
@@ -65,14 +66,28 @@ const attributionFields = [
   'msclkid',
   'ttclid',
 ] as const;
+const gtmLegacyFields = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+  'campaign_id',
+] as const;
 ---
 
 <div class="lead-card">
   <div class="lead-card__body">
-    <p class="lead-card__intro">
-      <br />Déjanos tus datos y {contactCopy.action} para<br />
-      <strong>agendar tu evaluación</strong> de {contactCopy.procedure} capilar
-    </p>
+    {formVersion === 'v1' ? (
+      <p class="lead-card__intro lead-card__intro--v1">
+        Déjanos tus datos y te contactaremos para <strong>agendar tu evaluación</strong> de injerto capilar.
+      </p>
+    ) : (
+      <p class="lead-card__intro">
+        <br />Déjanos tus datos y {contactCopy.action} para<br />
+        <strong>agendar tu evaluación</strong> de {contactCopy.procedure} capilar
+      </p>
+    )}
 
     <form
       class="lead-form"
@@ -141,8 +156,11 @@ const attributionFields = [
       {/* Identidad y atribución: nombres estables para Make y Pipedrive */}
       <input type="hidden" name="form_version" value={formVersion} />
       <input type="hidden" name="submission_id" />
-      <input type="hidden" name="source_form" value="Providencia" />
+      <input type="hidden" name="source_form" value={sourceForm} />
       {attributionFields.map((name) => <input type="hidden" name={name} />)}
+      {gtmLegacyFields.map((name) => (
+        <input type="hidden" name={`form_fields[${name}]`} disabled data-gtm-legacy />
+      ))}
 
       <div class="lead-form__buttons" data-buttons>
         <button class="btn-form btn-form--prev" type="button" data-prev hidden>Volver</button>
@@ -178,6 +196,11 @@ const attributionFields = [
   }
   .lead-card__intro strong {
     font-weight: 700;
+  }
+  .lead-card__intro--v1 {
+    max-width: 31ch;
+    margin-inline: auto;
+    text-wrap: balance;
   }
 
   .lead-card__footer {
@@ -360,6 +383,12 @@ const attributionFields = [
 
 
   @media (max-width: 767px) {
+    .lead-card__intro--v1 {
+      max-width: 29ch;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      line-height: 1.35;
+    }
+
     /* la franja oscura baja su padding inferior en móvil */
     .lead-card__footer {
       padding: 20px;
@@ -433,7 +462,17 @@ const attributionFields = [
     return input.value;
   }
 
+  function syncLegacyAttribution(target: HTMLFormElement) {
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id'];
+    for (const key of keys) {
+      const canonical = target.querySelector<HTMLInputElement>(`input[name="${key}"]`);
+      const legacy = target.querySelector<HTMLInputElement>(`input[name="form_fields[${key}]"]`);
+      if (canonical && legacy?.value && !canonical.value) canonical.value = legacy.value;
+    }
+  }
+
   function buildPayload(target: HTMLFormElement) {
+    syncLegacyAttribution(target);
     ensureSubmissionId(target);
     const data = new FormData(target);
     const raw: Record<string, string> = {};
@@ -456,12 +495,12 @@ const attributionFields = [
 
     const makeConfigured = Boolean(target.dataset.makeWebhookUrl);
     await request(
-      `${supabaseUrl}/rest/v1/${supabaseTable}?on_conflict=submission_id`,
+      `${supabaseUrl}/rest/v1/${supabaseTable}`,
       {
         'Content-Type': 'application/json',
         apikey: supabaseKey,
         Authorization: `Bearer ${supabaseKey}`,
-        Prefer: 'resolution=ignore-duplicates,return=minimal',
+        Prefer: 'return=minimal',
       },
       {
         ...payload,
@@ -469,7 +508,8 @@ const attributionFields = [
         make_status: makeConfigured ? 'pending' : 'not_configured',
         pipedrive_status: makeConfigured ? 'pending' : 'not_configured',
         raw_payload: payload,
-      }
+      },
+      ['23505']
     );
 
     await logDeliveryEvent(target, payload.submission_id, 'received').catch(() => undefined);
@@ -546,10 +586,16 @@ const attributionFields = [
     return { ok: true, demo: true };
   }
 
-  async function request(url: string, headers: Record<string, string>, body: unknown) {
+  async function request(
+    url: string,
+    headers: Record<string, string>,
+    body: unknown,
+    acceptedErrorCodes: string[] = []
+  ) {
     const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
     if (res.ok) return res.status === 204 ? {} : await res.json().catch(() => ({}));
     const error = await res.json().catch(() => ({}) as Record<string, unknown>);
+    if (acceptedErrorCodes.includes(String(error.code ?? ''))) return {};
     throw new Error(String(error.message ?? error.error ?? `HTTP ${res.status}`));
   }
 
@@ -734,7 +780,7 @@ const attributionFields = [
           const error = validateField(invalidField);
           current = i;
           render();
-          setStatus(error, 'error');
+          setStatus(error ?? ERROR_MESSAGE, 'error');
           invalidField.classList.add('has-error');
           invalidField.focus({ preventScroll: true });
           return;

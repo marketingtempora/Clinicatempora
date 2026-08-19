@@ -7,10 +7,17 @@ interface Props {
   title?: string;
   description?: string;
   robots?: string;
+  tracking?: boolean;
 }
 
-const { title = site.title, description = site.description, robots = 'index, follow' } = Astro.props;
+const { title = site.title, description = site.description, robots = 'index, follow', tracking = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
+const gtmId = 'GTM-58K95WQ';
+const gtmHead = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${gtmId}');`;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -68,9 +75,21 @@ const schema = {
     <link rel="preload" as="image" href="/assets/img/hero-desktop.webp" media="(min-width: 768px)" />
 
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    {tracking && <script is:inline set:html={gtmHead}></script>}
   </head>
 
   <body>
+    {tracking && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+          title="Google Tag Manager"
+        ></iframe>
+      </noscript>
+    )}
     <a class="skip-link" href="#hero">Ir al contenido</a>
     <slot />
 
@@ -137,6 +156,39 @@ const schema = {
         );
         counters.forEach((el) => counterObserver.observe(el));
       }
+
+      // --- Medición de CTAs ---
+      document.querySelectorAll<HTMLAnchorElement>('[data-cta-event]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const eventName = link.dataset.ctaEvent;
+          if (!eventName) return;
+
+          const externalNavigation = link.origin !== window.location.origin;
+          let navigationStarted = false;
+          const continueNavigation = () => {
+            if (!externalNavigation || navigationStarted) return;
+            navigationStarted = true;
+            window.location.assign(link.href);
+          };
+
+          const eventPayload: Record<string, unknown> = {
+            event: eventName,
+            cta_action: link.dataset.ctaAction ?? '',
+            cta_location: link.dataset.ctaLocation ?? '',
+            form_version: link.dataset.formVersion ?? '',
+          };
+
+          if (externalNavigation) {
+            event.preventDefault();
+            eventPayload.eventCallback = continueNavigation;
+            eventPayload.eventTimeout = 600;
+            window.setTimeout(continueNavigation, 650);
+          }
+
+          window.dataLayer ??= [];
+          window.dataLayer.push(eventPayload);
+        });
+      });
     </script>
   </body>
 </html>
