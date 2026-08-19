@@ -22,13 +22,13 @@ test('el CMS permite consultar, filtrar y exportar formularios sin mezclar integ
   assert.match(page, /rest\/v1\/leads/);
   assert.match(page, /data-search/);
   assert.match(page, /data-version-filter/);
-  assert.match(page, /Exportar CSV/);
+  assert.match(page, /Exportar Excel/);
   assert.doesNotMatch(page, /lead_delivery_events/);
   assert.doesNotMatch(page, /request_lead_requeue/);
   assert.doesNotMatch(page, /method:\s*'PATCH'/);
 });
 
-test('la tabla y el CSV incluyen todos los campos visibles y de atribución', async () => {
+test('la tabla y el Excel incluyen todos los campos visibles y de atribución', async () => {
   const page = await read('../src/pages/CMS/index.astro');
 
   for (const field of [

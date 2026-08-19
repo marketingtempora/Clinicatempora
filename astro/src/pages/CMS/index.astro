@@ -66,7 +66,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
             <h1>Centro de formularios</h1>
             <p>Respaldo privado de los datos enviados desde LP1 y LP2.</p>
           </div>
-          <button class="button button--primary" type="button" data-export>Exportar CSV</button>
+          <button class="button button--primary" type="button" data-export>Exportar Excel</button>
         </div>
 
         <section class="metrics" aria-label="Resumen de formularios">
@@ -119,7 +119,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         </div>
         <button type="button" class="details__close" data-close-details aria-label="Cerrar">×</button>
       </div>
-      <dl data-detail-list></dl>
+      <div class="details__content" data-detail-list></div>
       <div class="details__actions">
         <button class="button button--primary" type="button" data-close-details>Listo</button>
       </div>
@@ -183,11 +183,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   table { width: 2400px; min-width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: .78rem; }
   th { position: sticky; z-index: 2; top: 0; width: 150px; padding: 12px 14px; border-right: 1px solid #dde3dd; border-bottom: 1px solid #d8ded8; background: #f3f6f2; color: #536164; font-size: .66rem; font-weight: 800; letter-spacing: .055em; text-align: left; text-transform: uppercase; white-space: nowrap; }
   td { width: 150px; max-width: 150px; padding: 13px 14px; border-top: 1px solid #edf0ed; border-right: 1px solid #edf0ed; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; white-space: nowrap; }
+  tbody tr:nth-child(even) td { background: #fafbf8; }
   th:first-child, td:first-child { position: sticky; z-index: 1; left: 0; background: #fff; }
   th:first-child { z-index: 3; background: #f5f7f4; }
   tbody tr:hover td { background: #fbfcf8; }
   th:last-child, td:last-child { position: sticky; z-index: 1; right: 0; background: #fff; box-shadow: -8px 0 14px rgba(6,26,28,.04); }
   th:last-child { z-index: 3; background: #f5f7f4; }
+  .cell--empty { color: #a3adaa; font-style: italic; }
+  .cell--tracking { color: #526266; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .7rem; }
+  .cell-link { color: #244f53; font-weight: 700; text-decoration-color: #a7c400; text-underline-offset: 3px; }
+  .landing-pill { display: inline-flex; min-width: 42px; padding: 4px 9px; align-items: center; justify-content: center; border-radius: 999px; background: #e8efbd; color: #304300; font-size: .67rem; font-weight: 900; letter-spacing: .06em; }
   .status-pill { display: inline-flex; padding: 4px 8px; align-items: center; gap: 5px; border-radius: 20px; background: #eef0eb; color: #566265; font-size: .67rem; font-weight: 800; white-space: nowrap; }
   .status-pill::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ''; }
   .status-pill--success { background: #e9f3df; color: #426d22; }
@@ -206,7 +211,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   .details__head h2 { font-size: 1.7rem; }
   .details__close { width: 34px; height: 34px; border: 0; border-radius: 50%; background: #eef1ed; font-size: 1.4rem; line-height: 1; }
   .details__status { padding: 15px 26px 0; }
-  .details dl { display: grid; margin: 0; padding: 20px 26px; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px 22px; overflow-y: auto; }
+  .details__content { display: grid; max-height: calc(100svh - 190px); padding: 22px 26px; gap: 18px; overflow-y: auto; background: #f7f9f5; }
+  .detail-group { padding: 17px; border: 1px solid #dfe5dc; border-radius: 13px; background: #fff; box-shadow: 0 8px 24px rgba(11,41,44,.045); }
+  .detail-group h3 { margin: 0 0 13px; padding-bottom: 9px; border-bottom: 2px solid #d7e656; color: #183b3e; font-size: .82rem; letter-spacing: .02em; }
+  .details dl { display: grid; margin: 0; padding: 0; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px 22px; }
+  .details dl > div { min-width: 0; padding: 2px 0; }
   .details dt { color: #718083; font-size: .66rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
   .details dd { margin: 2px 0 0; overflow-wrap: anywhere; font-size: .82rem; }
   .details__error { margin: 0 26px 18px; padding: 12px; border-left: 3px solid #a52e2e; background: #f9e9e7; color: #7d2824; font-size: .78rem; }
@@ -234,6 +243,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     .metrics article { padding: 16px; }
     .empty { min-height: 210px; }
     .details dl { grid-template-columns: 1fr; }
+    .details__content { padding: 16px; }
     .details__actions { align-items: stretch; flex-direction: column-reverse; }
   }
 </style>
@@ -273,10 +283,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     setup.hidden = configured;
     if (!configured) loginForm.querySelector<HTMLButtonElement>('button[type="submit"]')!.disabled = true;
 
-    const escapeCsv = (value: unknown) => {
-      let text = String(value ?? '').replaceAll('"', '""');
+    const escapeExcelCell = (value: unknown) => {
+      let text = String(value ?? '');
       if (/^[=+\-@]/.test(text)) text = `'${text}`;
-      return `"${text}"`;
+      return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
     };
 
     const getSession = () => {
@@ -351,6 +365,13 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       { label: 'URL de envío', field: 'page_url' },
     ];
     const detailColumns = [...tableColumns, ...attributionColumns];
+    const detailGroups = [
+      { title: 'Datos de contacto', fields: ['created_at', 'source_form', 'nombre', 'apellido', 'email', 'telefono'] },
+      { title: 'Preferencias', fields: ['urgencia_cirugia', 'medio_evaluacion', 'genero', 'horario_contacto'] },
+      { title: 'Atribución', fields: detailColumns.filter((column) => column.field.startsWith('utm_')
+        || ['campaign_id', 'adgroup_id', 'ad_id', 'keyword', 'match_type', 'network', 'device', 'placement', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'ttclid'].includes(column.field)).map((column) => column.field) },
+      { title: 'Contexto', fields: ['page_url'] },
+    ];
 
     tableHead.replaceChildren();
     tableColumns.forEach((column) => {
@@ -375,10 +396,25 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       if (element) element.textContent = String(value);
     };
 
-    const createCell = (row: HTMLTableRowElement, value: string, className = '') => {
+    const createCell = (row: HTMLTableRowElement, value: string, column: TableColumn) => {
       const cell = row.insertCell();
-      cell.textContent = value;
-      if (className) cell.className = className;
+      cell.dataset.field = column.field;
+      if (value === '—') cell.classList.add('cell--empty');
+      if (column.field.startsWith('utm_')) cell.classList.add('cell--tracking');
+      if (column.field === 'source_form') {
+        const pill = document.createElement('span');
+        pill.className = 'landing-pill';
+        pill.textContent = value;
+        cell.append(pill);
+      } else if ((column.field === 'email' || column.field === 'telefono') && value !== '—') {
+        const link = document.createElement('a');
+        link.className = 'cell-link';
+        link.href = column.field === 'email' ? `mailto:${value}` : `tel:${value.replace(/\s+/g, '')}`;
+        link.textContent = value;
+        cell.append(link);
+      } else {
+        cell.textContent = value;
+      }
       return cell;
     };
 
@@ -404,7 +440,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       visibleLeads.forEach((lead) => {
         const row = tableBody.insertRow();
         tableColumns.forEach((column) => {
-          const cell = createCell(row, columnValue(lead, column));
+          const cell = createCell(row, columnValue(lead, column), column);
           cell.title = columnValue(lead, column);
         });
 
@@ -434,22 +470,29 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       }
     };
 
-    const detailFields: Array<[string, string]> = detailColumns
-      .map((column): [string, string] => [column.label, column.field]);
-
     function openDetails(lead: Lead) {
       root.querySelector<HTMLElement>('[data-detail-name]')!.textContent = `${lead.nombre ?? ''} ${lead.apellido ?? ''}`.trim();
       const list = root.querySelector<HTMLElement>('[data-detail-list]')!;
       list.replaceChildren();
-      detailFields.forEach(([label, field]) => {
-        const wrapper = document.createElement('div');
-        const term = document.createElement('dt');
-        const description = document.createElement('dd');
-        term.textContent = label;
-        const raw = lead[field];
-        description.textContent = field.endsWith('_at') || field === 'created_at' ? formatDate(raw) : String(raw ?? '—');
-        wrapper.append(term, description);
-        list.append(wrapper);
+      detailGroups.forEach((group) => {
+        const section = document.createElement('section');
+        section.className = 'detail-group';
+        const title = document.createElement('h3');
+        title.textContent = group.title;
+        const fields = document.createElement('dl');
+        group.fields.forEach((field) => {
+          const column = detailColumns.find((item) => item.field === field);
+          if (!column) return;
+          const wrapper = document.createElement('div');
+          const term = document.createElement('dt');
+          const description = document.createElement('dd');
+          term.textContent = column.label;
+          description.textContent = columnValue(lead, column);
+          wrapper.append(term, description);
+          fields.append(wrapper);
+        });
+        section.append(title, fields);
+        list.append(section);
       });
       details.showModal();
     }
@@ -520,14 +563,17 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
     root.querySelector('[data-export]')?.addEventListener('click', () => {
       const fields = detailColumns;
-      const rows = [
-        fields.map((column) => escapeCsv(column.label)).join(','),
-        ...visibleLeads.map((lead) => fields.map((column) => escapeCsv(columnValue(lead, column))).join(',')),
-      ];
-      const blob = new Blob([`\uFEFF${rows.join('\n')}`], { type: 'text/csv;charset=utf-8' });
+      const exportedAt = new Intl.DateTimeFormat('es-CL', { dateStyle: 'long', timeStyle: 'short' }).format(new Date());
+      const header = fields.map((column) => `<th>${escapeExcelCell(column.label)}</th>`).join('');
+      const rows = visibleLeads.map((lead) => `<tr>${fields
+        .map((column) => `<td>${escapeExcelCell(columnValue(lead, column))}</td>`).join('')}</tr>`).join('');
+      const workbook = `<!doctype html><html><head><meta charset="utf-8"><style>
+        body{font-family:Arial,sans-serif;color:#0b292c}h1{margin:0;color:#0b292c;font-size:24px}.meta{margin:6px 0 20px;color:#607174}table{border-collapse:collapse}th{padding:10px 12px;border:1px solid #28474a;background:#0b292c;color:#fff;font-size:11px;text-align:left}td{padding:9px 12px;border:1px solid #dce4dc;font-size:11px}tr:nth-child(even) td{background:#f3f6ee}.accent{width:120px;height:5px;margin:12px 0;background:#b6d500}
+      </style></head><body><h1>Clínica Témpora · Formularios</h1><div class="accent"></div><p class="meta">Exportado ${escapeExcelCell(exportedAt)} · ${visibleLeads.length} registros</p><table><thead><tr>${header}</tr></thead><tbody>${rows}</tbody></table></body></html>`;
+      const blob = new Blob(['\uFEFF', workbook], { type: 'application/vnd.ms-excel;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `formularios-tempora-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.download = `formularios-tempora-${new Date().toISOString().slice(0, 10)}.xls`;
       link.click();
       URL.revokeObjectURL(link.href);
     });

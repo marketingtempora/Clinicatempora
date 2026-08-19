@@ -28,7 +28,7 @@ test('el CMS no presenta columnas de Make o Pipedrive', () => {
   }
 });
 
-test('la tabla queda compacta y los campos secundarios permanecen en el detalle y el CSV', () => {
+test('la tabla queda compacta y los campos secundarios permanecen en el detalle y el Excel', () => {
   assert.match(source, /const attributionColumns: TableColumn\[\]/);
   assert.match(source, /const detailColumns = \[\.\.\.tableColumns, \.\.\.attributionColumns\]/);
   assert.match(source, /const fields = detailColumns/);
