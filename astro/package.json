@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
-    "render-build": "npm ci --no-audit --no-fund && astro build"
+    "render-build": "npm ci --no-audit --no-fund && node scripts/provision-supabase.mjs && astro build"
   },
   "dependencies": {
     "astro": "^5.6.1"
