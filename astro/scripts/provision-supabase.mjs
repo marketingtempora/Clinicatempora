@@ -22,7 +22,14 @@ if (!hasProvisioningCredentials) {
     console.log('Puesta en marcha de Supabase omitida fuera de Render.');
   }
 } else {
-  await provisionSupabase();
+  try {
+    await provisionSupabase();
+    await writeSetupStatus({ ok: true, phase: 'complete' });
+  } catch (error) {
+    const message = sanitizeError(error);
+    console.error(`Puesta en marcha de Supabase falló: ${message}`);
+    await writeSetupStatus({ ok: false, phase: 'provision', message });
+  }
 }
 
 async function provisionSupabase() {
@@ -175,4 +182,20 @@ async function readJson(response, label) {
     throw new Error(`${label} falló (${response.status}): ${detail}`);
   }
   return payload;
+}
+
+async function writeSetupStatus(status) {
+  await writeFile(
+    new URL('../public/cms-setup-status.json', import.meta.url),
+    `${JSON.stringify(status)}\n`,
+    { mode: 0o600 },
+  );
+}
+
+function sanitizeError(error) {
+  let message = error instanceof Error ? error.message : 'Error desconocido';
+  for (const sensitive of [accessToken, cmsPassword]) {
+    if (sensitive) message = message.replaceAll(sensitive, '[redacted]');
+  }
+  return message.slice(0, 500);
 }
