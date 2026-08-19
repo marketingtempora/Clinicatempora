@@ -1,5 +1,5 @@
--- Clínica Témpora · almacenamiento de formularios y respaldo para Pipedrive.
--- Ejecutar una vez en Supabase > SQL Editor.
+-- Clínica Témpora · respaldo privado de formularios y entrega a Pipedrive.
+-- Ejecutar en Supabase > SQL Editor. Es idempotente y conserva los registros.
 
 create extension if not exists pgcrypto;
 
@@ -11,7 +11,7 @@ create table if not exists public.leads (
   submitted_at timestamptz,
 
   form_version text not null default '',
-  source_form text not null default 'Providencia',
+  source_form text not null default '',
   nombre text not null,
   apellido text not null,
   email text not null,
@@ -76,8 +76,15 @@ create table if not exists public.lead_delivery_events (
   created_at timestamptz not null default now()
 );
 
+-- Esta lista es la segunda barrera del CMS: estar autenticado no basta.
+create table if not exists public.cms_users (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 create index if not exists leads_pipedrive_status_idx on public.leads (pipedrive_status, created_at desc);
+create index if not exists leads_source_form_idx on public.leads (source_form, created_at desc);
 create index if not exists leads_email_idx on public.leads (lower(email));
 create index if not exists leads_phone_idx on public.leads (telefono);
 create index if not exists lead_delivery_events_submission_idx
@@ -102,6 +109,25 @@ for each row execute function public.set_updated_at();
 
 alter table public.leads enable row level security;
 alter table public.lead_delivery_events enable row level security;
+alter table public.cms_users enable row level security;
+
+-- Se ejecuta con el propietario de la función para consultar la lista privada.
+create or replace function public.is_cms_user()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1
+    from public.cms_users
+    where user_id = auth.uid()
+  );
+$$;
+
+revoke all on function public.is_cms_user() from public, anon;
+grant execute on function public.is_cms_user() to authenticated;
 
 drop policy if exists "public can submit leads" on public.leads;
 create policy "public can submit leads"
@@ -110,10 +136,16 @@ for insert
 to anon
 with check (
   submission_id <> ''
+  and form_version in ('v1', 'v2')
+  and source_form in ('lp1', 'lp2')
   and nombre <> ''
   and apellido <> ''
   and position('@' in email) > 1
   and telefono ~ '^[0-9]{9}$'
+  and urgencia_cirugia <> ''
+  and medio_evaluacion <> ''
+  and genero <> ''
+  and horario_contacto <> ''
   and delivery_status = 'received'
   and make_status in ('pending', 'not_configured')
   and pipedrive_status in ('pending', 'not_configured')
@@ -124,42 +156,83 @@ with check (
 );
 
 drop policy if exists "authenticated users can read leads" on public.leads;
-create policy "authenticated users can read leads"
+drop policy if exists "cms users can read leads" on public.leads;
+create policy "cms users can read leads"
 on public.leads
 for select
 to authenticated
-using (true);
+using (public.is_cms_user());
 
+-- El CMS no puede modificar datos personales. Sólo invoca el RPC acotado de reintento.
 drop policy if exists "authenticated users can update leads" on public.leads;
-create policy "authenticated users can update leads"
-on public.leads
-for update
-to authenticated
-using (true)
-with check (true);
+drop policy if exists "cms users can update leads" on public.leads;
 
 drop policy if exists "public can append delivery events" on public.lead_delivery_events;
 create policy "public can append delivery events"
 on public.lead_delivery_events
 for insert
 to anon
-with check (true);
+with check (
+  submission_id <> ''
+  and char_length(coalesce(error_message, '')) <= 800
+);
 
 drop policy if exists "authenticated users can read delivery events" on public.lead_delivery_events;
-create policy "authenticated users can read delivery events"
+drop policy if exists "cms users can read delivery events" on public.lead_delivery_events;
+create policy "cms users can read delivery events"
 on public.lead_delivery_events
 for select
 to authenticated
-using (true);
+using (public.is_cms_user());
+
+create or replace function public.request_lead_requeue(p_submission_id text)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  affected integer;
+begin
+  if not public.is_cms_user() then
+    raise exception 'forbidden' using errcode = '42501';
+  end if;
+
+  update public.leads
+  set delivery_status = 'received',
+      make_status = 'pending',
+      pipedrive_status = 'pending',
+      integration_error = null,
+      requeue_requested_at = now()
+  where submission_id = p_submission_id;
+
+  get diagnostics affected = row_count;
+  return affected = 1;
+end;
+$$;
+
+revoke all on function public.request_lead_requeue(text) from public, anon;
+grant execute on function public.request_lead_requeue(text) to authenticated;
 
 grant usage on schema public to anon, authenticated;
+revoke all on public.leads from anon, authenticated;
+revoke all on public.lead_delivery_events from anon, authenticated;
+revoke all on public.cms_users from anon, authenticated;
 grant insert on public.leads to anon;
 grant insert on public.lead_delivery_events to anon;
-grant select, update on public.leads to authenticated;
+grant select on public.leads to authenticated;
 grant select on public.lead_delivery_events to authenticated;
-grant usage, select on sequence public.lead_delivery_events_id_seq to anon, authenticated;
+grant usage, select on sequence public.lead_delivery_events_id_seq to anon;
 
--- Seguridad operativa:
--- 1. Desactivar "Allow new users to sign up" en Authentication > Providers > Email.
--- 2. Crear únicamente los usuarios internos que podrán entrar a /cms.
--- 3. Make actualiza delivery_status/pipedrive_status usando su conexión segura.
+-- Puesta en marcha segura:
+-- 1. Authentication > Providers > Email: desactivar "Allow new users to sign up".
+-- 2. Authentication > Users: crear el usuario interno con correo verificado y
+--    una contraseña única y larga. La contraseña nunca va en Git ni en Render.
+-- 3. Autorizar ese usuario desde SQL Editor, reemplazando el correo:
+--
+-- insert into public.cms_users (user_id)
+-- select id from auth.users where lower(email) = lower('correo-autorizado@dominio.cl')
+-- on conflict (user_id) do nothing;
+--
+-- 4. Render sólo recibe PUBLIC_SUPABASE_URL y PUBLIC_SUPABASE_ANON_KEY.
+--    La service_role queda exclusivamente en Supabase/Make; nunca en el navegador.

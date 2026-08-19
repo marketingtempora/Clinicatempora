@@ -30,6 +30,7 @@ const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
 const stepEventNames = Astro.props.stepEventNames ?? [];
 const finalEventName = Astro.props.finalEventName ?? '';
 const formVersion = Astro.props.formVersion ?? '';
+const sourceForm = formVersion === 'v2' ? 'lp2' : 'lp1';
 const contactCopy = formVersion === 'v2'
   ? { action: 'te contactaremos', procedure: 'implante' }
   : { action: 'te contactaremos', procedure: 'injerto' };
@@ -147,7 +148,7 @@ const attributionFields = [
       {/* Identidad y atribución: nombres estables para Make y Pipedrive */}
       <input type="hidden" name="form_version" value={formVersion} />
       <input type="hidden" name="submission_id" />
-      <input type="hidden" name="source_form" value="Providencia" />
+      <input type="hidden" name="source_form" value={sourceForm} />
       {attributionFields.map((name) => <input type="hidden" name={name} />)}
 
       <div class="lead-form__buttons" data-buttons>
@@ -751,7 +752,7 @@ const attributionFields = [
           const error = validateField(invalidField);
           current = i;
           render();
-          setStatus(error, 'error');
+          setStatus(error ?? ERROR_MESSAGE, 'error');
           invalidField.classList.add('has-error');
           invalidField.focus({ preventScroll: true });
           return;

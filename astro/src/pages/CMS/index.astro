@@ -63,7 +63,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           <div>
             <p class="eyebrow">Respaldo comercial</p>
             <h1>Centro de formularios</h1>
-            <p>Todos los registros recibidos, incluso si Make o Pipedrive presentan un error.</p>
+            <p>Todos los campos quedan respaldados antes de intentar la entrega a Make o Pipedrive.</p>
           </div>
           <button class="button button--primary" type="button" data-export>Exportar CSV</button>
         </div>
@@ -93,9 +93,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
             <label>
               <span>Formulario</span>
               <select data-version-filter>
-                <option value="all">V1 y V2</option>
-                <option value="v1">Versión 1</option>
-                <option value="v2">Versión 2</option>
+                <option value="all">LP1 y LP2</option>
+                <option value="v1">LP1</option>
+                <option value="v2">LP2</option>
               </select>
             </label>
             <p class="records__count"><strong data-visible-count>0</strong> registros</p>
@@ -104,16 +104,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           <div class="table-wrap">
             <table>
               <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Paciente</th>
-                  <th>Contacto</th>
-                  <th>Formulario</th>
-                  <th>Campaña</th>
-                  <th>Estado</th>
-                  <th>Intentos</th>
-                  <th><span class="sr-only">Acciones</span></th>
-                </tr>
+                <tr data-table-head></tr>
               </thead>
               <tbody data-table-body></tbody>
             </table>
@@ -195,12 +186,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   .filters .search { flex: 1; }
   .records__count { margin: 0 4px 8px auto; color: #697578; font-size: .75rem; white-space: nowrap; }
   .table-wrap { position: relative; overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: .78rem; }
-  th { padding: 11px 12px; background: #f5f7f4; color: #657174; font-size: .66rem; letter-spacing: .05em; text-align: left; text-transform: uppercase; white-space: nowrap; }
-  td { padding: 13px 12px; border-top: 1px solid #edf0ed; vertical-align: middle; }
-  tbody tr:hover { background: #fbfcf8; }
-  .patient strong, .contact span { display: block; }
-  .patient span, .contact span { color: #6d797a; font-size: .7rem; }
+  table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: .78rem; }
+  th { position: sticky; z-index: 2; top: 0; min-width: 118px; padding: 11px 12px; border-right: 1px solid #e3e7e3; border-bottom: 1px solid #e3e7e3; background: #f5f7f4; color: #657174; font-size: .66rem; letter-spacing: .05em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+  td { max-width: 260px; padding: 13px 12px; border-top: 1px solid #edf0ed; border-right: 1px solid #f0f2ef; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; white-space: nowrap; }
+  th:first-child, td:first-child { position: sticky; z-index: 1; left: 0; background: #fff; }
+  th:first-child { z-index: 3; background: #f5f7f4; }
+  tbody tr:hover td { background: #fbfcf8; }
+  th:last-child, td:last-child { position: sticky; z-index: 1; right: 0; background: #fff; box-shadow: -8px 0 14px rgba(6,26,28,.04); }
+  th:last-child { z-index: 3; background: #f5f7f4; }
   .status-pill { display: inline-flex; padding: 4px 8px; align-items: center; gap: 5px; border-radius: 20px; background: #eef0eb; color: #566265; font-size: .67rem; font-weight: 800; white-space: nowrap; }
   .status-pill::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ''; }
   .status-pill--success { background: #e9f3df; color: #426d22; }
@@ -227,6 +220,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     .login { grid-template-columns: 1fr; }
     .login__brand { min-height: 140px; padding: 28px; }
     .login__brand p { display: none; }
+    .setup { position: static; width: calc(100% - 48px); max-width: 460px; margin: -12px auto 28px; }
     .topbar__actions > span { display: none; }
     .metrics { grid-template-columns: repeat(2,1fr); }
     .page-head { align-items: start; flex-direction: column; }
@@ -250,8 +244,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 <script>
   type Lead = Record<string, string | number | null>;
   type Session = { access_token: string; refresh_token?: string; expires_at?: number; user?: { email?: string } };
+  type TableColumn = { label: string; field: string; format?: 'date' | 'status' };
 
-  const root = document.querySelector<HTMLElement>('[data-cms]');
+  const root = document.querySelector<HTMLElement>('[data-cms]')!;
   const SESSION_KEY = 'tempora_cms_session';
 
   if (root) {
@@ -263,6 +258,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     const loginStatus = root.querySelector<HTMLElement>('[data-login-status]')!;
     const setup = root.querySelector<HTMLElement>('[data-setup]')!;
     const dashboard = root.querySelector<HTMLElement>('[data-dashboard]')!;
+    const tableHead = root.querySelector<HTMLTableRowElement>('[data-table-head]')!;
     const tableBody = root.querySelector<HTMLTableSectionElement>('[data-table-body]')!;
     const empty = root.querySelector<HTMLElement>('[data-empty]')!;
     const recordsStatus = root.querySelector<HTMLElement>('[data-records-status]')!;
@@ -317,6 +313,68 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       ? new Intl.DateTimeFormat('es-CL', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(String(value)))
       : '—';
 
+    const tableColumns: TableColumn[] = [
+      { label: 'Fecha', field: 'created_at', format: 'date' },
+      { label: 'Origen', field: 'source_form' },
+      { label: 'Landing', field: 'form_version' },
+      { label: 'Nombre', field: 'nombre' },
+      { label: 'Apellido', field: 'apellido' },
+      { label: 'Email', field: 'email' },
+      { label: 'Teléfono', field: 'telefono' },
+      { label: 'Urgencia cirugía', field: 'urgencia_cirugia' },
+      { label: 'Medio evaluación', field: 'medio_evaluacion' },
+      { label: 'Género', field: 'genero' },
+      { label: 'Horario contacto', field: 'horario_contacto' },
+      { label: 'UTM ID', field: 'utm_id' },
+      { label: 'UTM source', field: 'utm_source' },
+      { label: 'UTM medium', field: 'utm_medium' },
+      { label: 'UTM campaign', field: 'utm_campaign' },
+      { label: 'UTM term', field: 'utm_term' },
+      { label: 'UTM content', field: 'utm_content' },
+      { label: 'Source platform', field: 'utm_source_platform' },
+      { label: 'Creative format', field: 'utm_creative_format' },
+      { label: 'Marketing tactic', field: 'utm_marketing_tactic' },
+      { label: 'Campaign ID', field: 'campaign_id' },
+      { label: 'Ad group ID', field: 'adgroup_id' },
+      { label: 'Ad ID', field: 'ad_id' },
+      { label: 'Keyword', field: 'keyword' },
+      { label: 'Match type', field: 'match_type' },
+      { label: 'Network', field: 'network' },
+      { label: 'Device', field: 'device' },
+      { label: 'Placement', field: 'placement' },
+      { label: 'GCLID', field: 'gclid' },
+      { label: 'GBRAID', field: 'gbraid' },
+      { label: 'WBRAID', field: 'wbraid' },
+      { label: 'FBCLID', field: 'fbclid' },
+      { label: 'MSCLKID', field: 'msclkid' },
+      { label: 'TTCLID', field: 'ttclid' },
+      { label: 'Página', field: 'page_path' },
+      { label: 'URL', field: 'page_url' },
+      { label: 'Referente', field: 'referrer' },
+      { label: 'Estado', field: '__status', format: 'status' },
+      { label: 'Make', field: 'make_status' },
+      { label: 'Pipedrive', field: 'pipedrive_status' },
+      { label: 'Persona Pipedrive', field: 'pipedrive_person_id' },
+      { label: 'Negocio Pipedrive', field: 'pipedrive_deal_id' },
+      { label: 'Intentos', field: 'attempt_count' },
+      { label: 'Último intento', field: 'last_attempt_at', format: 'date' },
+      { label: 'Reintento solicitado', field: 'requeue_requested_at', format: 'date' },
+      { label: 'Error integración', field: 'integration_error' },
+      { label: 'Submission ID', field: 'submission_id' },
+    ];
+
+    tableHead.replaceChildren();
+    tableColumns.forEach((column) => {
+      const heading = document.createElement('th');
+      heading.scope = 'col';
+      heading.textContent = column.label;
+      tableHead.append(heading);
+    });
+    const actionsHeading = document.createElement('th');
+    actionsHeading.scope = 'col';
+    actionsHeading.textContent = 'Acciones';
+    tableHead.append(actionsHeading);
+
     const effectiveStatus = (lead: Lead) => {
       const status = String(lead.pipedrive_status ?? 'pending');
       if (status === 'success') return 'success';
@@ -327,6 +385,15 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     };
 
     const statusLabel = (status: string) => ({ success: 'Sincronizado', failed: 'Con error', pending: 'Pendiente' })[status] ?? 'Pendiente';
+
+    const columnValue = (lead: Lead, column: TableColumn) => {
+      if (column.format === 'date') return formatDate(lead[column.field]);
+      if (column.field === 'source_form') return String(lead.source_form ?? '—').toUpperCase();
+      if (column.field === 'form_version') {
+        return lead.form_version === 'v2' ? 'LP2' : lead.form_version === 'v1' ? 'LP1' : String(lead.form_version ?? '—');
+      }
+      return String(lead[column.field] ?? '—');
+    };
 
     const setMetric = (name: string, value: number) => {
       const element = root.querySelector<HTMLElement>(`[data-metric="${name}"]`);
@@ -351,7 +418,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     const renderTable = () => {
       const needle = search.value.trim().toLocaleLowerCase('es');
       visibleLeads = leads.filter((lead) => {
-        const haystack = [lead.nombre, lead.apellido, lead.email, lead.telefono, lead.utm_campaign]
+        const haystack = tableColumns.map((column) => lead[column.field])
           .join(' ').toLocaleLowerCase('es');
         return (!needle || haystack.includes(needle))
           && (statusFilter.value === 'all' || effectiveStatus(lead) === statusFilter.value)
@@ -361,33 +428,20 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       tableBody.replaceChildren();
       visibleLeads.forEach((lead) => {
         const row = tableBody.insertRow();
-        createCell(row, formatDate(lead.created_at));
+        tableColumns.forEach((column) => {
+          if (column.format !== 'status') {
+            const cell = createCell(row, columnValue(lead, column));
+            cell.title = columnValue(lead, column);
+            return;
+          }
+          const status = effectiveStatus(lead);
+          const statusCell = row.insertCell();
+          const badge = document.createElement('span');
+          badge.className = `status-pill status-pill--${status}`;
+          badge.textContent = statusLabel(status);
+          statusCell.append(badge);
+        });
 
-        const patient = createCell(row, '', 'patient');
-        const patientName = document.createElement('strong');
-        patientName.textContent = `${lead.nombre ?? ''} ${lead.apellido ?? ''}`.trim() || 'Sin nombre';
-        const source = document.createElement('span');
-        source.textContent = String(lead.source_form ?? 'Providencia');
-        patient.append(patientName, source);
-
-        const contact = createCell(row, '', 'contact');
-        const email = document.createElement('span');
-        email.textContent = String(lead.email ?? '—');
-        const phone = document.createElement('span');
-        phone.textContent = String(lead.telefono ?? '—');
-        contact.append(email, phone);
-
-        createCell(row, String(lead.form_version ?? '—').toUpperCase());
-        createCell(row, String(lead.utm_campaign ?? lead.utm_source ?? 'Sin UTM'));
-
-        const status = effectiveStatus(lead);
-        const statusCell = row.insertCell();
-        const badge = document.createElement('span');
-        badge.className = `status-pill status-pill--${status}`;
-        badge.textContent = statusLabel(status);
-        statusCell.append(badge);
-
-        createCell(row, String(lead.attempt_count ?? 0));
         const actionCell = row.insertCell();
         const action = document.createElement('button');
         action.type = 'button';
@@ -401,15 +455,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       empty.hidden = visibleLeads.length > 0;
     };
 
-    const detailFields: Array<[string, string]> = [
-      ['Fecha', 'created_at'], ['Correo', 'email'], ['Teléfono', 'telefono'],
-      ['Cirugía', 'urgencia_cirugia'], ['Evaluación', 'medio_evaluacion'], ['Género', 'genero'],
-      ['Horario', 'horario_contacto'], ['Formulario', 'form_version'], ['Origen', 'source_form'],
-      ['UTM source', 'utm_source'], ['UTM medium', 'utm_medium'], ['UTM campaign', 'utm_campaign'],
-      ['UTM content', 'utm_content'], ['UTM term', 'utm_term'], ['Campaign ID', 'campaign_id'],
-      ['Submission ID', 'submission_id'], ['Persona Pipedrive', 'pipedrive_person_id'],
-      ['Negocio Pipedrive', 'pipedrive_deal_id'], ['Último intento', 'last_attempt_at'],
-    ];
+    const detailFields: Array<[string, string]> = tableColumns
+      .filter((column) => column.field !== '__status')
+      .map((column): [string, string] => [column.label, column.field]);
 
     function openDetails(lead: Lead) {
       selectedLead = lead;
@@ -430,7 +478,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         const description = document.createElement('dd');
         term.textContent = label;
         const raw = lead[field];
-        description.textContent = field.endsWith('_at') ? formatDate(raw) : String(raw ?? '—');
+        description.textContent = field.endsWith('_at') || field === 'created_at' ? formatDate(raw) : String(raw ?? '—');
         wrapper.append(term, description);
         list.append(wrapper);
       });
@@ -467,7 +515,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       }
     };
 
+    const authorizeCms = async () => {
+      const allowed = await api('/rest/v1/rpc/is_cms_user', {
+        method: 'POST',
+        body: JSON.stringify({}),
+      });
+      if (allowed !== true) throw new Error('Esta cuenta no está autorizada para acceder al CMS.');
+    };
+
     const showDashboard = async () => {
+      await authorizeCms();
       loginView.hidden = true;
       dashboard.hidden = false;
       root.querySelector<HTMLElement>('[data-user-email]')!.textContent = session?.user?.email ?? '';
@@ -495,6 +552,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         loginStatus.textContent = '';
         await showDashboard();
       } catch (error) {
+        saveSession(null);
+        dashboard.hidden = true;
+        loginView.hidden = false;
         loginStatus.textContent = error instanceof Error ? error.message : 'No fue posible iniciar sesión.';
       }
     });
@@ -511,15 +571,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       const button = root.querySelector<HTMLButtonElement>('[data-requeue]')!;
       button.disabled = true;
       try {
-        await api(`/rest/v1/leads?submission_id=eq.${encodeURIComponent(String(selectedLead.submission_id))}`, {
-          method: 'PATCH',
-          headers: { Prefer: 'return=minimal' },
+        await api('/rest/v1/rpc/request_lead_requeue', {
+          method: 'POST',
           body: JSON.stringify({
-            delivery_status: 'received',
-            make_status: 'pending',
-            pipedrive_status: 'pending',
-            integration_error: null,
-            requeue_requested_at: new Date().toISOString(),
+            p_submission_id: String(selectedLead.submission_id),
           }),
         });
         details.close();
@@ -534,8 +589,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     });
 
     root.querySelector('[data-export]')?.addEventListener('click', () => {
-      const fields = ['created_at', 'nombre', 'apellido', 'email', 'telefono', 'form_version', 'source_form', 'utm_source', 'utm_medium', 'utm_campaign', 'pipedrive_status', 'integration_error', 'submission_id'];
-      const rows = [fields.join(','), ...visibleLeads.map((lead) => fields.map((field) => escapeCsv(lead[field])).join(','))];
+      const fields = tableColumns.filter((column) => column.field !== '__status');
+      const rows = [
+        fields.map((column) => escapeCsv(column.label)).join(','),
+        ...visibleLeads.map((lead) => fields.map((column) => escapeCsv(columnValue(lead, column))).join(',')),
+      ];
       const blob = new Blob([`\uFEFF${rows.join('\n')}`], { type: 'text/csv;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -545,6 +603,13 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     });
 
     session = getSession();
-    if (configured && session?.access_token) void showDashboard();
+    if (configured && session?.access_token) {
+      void showDashboard().catch((error) => {
+        saveSession(null);
+        dashboard.hidden = true;
+        loginView.hidden = false;
+        loginStatus.textContent = error instanceof Error ? error.message : 'La sesión expiró. Ingresa nuevamente.';
+      });
+    }
   }
 </script>

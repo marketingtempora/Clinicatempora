@@ -17,3 +17,8 @@ test('el formulario registra el resultado de Make sin perder un lead respaldado'
   assert.match(source, /make_failed/);
   assert.match(source, /backupSaved/);
 });
+
+test('cada landing identifica inequívocamente el origen del formulario', () => {
+  assert.match(source, /const sourceForm = formVersion === 'v2' \? 'lp2' : 'lp1'/);
+  assert.match(source, /name="source_form" value=\{sourceForm\}/);
+});

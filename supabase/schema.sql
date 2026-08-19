@@ -1,100 +1,100 @@
--- =============================================================================
--- Clínica Témpora – Implante capilar
--- Esquema de base de datos para capturar los leads de la landing.
---
--- Cómo aplicarlo:
---   Opción A (rápida): Supabase Dashboard -> SQL Editor -> pega este archivo -> Run
---   Opción B (CLI):    supabase db push   (con el archivo en supabase/migrations/)
---
--- Es idempotente: se puede volver a ejecutar sin romper nada.
--- =============================================================================
+-- Clínica Témpora · respaldo privado de formularios y entrega a Pipedrive.
+-- Ejecutar en Supabase > SQL Editor. Es idempotente y conserva los registros.
 
--- Extensión para gen_random_uuid()
-create extension if not exists "pgcrypto";
+create extension if not exists pgcrypto;
 
--- =============================================================================
--- TABLA: leads
--- =============================================================================
 create table if not exists public.leads (
-  id                uuid primary key default gen_random_uuid(),
-  created_at        timestamptz not null default now(),
-  updated_at        timestamptz not null default now(),
+  id uuid primary key default gen_random_uuid(),
+  submission_id text not null unique,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  submitted_at timestamptz,
 
-  -- Datos del formulario (los 8 pasos)
-  nombre            text not null,
-  apellido          text not null,
-  email             text not null,
-  telefono          text not null,
-  urgencia_cirugia  text,
-  medio_evaluacion  text,
-  genero            text,
-  horario_contacto  text,
+  form_version text not null default '',
+  source_form text not null default '',
+  nombre text not null,
+  apellido text not null,
+  email text not null,
+  telefono text not null,
+  urgencia_cirugia text not null,
+  medio_evaluacion text not null,
+  genero text not null,
+  horario_contacto text not null,
 
-  -- Origen / atribución
-  source_form       text default 'Providencia',
-  utm_source        text,
-  utm_medium        text,
-  utm_campaign      text,
-  utm_content       text,
-  utm_term          text,
-  campaign_id       text,
-  page_url          text,
-  referrer          text,
+  delivery_status text not null default 'received'
+    check (delivery_status in ('received', 'processing', 'synced', 'failed')),
+  make_status text not null default 'pending'
+    check (make_status in ('pending', 'success', 'failed', 'not_configured')),
+  pipedrive_status text not null default 'pending'
+    check (pipedrive_status in ('pending', 'processing', 'success', 'failed', 'not_configured')),
+  pipedrive_person_id text,
+  pipedrive_deal_id text,
+  integration_error text,
+  attempt_count integer not null default 0 check (attempt_count >= 0),
+  last_attempt_at timestamptz,
+  requeue_requested_at timestamptz,
 
-  -- Metadatos técnicos (los rellena la API, no el navegador)
-  user_agent        text,
-  ip_hash           text,
+  utm_id text,
+  utm_source text,
+  utm_medium text,
+  utm_campaign text,
+  utm_term text,
+  utm_content text,
+  utm_source_platform text,
+  utm_creative_format text,
+  utm_marketing_tactic text,
+  campaign_id text,
+  adgroup_id text,
+  ad_id text,
+  keyword text,
+  match_type text,
+  network text,
+  device text,
+  placement text,
+  gclid text,
+  gbraid text,
+  wbraid text,
+  fbclid text,
+  msclkid text,
+  ttclid text,
 
-  -- Gestión comercial
-  status            text not null default 'nuevo',
-  assigned_to       text,
-  notes             text,
-  contacted_at      timestamptz,
+  page_url text,
+  page_path text,
+  referrer text,
+  raw_payload jsonb not null default '{}'::jsonb,
 
-  -- Validaciones a nivel de base de datos
-  constraint leads_email_check
-    check (email ~* '^[^@\s]+@[^@\s]+\.[a-z]{2,}$'),
-  constraint leads_telefono_check
-    check (telefono ~ '^[0-9]{9}$'),
-  constraint leads_status_check
-    check (status in ('nuevo', 'contactado', 'agendado', 'ganado', 'descartado')),
-  constraint leads_urgencia_check
-    check (urgencia_cirugia is null or urgencia_cirugia in (
-      'Lo antes posible', 'Dentro de 6 meses', 'Entre 6 y 12 meses',
-      'Después de un año', 'Sin fecha aún')),
-  constraint leads_medio_check
-    check (medio_evaluacion is null or medio_evaluacion in (
-      'Presencial', 'A distancia', 'Busca información')),
-  constraint leads_genero_check
-    check (genero is null or genero in ('Hombre', 'Mujer', 'Otro')),
-  constraint leads_horario_check
-    check (horario_contacto is null or horario_contacto in (
-      'Entre 9:00 y 14:00 hrs', 'Entre 14:00 y 18:00 hrs'))
+  constraint leads_email_format check (position('@' in email) > 1),
+  constraint leads_phone_format check (telefono ~ '^[0-9]{9}$')
 );
 
-comment on table public.leads is
-  'Leads del formulario de la landing de implante capilar.';
-comment on column public.leads.ip_hash is
-  'Hash SHA-256 de la IP + salt. No guardamos la IP en claro.';
-comment on column public.leads.status is
-  'Estado comercial: nuevo -> contactado -> agendado -> ganado / descartado.';
+create table if not exists public.lead_delivery_events (
+  id bigint generated by default as identity primary key,
+  submission_id text not null references public.leads(submission_id) on delete cascade,
+  event_type text not null
+    check (event_type in ('received', 'make_success', 'make_failed', 'queued_offline')),
+  error_message text,
+  created_at timestamptz not null default now()
+);
 
--- =============================================================================
--- ÍNDICES
--- =============================================================================
-create index if not exists leads_created_at_idx  on public.leads (created_at desc);
-create index if not exists leads_status_idx      on public.leads (status);
-create index if not exists leads_email_idx       on public.leads (lower(email));
-create index if not exists leads_telefono_idx    on public.leads (telefono);
-create index if not exists leads_utm_source_idx  on public.leads (utm_source)
-  where utm_source is not null;
+-- Esta lista es la segunda barrera del CMS: estar autenticado no basta.
+create table if not exists public.cms_users (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
 
--- =============================================================================
--- TRIGGER: mantener updated_at
--- =============================================================================
+create index if not exists leads_created_at_idx on public.leads (created_at desc);
+create index if not exists leads_pipedrive_status_idx on public.leads (pipedrive_status, created_at desc);
+create index if not exists leads_source_form_idx on public.leads (source_form, created_at desc);
+create index if not exists leads_email_idx on public.leads (lower(email));
+create index if not exists leads_phone_idx on public.leads (telefono);
+create index if not exists lead_delivery_events_submission_idx
+  on public.lead_delivery_events (submission_id, created_at desc);
+
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+security invoker
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
@@ -104,63 +104,135 @@ $$;
 
 drop trigger if exists leads_set_updated_at on public.leads;
 create trigger leads_set_updated_at
-  before update on public.leads
-  for each row execute function public.set_updated_at();
+before update on public.leads
+for each row execute function public.set_updated_at();
 
--- =============================================================================
--- RLS (Row Level Security)
--- -----------------------------------------------------------------------------
--- La service_role key (la que usa la API en Render) ignora RLS, así que la API
--- siempre puede insertar y leer.
---
--- La política de INSERT para anon existe SOLO para el modo "Supabase directo"
--- del front (config.js -> supabase.anonKey). Si vas a usar siempre la API de
--- Render, borra esa política: es más seguro.
--- =============================================================================
 alter table public.leads enable row level security;
+alter table public.lead_delivery_events enable row level security;
+alter table public.cms_users enable row level security;
 
--- Insertar: permitido para anon y usuarios autenticados. Nada más.
-drop policy if exists "leads_insert_anon" on public.leads;
-create policy "leads_insert_anon"
-  on public.leads
-  for insert
-  to anon, authenticated
-  with check (true);
+-- Se ejecuta con el propietario de la función para consultar la lista privada.
+create or replace function public.is_cms_user()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1
+    from public.cms_users
+    where user_id = auth.uid()
+  );
+$$;
 
--- Leer: sólo usuarios autenticados (equipo comercial con login en Supabase).
--- El público con anon key NO puede leer los leads.
-drop policy if exists "leads_select_authenticated" on public.leads;
-create policy "leads_select_authenticated"
-  on public.leads
-  for select
-  to authenticated
-  using (true);
+revoke all on function public.is_cms_user() from public, anon;
+grant execute on function public.is_cms_user() to authenticated;
 
--- Actualizar: sólo usuarios autenticados (para cambiar status / notas).
-drop policy if exists "leads_update_authenticated" on public.leads;
-create policy "leads_update_authenticated"
-  on public.leads
-  for update
-  to authenticated
-  using (true)
-  with check (true);
+drop policy if exists "public can submit leads" on public.leads;
+create policy "public can submit leads"
+on public.leads
+for insert
+to anon
+with check (
+  submission_id <> ''
+  and form_version in ('v1', 'v2')
+  and source_form in ('lp1', 'lp2')
+  and nombre <> ''
+  and apellido <> ''
+  and position('@' in email) > 1
+  and telefono ~ '^[0-9]{9}$'
+  and urgencia_cirugia <> ''
+  and medio_evaluacion <> ''
+  and genero <> ''
+  and horario_contacto <> ''
+  and delivery_status = 'received'
+  and make_status in ('pending', 'not_configured')
+  and pipedrive_status in ('pending', 'not_configured')
+  and attempt_count = 0
+  and pipedrive_person_id is null
+  and pipedrive_deal_id is null
+  and integration_error is null
+);
 
--- =============================================================================
--- VISTA: resumen diario para reportes
--- =============================================================================
-create or replace view public.leads_daily_summary as
-select
-  date_trunc('day', created_at)::date        as dia,
-  count(*)                                   as total,
-  count(*) filter (where status = 'nuevo')       as nuevos,
-  count(*) filter (where status = 'contactado')  as contactados,
-  count(*) filter (where status = 'agendado')    as agendados,
-  count(*) filter (where status = 'ganado')      as ganados,
-  count(*) filter (where urgencia_cirugia = 'Lo antes posible') as urgentes,
-  count(distinct utm_campaign)               as campanas
-from public.leads
-group by 1
-order by 1 desc;
+drop policy if exists "authenticated users can read leads" on public.leads;
+drop policy if exists "cms users can read leads" on public.leads;
+create policy "cms users can read leads"
+on public.leads
+for select
+to authenticated
+using (public.is_cms_user());
 
-comment on view public.leads_daily_summary is
-  'Leads por día con desglose de estados. Útil para el dashboard comercial.';
+-- El CMS no puede modificar datos personales. Sólo invoca el RPC acotado de reintento.
+drop policy if exists "authenticated users can update leads" on public.leads;
+drop policy if exists "cms users can update leads" on public.leads;
+
+drop policy if exists "public can append delivery events" on public.lead_delivery_events;
+create policy "public can append delivery events"
+on public.lead_delivery_events
+for insert
+to anon
+with check (
+  submission_id <> ''
+  and char_length(coalesce(error_message, '')) <= 800
+);
+
+drop policy if exists "authenticated users can read delivery events" on public.lead_delivery_events;
+drop policy if exists "cms users can read delivery events" on public.lead_delivery_events;
+create policy "cms users can read delivery events"
+on public.lead_delivery_events
+for select
+to authenticated
+using (public.is_cms_user());
+
+create or replace function public.request_lead_requeue(p_submission_id text)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  affected integer;
+begin
+  if not public.is_cms_user() then
+    raise exception 'forbidden' using errcode = '42501';
+  end if;
+
+  update public.leads
+  set delivery_status = 'received',
+      make_status = 'pending',
+      pipedrive_status = 'pending',
+      integration_error = null,
+      requeue_requested_at = now()
+  where submission_id = p_submission_id;
+
+  get diagnostics affected = row_count;
+  return affected = 1;
+end;
+$$;
+
+revoke all on function public.request_lead_requeue(text) from public, anon;
+grant execute on function public.request_lead_requeue(text) to authenticated;
+
+grant usage on schema public to anon, authenticated;
+revoke all on public.leads from anon, authenticated;
+revoke all on public.lead_delivery_events from anon, authenticated;
+revoke all on public.cms_users from anon, authenticated;
+grant insert on public.leads to anon;
+grant insert on public.lead_delivery_events to anon;
+grant select on public.leads to authenticated;
+grant select on public.lead_delivery_events to authenticated;
+grant usage, select on sequence public.lead_delivery_events_id_seq to anon;
+
+-- Puesta en marcha segura:
+-- 1. Authentication > Providers > Email: desactivar "Allow new users to sign up".
+-- 2. Authentication > Users: crear el usuario interno con correo verificado y
+--    una contraseña única y larga. La contraseña nunca va en Git ni en Render.
+-- 3. Autorizar ese usuario desde SQL Editor, reemplazando el correo:
+--
+-- insert into public.cms_users (user_id)
+-- select id from auth.users where lower(email) = lower('correo-autorizado@dominio.cl')
+-- on conflict (user_id) do nothing;
+--
+-- 4. Render sólo recibe PUBLIC_SUPABASE_URL y PUBLIC_SUPABASE_ANON_KEY.
+--    La service_role queda exclusivamente en Supabase/Make; nunca en el navegador.

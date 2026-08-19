@@ -1,33 +1,6 @@
-# =============================================================================
-# Blueprint de Render – https://render.com/docs/blueprint-spec
-#
-# Define los dos sitios estáticos (la versión Astro y la vanilla). Están las
-# dos para que puedas elegir; en producción normalmente dejas una sola:
-# comenta o borra la que no uses.
-#
-# Uso:
-#   1. Sube el repo a GitHub.
-#   2. En Render: New -> Blueprint -> selecciona el repo.
-#   3. Rellena las variables marcadas con sync:false (las keys de Supabase).
-#
-# Si prefieres crearlos a mano (New -> Static Site), los valores están en la
-# tabla de cada servicio más abajo y en el README.
-# =============================================================================
+# Blueprint de Render para Clínica Témpora.
 
 services:
-  # ---------------------------------------------------------------------------
-  # Versión Astro (con build)
-  #
-  # El build es un solo comando ("npm run render-build") a propósito: Render no
-  # siempre pasa el buildCommand por una shell, y cuando no lo hace, un
-  # "npm ci && npm run build" llega como argumentos posicionales de npm, que
-  # entonces imprime su "Usage" y el deploy falla. El && vive dentro del script
-  # de package.json, que npm sí ejecuta con shell.
-  #
-  #   Root Directory   : astro
-  #   Build Command    : npm run render-build
-  #   Publish Directory: dist
-  # ---------------------------------------------------------------------------
   - type: web
     runtime: static
     name: tempora-implante-capilar
@@ -38,9 +11,7 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "20"
-      # Las keys se rellenan en el dashboard, no en el repo.
-      # Ojo: al ser un build estático quedan dentro del JS del navegador.
-      # La anon key es pública por diseño (RLS sólo permite INSERT).
+      # Variables públicas por diseño: la seguridad está en RLS de Supabase.
       - key: PUBLIC_SUPABASE_URL
         sync: false
       - key: PUBLIC_SUPABASE_ANON_KEY
@@ -48,7 +19,18 @@ services:
       - key: PUBLIC_SUPABASE_TABLE
         value: leads
     headers:
-      # Los assets con hash en el nombre pueden cachearse para siempre
+      - path: /CMS/*
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive
+      - path: /CMS/*
+        name: Cache-Control
+        value: no-store
+      - path: /CMS/*
+        name: X-Frame-Options
+        value: DENY
+      - path: /CMS/*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
       - path: /_astro/*
         name: Cache-Control
         value: public, max-age=31536000, immutable
@@ -62,15 +44,7 @@ services:
         name: Referrer-Policy
         value: strict-origin-when-cross-origin
 
-  # ---------------------------------------------------------------------------
-  # Versión vanilla (sin build)
-  #   Root Directory   : (vacío)
-  #   Build Command    : (vacío)
-  #   Publish Directory: vanilla
-  #
-  # La configuración del formulario va en vanilla/assets/js/config.js, no en
-  # variables de entorno: sin build no hay nada que las inyecte.
-  # ---------------------------------------------------------------------------
+  # Sitio vanilla heredado; se conserva sin cambios funcionales.
   - type: web
     runtime: static
     name: tempora-implante-capilar-vanilla
