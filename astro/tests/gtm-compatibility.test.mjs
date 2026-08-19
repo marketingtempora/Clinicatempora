@@ -13,6 +13,18 @@ test('las páginas públicas cargan el contenedor oficial de GTM', () => {
   assert.match(layout, /tracking = true/);
 });
 
+test('GTM ocupa las posiciones prioritarias indicadas por Google', () => {
+  const headOpen = layout.indexOf('<head>');
+  const headScript = layout.indexOf('{tracking && <script');
+  const firstMeta = layout.indexOf('<meta charset');
+  const bodyOpen = layout.indexOf('<body>');
+  const bodyFallback = layout.indexOf('{tracking && (', bodyOpen);
+  const firstVisibleContent = layout.indexOf('<a class="skip-link"', bodyOpen);
+
+  assert.ok(headOpen < headScript && headScript < firstMeta);
+  assert.ok(bodyOpen < bodyFallback && bodyFallback < firstVisibleContent);
+});
+
 test('el CMS privado no carga etiquetas publicitarias', () => {
   assert.match(cms, /tracking=\{false\}/);
 });

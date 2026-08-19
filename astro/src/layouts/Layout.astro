@@ -44,6 +44,7 @@ const schema = {
 <!doctype html>
 <html lang="es">
   <head>
+    {tracking && <script is:inline set:html={gtmHead}></script>}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
@@ -75,7 +76,6 @@ const schema = {
     <link rel="preload" as="image" href="/assets/img/hero-desktop.webp" media="(min-width: 768px)" />
 
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-    {tracking && <script is:inline set:html={gtmHead}></script>}
   </head>
 
   <body>
