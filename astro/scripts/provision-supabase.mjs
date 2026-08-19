@@ -11,10 +11,10 @@ const hasProvisioningCredentials = Boolean(
   accessToken && projectRef && cmsEmail && cmsPassword,
 );
 
-if (!hasProvisioningCredentials) {
-  if (publicUrl && publicKey) {
-    console.log('Supabase ya está configurado; se usan las variables públicas de Render.');
-  } else if (process.env.RENDER) {
+if (publicUrl && publicKey) {
+  console.log('Supabase ya está configurado; se usan las variables públicas de Render.');
+} else if (!hasProvisioningCredentials) {
+  if (process.env.RENDER) {
     throw new Error(
       'Faltan las variables públicas de Supabase o las credenciales temporales de puesta en marcha.',
     );
