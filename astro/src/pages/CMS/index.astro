@@ -343,27 +343,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     ];
 
     const attributionColumns: TableColumn[] = [
-      { label: 'UTM ID', field: 'utm_id' },
       { label: 'UTM term', field: 'utm_term' },
       { label: 'UTM content', field: 'utm_content' },
-      { label: 'Plataforma de origen', field: 'utm_source_platform' },
-      { label: 'Formato creativo', field: 'utm_creative_format' },
-      { label: 'Táctica de marketing', field: 'utm_marketing_tactic' },
       { label: 'Campaign ID', field: 'campaign_id' },
-      { label: 'Grupo de anuncios ID', field: 'adgroup_id' },
-      { label: 'Ad ID', field: 'ad_id' },
-      { label: 'Keyword', field: 'keyword' },
-      { label: 'Tipo de concordancia', field: 'match_type' },
-      { label: 'Red', field: 'network' },
-      { label: 'Dispositivo', field: 'device' },
-      { label: 'Ubicación', field: 'placement' },
-      { label: 'GCLID', field: 'gclid' },
-      { label: 'GBRAID', field: 'gbraid' },
-      { label: 'WBRAID', field: 'wbraid' },
-      { label: 'FBCLID', field: 'fbclid' },
-      { label: 'MSCLKID', field: 'msclkid' },
-      { label: 'TTCLID', field: 'ttclid' },
-      { label: 'URL de envío', field: 'page_url' },
     ];
     const detailColumns = [...tableColumns, ...attributionColumns];
     const displayColumns = detailColumns;
@@ -371,8 +353,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       { title: 'Datos de contacto', fields: ['created_at', 'source_form', 'nombre', 'apellido', 'email', 'telefono'] },
       { title: 'Preferencias', fields: ['urgencia_cirugia', 'medio_evaluacion', 'genero', 'horario_contacto'] },
       { title: 'Atribución', fields: detailColumns.filter((column) => column.field.startsWith('utm_')
-        || ['campaign_id', 'adgroup_id', 'ad_id', 'keyword', 'match_type', 'network', 'device', 'placement', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'ttclid'].includes(column.field)).map((column) => column.field) },
-      { title: 'Contexto', fields: ['page_url'] },
+        || column.field === 'campaign_id').map((column) => column.field) },
     ];
 
     tableHead.replaceChildren();
@@ -425,7 +406,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       setMetric('lp1', leads.filter((lead) => lead.source_form === 'lp1' || lead.form_version === 'v1').length);
       setMetric('lp2', leads.filter((lead) => lead.source_form === 'lp2' || lead.form_version === 'v2').length);
       setMetric('attributed', leads.filter((lead) => Boolean(
-        lead.utm_source || lead.utm_medium || lead.utm_campaign || lead.gclid || lead.fbclid
+        lead.utm_source || lead.utm_medium || lead.utm_campaign || lead.utm_content || lead.utm_term || lead.campaign_id
       )).length);
     };
 

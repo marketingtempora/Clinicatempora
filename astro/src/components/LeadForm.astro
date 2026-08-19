@@ -42,29 +42,12 @@ const fieldGroups = Array.from(
 const totalSteps = fieldGroups.length;
 const firstPct = Math.floor((1 / totalSteps) * 100);
 const attributionFields = [
-  'utm_id',
   'utm_source',
   'utm_medium',
   'utm_campaign',
-  'utm_term',
   'utm_content',
-  'utm_source_platform',
-  'utm_creative_format',
-  'utm_marketing_tactic',
+  'utm_term',
   'campaign_id',
-  'adgroup_id',
-  'ad_id',
-  'keyword',
-  'match_type',
-  'network',
-  'device',
-  'placement',
-  'gclid',
-  'gbraid',
-  'wbraid',
-  'fbclid',
-  'msclkid',
-  'ttclid',
 ] as const;
 const gtmLegacyFields = [
   'utm_source',
@@ -413,34 +396,14 @@ const gtmLegacyFields = [
     const params = new URLSearchParams(window.location.search);
     const aliases: Record<string, string[]> = {
       campaign_id: ['campaign_id', 'campaignid'],
-      adgroup_id: ['adgroup_id', 'adgroupid'],
-      ad_id: ['ad_id', 'adid', 'creative'],
-      match_type: ['match_type', 'matchtype'],
     };
     const fields = [
-      'utm_id',
       'utm_source',
       'utm_medium',
       'utm_campaign',
-      'utm_term',
       'utm_content',
-      'utm_source_platform',
-      'utm_creative_format',
-      'utm_marketing_tactic',
+      'utm_term',
       'campaign_id',
-      'adgroup_id',
-      'ad_id',
-      'keyword',
-      'match_type',
-      'network',
-      'device',
-      'placement',
-      'gclid',
-      'gbraid',
-      'wbraid',
-      'fbclid',
-      'msclkid',
-      'ttclid',
     ];
 
     for (const key of fields) {

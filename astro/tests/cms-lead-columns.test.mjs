@@ -9,7 +9,7 @@ test('la tabla principal muestra datos del lead sin duplicar el origen', () => {
   assert.match(columns, /label: 'Landing', field: 'source_form'/);
   assert.doesNotMatch(columns, /field: 'form_version'/);
   assert.doesNotMatch(columns, /label: 'Origen'/);
-  assert.match(columns, /label: 'URL de envío', field: 'page_url'/);
+  assert.doesNotMatch(columns, /field: 'page_url'/);
   assert.doesNotMatch(columns, /field: 'page_path'/);
 });
 

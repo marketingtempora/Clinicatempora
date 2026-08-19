@@ -28,16 +28,22 @@ test('el CMS permite consultar, filtrar y exportar formularios sin mezclar integ
   assert.doesNotMatch(page, /method:\s*'PATCH'/);
 });
 
-test('la tabla y el Excel incluyen todos los campos visibles y de atribución', async () => {
+test('la tabla y el Excel incluyen los campos visibles y solo la atribución solicitada', async () => {
   const page = await read('../src/pages/CMS/index.astro');
 
   for (const field of [
     'nombre', 'apellido', 'email', 'telefono', 'urgencia_cirugia',
     'medio_evaluacion', 'genero', 'horario_contacto', 'source_form',
-    'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
-    'campaign_id', 'adgroup_id', 'ad_id', 'gclid', 'fbclid',
+    'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id',
   ]) {
     assert.match(page, new RegExp(`['\"]${field}['\"]`), `falta la columna ${field}`);
+  }
+  for (const field of [
+    'utm_id', 'utm_source_platform', 'utm_creative_format', 'utm_marketing_tactic',
+    'adgroup_id', 'ad_id', 'keyword', 'match_type', 'network', 'device', 'placement',
+    'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'ttclid',
+  ]) {
+    assert.doesNotMatch(page, new RegExp(`field: ['\"]${field}['\"]`), `sobra la columna ${field}`);
   }
   assert.match(page, /data-table-head/);
 });
