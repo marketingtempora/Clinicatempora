@@ -101,16 +101,17 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
             <p class="records__count"><strong data-visible-count>0</strong> registros</p>
           </div>
 
-          <div class="table-wrap">
-            <table>
+          <div class="table-wrap" data-table-wrap>
+            <table data-records-table hidden>
               <thead>
                 <tr data-table-head></tr>
               </thead>
               <tbody data-table-body></tbody>
             </table>
             <div class="empty" data-empty hidden>
-              <strong>No hay formularios para mostrar.</strong>
-              <span>Cambia los filtros o actualiza los datos.</span>
+              <span class="empty__icon" aria-hidden="true">✓</span>
+              <strong data-empty-title>No hay formularios recibidos todavía.</strong>
+              <span data-empty-copy>Los nuevos registros aparecerán aquí automáticamente.</span>
             </div>
           </div>
           <p class="records__status" data-records-status role="status" aria-live="polite"></p>
@@ -185,10 +186,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   .filters input, .filters select { height: 39px; padding: 0 11px; border: 1px solid #d2d8d2; border-radius: 8px; background: #f8faf7; color: var(--ink); font-size: .8rem; }
   .filters .search { flex: 1; }
   .records__count { margin: 0 4px 8px auto; color: #697578; font-size: .75rem; white-space: nowrap; }
-  .table-wrap { position: relative; overflow-x: auto; }
-  table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: .78rem; }
-  th { position: sticky; z-index: 2; top: 0; min-width: 118px; padding: 11px 12px; border-right: 1px solid #e3e7e3; border-bottom: 1px solid #e3e7e3; background: #f5f7f4; color: #657174; font-size: .66rem; letter-spacing: .05em; text-align: left; text-transform: uppercase; white-space: nowrap; }
-  td { max-width: 260px; padding: 13px 12px; border-top: 1px solid #edf0ed; border-right: 1px solid #f0f2ef; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; white-space: nowrap; }
+  .table-wrap { position: relative; max-width: 100%; overflow-x: auto; scrollbar-color: #9eae9f #edf1ec; scrollbar-width: thin; }
+  .table-wrap::-webkit-scrollbar { height: 10px; }
+  .table-wrap::-webkit-scrollbar-track { background: #edf1ec; }
+  .table-wrap::-webkit-scrollbar-thumb { border: 2px solid #edf1ec; border-radius: 10px; background: #9eae9f; }
+  .table-wrap--empty { overflow: hidden; }
+  table { width: 7200px; min-width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: .78rem; }
+  th { position: sticky; z-index: 2; top: 0; width: 150px; padding: 12px 14px; border-right: 1px solid #dde3dd; border-bottom: 1px solid #d8ded8; background: #f3f6f2; color: #536164; font-size: .66rem; font-weight: 800; letter-spacing: .055em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+  td { width: 150px; max-width: 150px; padding: 13px 14px; border-top: 1px solid #edf0ed; border-right: 1px solid #edf0ed; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; white-space: nowrap; }
   th:first-child, td:first-child { position: sticky; z-index: 1; left: 0; background: #fff; }
   th:first-child { z-index: 3; background: #f5f7f4; }
   tbody tr:hover td { background: #fbfcf8; }
@@ -200,8 +205,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   .status-pill--failed { background: #f8e5e3; color: #9b302b; }
   .status-pill--pending { background: #f6f0d7; color: #806b13; }
   .row-action { padding: 6px 9px; border: 1px solid #d7ddd7; border-radius: 7px; background: #fff; color: var(--ink); font-size: .7rem; font-weight: 750; }
-  .empty { display: flex; min-height: 220px; align-items: center; justify-content: center; flex-direction: column; color: #6d797a; }
-  .empty strong { color: var(--ink); }
+  .empty { display: flex; min-height: 250px; padding: 32px 20px; align-items: center; justify-content: center; gap: 6px; flex-direction: column; background: linear-gradient(180deg, #fff 0%, #fafcf9 100%); color: #6d797a; text-align: center; }
+  .empty__icon { display: grid; width: 42px; height: 42px; margin-bottom: 7px; place-items: center; border-radius: 50%; background: #eef4d8; color: #718500; font-size: 1.15rem; font-weight: 900; }
+  .empty strong { color: var(--ink); font-size: .95rem; }
+  .empty span:last-child { font-size: .82rem; }
   .records__status { min-height: 24px; margin: 0; padding: 0 14px 10px; color: #9b302b; font-size: .76rem; }
 
   .details { width: min(680px, calc(100% - 28px)); max-height: calc(100svh - 40px); padding: 0; border: 0; border-radius: 18px; color: var(--ink); box-shadow: 0 28px 100px rgba(0,0,0,.35); }
@@ -236,6 +243,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     .workspace { padding-top: 28px; }
     .metrics { gap: 8px; }
     .metrics article { padding: 16px; }
+    .empty { min-height: 210px; }
     .details dl { grid-template-columns: 1fr; }
     .details__actions { align-items: stretch; flex-direction: column-reverse; }
   }
@@ -260,7 +268,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     const dashboard = root.querySelector<HTMLElement>('[data-dashboard]')!;
     const tableHead = root.querySelector<HTMLTableRowElement>('[data-table-head]')!;
     const tableBody = root.querySelector<HTMLTableSectionElement>('[data-table-body]')!;
+    const recordsTable = root.querySelector<HTMLTableElement>('[data-records-table]')!;
+    const tableWrap = root.querySelector<HTMLElement>('[data-table-wrap]')!;
     const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const emptyTitle = root.querySelector<HTMLElement>('[data-empty-title]')!;
+    const emptyCopy = root.querySelector<HTMLElement>('[data-empty-copy]')!;
     const recordsStatus = root.querySelector<HTMLElement>('[data-records-status]')!;
     const search = root.querySelector<HTMLInputElement>('[data-search]')!;
     const statusFilter = root.querySelector<HTMLSelectElement>('[data-status-filter]')!;
@@ -452,7 +464,21 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       });
 
       root.querySelector<HTMLElement>('[data-visible-count]')!.textContent = String(visibleLeads.length);
-      empty.hidden = visibleLeads.length > 0;
+      const hasRows = visibleLeads.length > 0;
+      recordsTable.hidden = !hasRows;
+      empty.hidden = hasRows;
+      tableWrap.classList.toggle('table-wrap--empty', !hasRows);
+      if (!hasRows) {
+        const filtersAreActive = Boolean(search.value.trim())
+          || statusFilter.value !== 'all'
+          || versionFilter.value !== 'all';
+        emptyTitle.textContent = leads.length && filtersAreActive
+          ? 'No hay formularios que coincidan.'
+          : 'No hay formularios recibidos todavía.';
+        emptyCopy.textContent = leads.length && filtersAreActive
+          ? 'Prueba cambiando la búsqueda o los filtros.'
+          : 'Los nuevos registros aparecerán aquí automáticamente.';
+      }
     };
 
     const detailFields: Array<[string, string]> = tableColumns

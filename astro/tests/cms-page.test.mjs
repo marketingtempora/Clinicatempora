@@ -46,3 +46,13 @@ test('/CMS contiene directamente el panel privado', async () => {
   assert.match(page, /data-cms/);
   assert.doesNotMatch(page, /location\.replace/);
 });
+
+test('el estado vacío oculta la tabla y las columnas conservan un ancho legible', async () => {
+  const page = await read('../src/pages/CMS/index.astro');
+
+  assert.match(page, /data-records-table hidden/);
+  assert.match(page, /recordsTable\.hidden = !hasRows/);
+  assert.match(page, /empty\.hidden = hasRows/);
+  assert.match(page, /table\s*\{[^}]*width:\s*7200px/);
+  assert.match(page, /table-layout:\s*fixed/);
+});
