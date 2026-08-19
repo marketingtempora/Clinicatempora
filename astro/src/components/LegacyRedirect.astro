@@ -1,0 +1,29 @@
+---
+interface Props {
+  destination: string;
+}
+
+const { destination } = Astro.props;
+const canonical = new URL(destination, Astro.url).href;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={canonical} />
+    <title>Redirigiendo | Clínica Témpora</title>
+  </head>
+  <body>
+    <p>Esta dirección cambió. <a href={destination}>Continuar</a></p>
+    <script is:inline define:vars={{ destination }}>
+      const target = new URL(destination, window.location.origin);
+      target.search = window.location.search;
+      target.hash = window.location.hash;
+      window.location.replace(target.href);
+    </script>
+  </body>
+</html>
