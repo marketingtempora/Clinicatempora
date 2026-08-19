@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, unlink, writeFile } from 'node:fs/promises';
 
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN?.trim();
 const projectRef = process.env.SUPABASE_PROJECT_REF?.trim();
@@ -12,6 +12,9 @@ const hasProvisioningCredentials = Boolean(
 );
 
 if (publicUrl && publicKey) {
+  await unlink(new URL('../public/cms-setup-status.json', import.meta.url)).catch((error) => {
+    if (error?.code !== 'ENOENT') throw error;
+  });
   console.log('Supabase ya está configurado; se usan las variables públicas de Render.');
 } else if (!hasProvisioningCredentials) {
   if (process.env.RENDER) {
