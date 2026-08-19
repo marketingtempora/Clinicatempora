@@ -127,7 +127,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   </main>
 </Layout>
 
-<style>
+<style is:global>
   :global(body) { background: #eef1ed; }
   :global(.skip-link) { display: none; }
   .cms { min-height: 100svh; color: var(--ink); }
@@ -180,15 +180,15 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   .table-wrap::-webkit-scrollbar-track { background: #edf1ec; }
   .table-wrap::-webkit-scrollbar-thumb { border: 2px solid #edf1ec; border-radius: 10px; background: #9eae9f; }
   .table-wrap--empty { overflow: hidden; }
-  table { width: 2400px; min-width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: .78rem; }
-  th { position: sticky; z-index: 2; top: 0; width: 150px; padding: 12px 14px; border-right: 1px solid #dde3dd; border-bottom: 1px solid #d8ded8; background: #f3f6f2; color: #536164; font-size: .66rem; font-weight: 800; letter-spacing: .055em; text-align: left; text-transform: uppercase; white-space: nowrap; }
-  td { width: 150px; max-width: 150px; padding: 13px 14px; border-top: 1px solid #edf0ed; border-right: 1px solid #edf0ed; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; white-space: nowrap; }
+  table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; table-layout: auto; font-size: .78rem; }
+  th { position: sticky; z-index: 2; top: 0; min-width: 165px; padding: 13px 15px; border-right: 1px solid rgba(255,255,255,.12); border-bottom: 1px solid #17383b; background: #0b292c; color: #fff; font-size: .66rem; font-weight: 800; letter-spacing: .06em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+  td { width: 165px; max-width: 220px; padding: 14px 15px; border-top: 1px solid #e7ece7; border-right: 1px solid #edf0ed; overflow: hidden; color: #23383a; text-overflow: ellipsis; vertical-align: middle; white-space: nowrap; }
   tbody tr:nth-child(even) td { background: #fafbf8; }
   th:first-child, td:first-child { position: sticky; z-index: 1; left: 0; background: #fff; }
-  th:first-child { z-index: 3; background: #f5f7f4; }
+  th:first-child { z-index: 3; background: #0b292c; }
   tbody tr:hover td { background: #fbfcf8; }
   th:last-child, td:last-child { position: sticky; z-index: 1; right: 0; background: #fff; box-shadow: -8px 0 14px rgba(6,26,28,.04); }
-  th:last-child { z-index: 3; background: #f5f7f4; }
+  th:last-child { z-index: 3; min-width: 128px; background: #0b292c; }
   .cell--empty { color: #a3adaa; font-style: italic; }
   .cell--tracking { color: #526266; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .7rem; }
   .cell-link { color: #244f53; font-weight: 700; text-decoration-color: #a7c400; text-underline-offset: 3px; }
@@ -198,7 +198,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   .status-pill--success { background: #e9f3df; color: #426d22; }
   .status-pill--failed { background: #f8e5e3; color: #9b302b; }
   .status-pill--pending { background: #f6f0d7; color: #806b13; }
-  .row-action { padding: 6px 9px; border: 1px solid #d7ddd7; border-radius: 7px; background: #fff; color: var(--ink); font-size: .7rem; font-weight: 750; }
+  .row-action { padding: 8px 12px; border: 1px solid var(--lime); border-radius: 8px; background: var(--lime); color: var(--ink); font-size: .72rem; font-weight: 850; box-shadow: 0 4px 12px rgba(166,194,0,.2); transition: transform .18s ease, box-shadow .18s ease; }
+  .row-action:hover { transform: translateY(-1px); box-shadow: 0 7px 16px rgba(166,194,0,.3); }
   .empty { display: flex; min-height: 250px; padding: 32px 20px; align-items: center; justify-content: center; gap: 6px; flex-direction: column; background: linear-gradient(180deg, #fff 0%, #fafcf9 100%); color: #6d797a; text-align: center; }
   .empty__icon { display: grid; width: 42px; height: 42px; margin-bottom: 7px; place-items: center; border-radius: 50%; background: #eef4d8; color: #718500; font-size: 1.15rem; font-weight: 900; }
   .empty strong { color: var(--ink); font-size: .95rem; }
@@ -365,6 +366,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       { label: 'URL de envío', field: 'page_url' },
     ];
     const detailColumns = [...tableColumns, ...attributionColumns];
+    const displayColumns = detailColumns;
     const detailGroups = [
       { title: 'Datos de contacto', fields: ['created_at', 'source_form', 'nombre', 'apellido', 'email', 'telefono'] },
       { title: 'Preferencias', fields: ['urgencia_cirugia', 'medio_evaluacion', 'genero', 'horario_contacto'] },
@@ -374,7 +376,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     ];
 
     tableHead.replaceChildren();
-    tableColumns.forEach((column) => {
+    displayColumns.forEach((column) => {
       const heading = document.createElement('th');
       heading.scope = 'col';
       heading.textContent = column.label;
@@ -430,7 +432,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     const renderTable = () => {
       const needle = search.value.trim().toLocaleLowerCase('es');
       visibleLeads = leads.filter((lead) => {
-        const haystack = detailColumns.map((column) => lead[column.field])
+        const haystack = displayColumns.map((column) => lead[column.field])
           .join(' ').toLocaleLowerCase('es');
         return (!needle || haystack.includes(needle))
           && (versionFilter.value === 'all' || lead.form_version === versionFilter.value);
@@ -439,7 +441,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       tableBody.replaceChildren();
       visibleLeads.forEach((lead) => {
         const row = tableBody.insertRow();
-        tableColumns.forEach((column) => {
+        displayColumns.forEach((column) => {
           const cell = createCell(row, columnValue(lead, column), column);
           cell.title = columnValue(lead, column);
         });

@@ -28,11 +28,12 @@ test('el CMS no presenta columnas de Make o Pipedrive', () => {
   }
 });
 
-test('la tabla queda compacta y los campos secundarios permanecen en el detalle y el Excel', () => {
+test('todos los campos permanecen sincronizados entre tabla, detalle y Excel', () => {
   assert.match(source, /const attributionColumns: TableColumn\[\]/);
   assert.match(source, /const detailColumns = \[\.\.\.tableColumns, \.\.\.attributionColumns\]/);
+  assert.match(source, /const displayColumns = detailColumns/);
   assert.match(source, /const fields = detailColumns/);
-  assert.match(source, /table \{ width: 2400px;/);
+  assert.match(source, /table \{ width: max-content;/);
 });
 
 test('el resumen del CMS se limita a formularios y atribución', () => {

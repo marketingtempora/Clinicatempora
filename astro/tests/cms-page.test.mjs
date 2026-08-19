@@ -54,6 +54,6 @@ test('el estado vacío oculta la tabla y las columnas conservan un ancho legible
   assert.match(page, /data-records-table hidden/);
   assert.match(page, /recordsTable\.hidden = !hasRows/);
   assert.match(page, /empty\.hidden = hasRows/);
-  assert.match(page, /table\s*\{[^}]*width:\s*2400px/);
-  assert.match(page, /table-layout:\s*fixed/);
+  assert.match(page, /table\s*\{[^}]*width:\s*max-content/);
+  assert.match(page, /table-layout:\s*auto/);
 });
