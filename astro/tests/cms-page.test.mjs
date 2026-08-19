@@ -16,14 +16,15 @@ test('el CMS exige autenticación y no expone credenciales administrativas', asy
   assert.doesNotMatch(page, /service_role/i);
 });
 
-test('el CMS permite consultar, filtrar, exportar y reencolar formularios', async () => {
+test('el CMS permite consultar, filtrar y exportar formularios sin mezclar integraciones', async () => {
   const page = await read('../src/pages/CMS/index.astro');
 
-  assert.match(page, /lead_delivery_events/);
+  assert.match(page, /rest\/v1\/leads/);
   assert.match(page, /data-search/);
-  assert.match(page, /data-status-filter/);
+  assert.match(page, /data-version-filter/);
   assert.match(page, /Exportar CSV/);
-  assert.match(page, /request_lead_requeue/);
+  assert.doesNotMatch(page, /lead_delivery_events/);
+  assert.doesNotMatch(page, /request_lead_requeue/);
   assert.doesNotMatch(page, /method:\s*'PATCH'/);
 });
 
@@ -53,6 +54,6 @@ test('el estado vacío oculta la tabla y las columnas conservan un ancho legible
   assert.match(page, /data-records-table hidden/);
   assert.match(page, /recordsTable\.hidden = !hasRows/);
   assert.match(page, /empty\.hidden = hasRows/);
-  assert.match(page, /table\s*\{[^}]*width:\s*7200px/);
+  assert.match(page, /table\s*\{[^}]*width:\s*2400px/);
   assert.match(page, /table-layout:\s*fixed/);
 });

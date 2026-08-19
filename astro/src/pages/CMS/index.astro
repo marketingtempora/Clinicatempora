@@ -8,8 +8,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 <Layout
   title="Centro de formularios | Clínica Témpora"
-  description="Panel privado de formularios e integraciones de Clínica Témpora."
+  description="Panel privado de formularios de Clínica Témpora."
   robots="noindex, nofollow"
+  tracking={false}
 >
   <main
     class="cms"
@@ -26,8 +27,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
       <form class="login__card" data-login-form>
         <p class="eyebrow">Acceso interno</p>
-        <h1>Formularios y Pipedrive</h1>
-        <p class="login__copy">Revisa cada solicitud recibida y el estado de su sincronización.</p>
+        <h1>Formularios recibidos</h1>
+        <p class="login__copy">Revisa las solicitudes enviadas desde las dos landing pages.</p>
 
         <label for="cms-email">Correo</label>
         <input id="cms-email" name="email" type="email" autocomplete="username" required />
@@ -63,16 +64,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           <div>
             <p class="eyebrow">Respaldo comercial</p>
             <h1>Centro de formularios</h1>
-            <p>Todos los campos quedan respaldados antes de intentar la entrega a Make o Pipedrive.</p>
+            <p>Respaldo privado de los datos enviados desde LP1 y LP2.</p>
           </div>
           <button class="button button--primary" type="button" data-export>Exportar CSV</button>
         </div>
 
         <section class="metrics" aria-label="Resumen de formularios">
           <article><span>Total recibidos</span><strong data-metric="total">0</strong></article>
-          <article><span>En Pipedrive</span><strong data-metric="success">0</strong></article>
-          <article><span>Pendientes</span><strong data-metric="pending">0</strong></article>
-          <article class="metric--danger"><span>Con error</span><strong data-metric="failed">0</strong></article>
+          <article><span>Desde LP1</span><strong data-metric="lp1">0</strong></article>
+          <article><span>Desde LP2</span><strong data-metric="lp2">0</strong></article>
+          <article><span>Con atribución</span><strong data-metric="attributed">0</strong></article>
         </section>
 
         <section class="records">
@@ -80,15 +81,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
             <label class="search">
               <span class="sr-only">Buscar formularios</span>
               <input type="search" placeholder="Buscar nombre, correo o teléfono" data-search />
-            </label>
-            <label>
-              <span>Estado</span>
-              <select data-status-filter>
-                <option value="all">Todos</option>
-                <option value="success">Sincronizados</option>
-                <option value="pending">Pendientes</option>
-                <option value="failed">Con error</option>
-              </select>
             </label>
             <label>
               <span>Formulario</span>
@@ -127,11 +119,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         </div>
         <button type="button" class="details__close" data-close-details aria-label="Cerrar">×</button>
       </div>
-      <div class="details__status" data-detail-status></div>
       <dl data-detail-list></dl>
-      <div class="details__error" data-detail-error hidden></div>
       <div class="details__actions">
-        <button class="button button--quiet" type="button" data-requeue>Reintentar sincronización</button>
         <button class="button button--primary" type="button" data-close-details>Listo</button>
       </div>
     </dialog>
@@ -191,7 +180,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   .table-wrap::-webkit-scrollbar-track { background: #edf1ec; }
   .table-wrap::-webkit-scrollbar-thumb { border: 2px solid #edf1ec; border-radius: 10px; background: #9eae9f; }
   .table-wrap--empty { overflow: hidden; }
-  table { width: 7200px; min-width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: .78rem; }
+  table { width: 2400px; min-width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: .78rem; }
   th { position: sticky; z-index: 2; top: 0; width: 150px; padding: 12px 14px; border-right: 1px solid #dde3dd; border-bottom: 1px solid #d8ded8; background: #f3f6f2; color: #536164; font-size: .66rem; font-weight: 800; letter-spacing: .055em; text-align: left; text-transform: uppercase; white-space: nowrap; }
   td { width: 150px; max-width: 150px; padding: 13px 14px; border-top: 1px solid #edf0ed; border-right: 1px solid #edf0ed; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; white-space: nowrap; }
   th:first-child, td:first-child { position: sticky; z-index: 1; left: 0; background: #fff; }
@@ -252,7 +241,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 <script>
   type Lead = Record<string, string | number | null>;
   type Session = { access_token: string; refresh_token?: string; expires_at?: number; user?: { email?: string } };
-  type TableColumn = { label: string; field: string; format?: 'date' | 'status' };
+  type TableColumn = { label: string; field: string; format?: 'date' };
 
   const root = document.querySelector<HTMLElement>('[data-cms]')!;
   const SESSION_KEY = 'tempora_cms_session';
@@ -275,14 +264,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     const emptyCopy = root.querySelector<HTMLElement>('[data-empty-copy]')!;
     const recordsStatus = root.querySelector<HTMLElement>('[data-records-status]')!;
     const search = root.querySelector<HTMLInputElement>('[data-search]')!;
-    const statusFilter = root.querySelector<HTMLSelectElement>('[data-status-filter]')!;
     const versionFilter = root.querySelector<HTMLSelectElement>('[data-version-filter]')!;
     const details = root.querySelector<HTMLDialogElement>('[data-details]')!;
     let session: Session | null = null;
     let leads: Lead[] = [];
-    let eventsBySubmission = new Map<string, Lead>();
     let visibleLeads: Lead[] = [];
-    let selectedLead: Lead | null = null;
 
     setup.hidden = configured;
     if (!configured) loginForm.querySelector<HTMLButtonElement>('button[type="submit"]')!.disabled = true;
@@ -327,8 +313,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
     const tableColumns: TableColumn[] = [
       { label: 'Fecha', field: 'created_at', format: 'date' },
-      { label: 'Origen', field: 'source_form' },
-      { label: 'Landing', field: 'form_version' },
+      { label: 'Landing', field: 'source_form' },
       { label: 'Nombre', field: 'nombre' },
       { label: 'Apellido', field: 'apellido' },
       { label: 'Email', field: 'email' },
@@ -337,43 +322,35 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       { label: 'Medio evaluación', field: 'medio_evaluacion' },
       { label: 'Género', field: 'genero' },
       { label: 'Horario contacto', field: 'horario_contacto' },
-      { label: 'UTM ID', field: 'utm_id' },
       { label: 'UTM source', field: 'utm_source' },
       { label: 'UTM medium', field: 'utm_medium' },
       { label: 'UTM campaign', field: 'utm_campaign' },
+    ];
+
+    const attributionColumns: TableColumn[] = [
+      { label: 'UTM ID', field: 'utm_id' },
       { label: 'UTM term', field: 'utm_term' },
       { label: 'UTM content', field: 'utm_content' },
-      { label: 'Source platform', field: 'utm_source_platform' },
-      { label: 'Creative format', field: 'utm_creative_format' },
-      { label: 'Marketing tactic', field: 'utm_marketing_tactic' },
+      { label: 'Plataforma de origen', field: 'utm_source_platform' },
+      { label: 'Formato creativo', field: 'utm_creative_format' },
+      { label: 'Táctica de marketing', field: 'utm_marketing_tactic' },
       { label: 'Campaign ID', field: 'campaign_id' },
-      { label: 'Ad group ID', field: 'adgroup_id' },
+      { label: 'Grupo de anuncios ID', field: 'adgroup_id' },
       { label: 'Ad ID', field: 'ad_id' },
       { label: 'Keyword', field: 'keyword' },
-      { label: 'Match type', field: 'match_type' },
-      { label: 'Network', field: 'network' },
-      { label: 'Device', field: 'device' },
-      { label: 'Placement', field: 'placement' },
+      { label: 'Tipo de concordancia', field: 'match_type' },
+      { label: 'Red', field: 'network' },
+      { label: 'Dispositivo', field: 'device' },
+      { label: 'Ubicación', field: 'placement' },
       { label: 'GCLID', field: 'gclid' },
       { label: 'GBRAID', field: 'gbraid' },
       { label: 'WBRAID', field: 'wbraid' },
       { label: 'FBCLID', field: 'fbclid' },
       { label: 'MSCLKID', field: 'msclkid' },
       { label: 'TTCLID', field: 'ttclid' },
-      { label: 'Página', field: 'page_path' },
-      { label: 'URL', field: 'page_url' },
-      { label: 'Referente', field: 'referrer' },
-      { label: 'Estado', field: '__status', format: 'status' },
-      { label: 'Make', field: 'make_status' },
-      { label: 'Pipedrive', field: 'pipedrive_status' },
-      { label: 'Persona Pipedrive', field: 'pipedrive_person_id' },
-      { label: 'Negocio Pipedrive', field: 'pipedrive_deal_id' },
-      { label: 'Intentos', field: 'attempt_count' },
-      { label: 'Último intento', field: 'last_attempt_at', format: 'date' },
-      { label: 'Reintento solicitado', field: 'requeue_requested_at', format: 'date' },
-      { label: 'Error integración', field: 'integration_error' },
-      { label: 'Submission ID', field: 'submission_id' },
+      { label: 'URL de envío', field: 'page_url' },
     ];
+    const detailColumns = [...tableColumns, ...attributionColumns];
 
     tableHead.replaceChildren();
     tableColumns.forEach((column) => {
@@ -387,23 +364,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     actionsHeading.textContent = 'Acciones';
     tableHead.append(actionsHeading);
 
-    const effectiveStatus = (lead: Lead) => {
-      const status = String(lead.pipedrive_status ?? 'pending');
-      if (status === 'success') return 'success';
-      if (status === 'failed') return 'failed';
-      const event = eventsBySubmission.get(String(lead.submission_id ?? ''));
-      if (event?.event_type === 'make_failed') return 'failed';
-      return 'pending';
-    };
-
-    const statusLabel = (status: string) => ({ success: 'Sincronizado', failed: 'Con error', pending: 'Pendiente' })[status] ?? 'Pendiente';
-
     const columnValue = (lead: Lead, column: TableColumn) => {
       if (column.format === 'date') return formatDate(lead[column.field]);
       if (column.field === 'source_form') return String(lead.source_form ?? '—').toUpperCase();
-      if (column.field === 'form_version') {
-        return lead.form_version === 'v2' ? 'LP2' : lead.form_version === 'v1' ? 'LP1' : String(lead.form_version ?? '—');
-      }
       return String(lead[column.field] ?? '—');
     };
 
@@ -420,20 +383,20 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     };
 
     const renderMetrics = () => {
-      const statuses = leads.map(effectiveStatus);
       setMetric('total', leads.length);
-      setMetric('success', statuses.filter((value) => value === 'success').length);
-      setMetric('pending', statuses.filter((value) => value === 'pending').length);
-      setMetric('failed', statuses.filter((value) => value === 'failed').length);
+      setMetric('lp1', leads.filter((lead) => lead.source_form === 'lp1' || lead.form_version === 'v1').length);
+      setMetric('lp2', leads.filter((lead) => lead.source_form === 'lp2' || lead.form_version === 'v2').length);
+      setMetric('attributed', leads.filter((lead) => Boolean(
+        lead.utm_source || lead.utm_medium || lead.utm_campaign || lead.gclid || lead.fbclid
+      )).length);
     };
 
     const renderTable = () => {
       const needle = search.value.trim().toLocaleLowerCase('es');
       visibleLeads = leads.filter((lead) => {
-        const haystack = tableColumns.map((column) => lead[column.field])
+        const haystack = detailColumns.map((column) => lead[column.field])
           .join(' ').toLocaleLowerCase('es');
         return (!needle || haystack.includes(needle))
-          && (statusFilter.value === 'all' || effectiveStatus(lead) === statusFilter.value)
           && (versionFilter.value === 'all' || lead.form_version === versionFilter.value);
       });
 
@@ -441,17 +404,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       visibleLeads.forEach((lead) => {
         const row = tableBody.insertRow();
         tableColumns.forEach((column) => {
-          if (column.format !== 'status') {
-            const cell = createCell(row, columnValue(lead, column));
-            cell.title = columnValue(lead, column);
-            return;
-          }
-          const status = effectiveStatus(lead);
-          const statusCell = row.insertCell();
-          const badge = document.createElement('span');
-          badge.className = `status-pill status-pill--${status}`;
-          badge.textContent = statusLabel(status);
-          statusCell.append(badge);
+          const cell = createCell(row, columnValue(lead, column));
+          cell.title = columnValue(lead, column);
         });
 
         const actionCell = row.insertCell();
@@ -470,7 +424,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       tableWrap.classList.toggle('table-wrap--empty', !hasRows);
       if (!hasRows) {
         const filtersAreActive = Boolean(search.value.trim())
-          || statusFilter.value !== 'all'
           || versionFilter.value !== 'all';
         emptyTitle.textContent = leads.length && filtersAreActive
           ? 'No hay formularios que coincidan.'
@@ -481,21 +434,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       }
     };
 
-    const detailFields: Array<[string, string]> = tableColumns
-      .filter((column) => column.field !== '__status')
+    const detailFields: Array<[string, string]> = detailColumns
       .map((column): [string, string] => [column.label, column.field]);
 
     function openDetails(lead: Lead) {
-      selectedLead = lead;
       root.querySelector<HTMLElement>('[data-detail-name]')!.textContent = `${lead.nombre ?? ''} ${lead.apellido ?? ''}`.trim();
-      const status = effectiveStatus(lead);
-      const statusBox = root.querySelector<HTMLElement>('[data-detail-status]')!;
-      statusBox.replaceChildren();
-      const badge = document.createElement('span');
-      badge.className = `status-pill status-pill--${status}`;
-      badge.textContent = statusLabel(status);
-      statusBox.append(badge);
-
       const list = root.querySelector<HTMLElement>('[data-detail-list]')!;
       list.replaceChildren();
       detailFields.forEach(([label, field]) => {
@@ -508,30 +451,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         wrapper.append(term, description);
         list.append(wrapper);
       });
-
-      const error = root.querySelector<HTMLElement>('[data-detail-error]')!;
-      const event = eventsBySubmission.get(String(lead.submission_id ?? ''));
-      const message = lead.integration_error ?? event?.error_message;
-      error.hidden = !message;
-      error.textContent = message ? `Error: ${message}` : '';
       details.showModal();
     }
 
     const loadRecords = async () => {
       recordsStatus.textContent = 'Actualizando…';
       try {
-        const [leadRows, eventRows] = await Promise.all([
-          api('/rest/v1/leads?select=*&order=created_at.desc&limit=500'),
-          api('/rest/v1/lead_delivery_events?select=*&order=created_at.desc&limit=1000'),
-        ]);
+        const leadRows = await api('/rest/v1/leads?select=*&order=created_at.desc&limit=500');
         leads = Array.isArray(leadRows) ? leadRows : [];
-        eventsBySubmission = new Map();
-        if (Array.isArray(eventRows)) {
-          eventRows.forEach((event: Lead) => {
-            const id = String(event.submission_id ?? '');
-            if (id && !eventsBySubmission.has(id)) eventsBySubmission.set(id, event);
-          });
-        }
         renderMetrics();
         renderTable();
         recordsStatus.textContent = '';
@@ -588,34 +515,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     root.querySelector('[data-logout]')?.addEventListener('click', logout);
     root.querySelector('[data-refresh]')?.addEventListener('click', loadRecords);
     search.addEventListener('input', renderTable);
-    statusFilter.addEventListener('change', renderTable);
     versionFilter.addEventListener('change', renderTable);
     root.querySelectorAll('[data-close-details]').forEach((button) => button.addEventListener('click', () => details.close()));
 
-    root.querySelector('[data-requeue]')?.addEventListener('click', async () => {
-      if (!selectedLead?.submission_id) return;
-      const button = root.querySelector<HTMLButtonElement>('[data-requeue]')!;
-      button.disabled = true;
-      try {
-        await api('/rest/v1/rpc/request_lead_requeue', {
-          method: 'POST',
-          body: JSON.stringify({
-            p_submission_id: String(selectedLead.submission_id),
-          }),
-        });
-        details.close();
-        await loadRecords();
-      } catch (error) {
-        const errorBox = root.querySelector<HTMLElement>('[data-detail-error]')!;
-        errorBox.hidden = false;
-        errorBox.textContent = error instanceof Error ? error.message : 'No fue posible reencolar el registro.';
-      } finally {
-        button.disabled = false;
-      }
-    });
-
     root.querySelector('[data-export]')?.addEventListener('click', () => {
-      const fields = tableColumns.filter((column) => column.field !== '__status');
+      const fields = detailColumns;
       const rows = [
         fields.map((column) => escapeCsv(column.label)).join(','),
         ...visibleLeads.map((lead) => fields.map((column) => escapeCsv(columnValue(lead, column))).join(',')),

@@ -66,6 +66,14 @@ const attributionFields = [
   'msclkid',
   'ttclid',
 ] as const;
+const gtmLegacyFields = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+  'campaign_id',
+] as const;
 ---
 
 <div class="lead-card">
@@ -150,6 +158,9 @@ const attributionFields = [
       <input type="hidden" name="submission_id" />
       <input type="hidden" name="source_form" value={sourceForm} />
       {attributionFields.map((name) => <input type="hidden" name={name} />)}
+      {gtmLegacyFields.map((name) => (
+        <input type="hidden" name={`form_fields[${name}]`} disabled data-gtm-legacy />
+      ))}
 
       <div class="lead-form__buttons" data-buttons>
         <button class="btn-form btn-form--prev" type="button" data-prev hidden>Volver</button>
@@ -451,7 +462,17 @@ const attributionFields = [
     return input.value;
   }
 
+  function syncLegacyAttribution(target: HTMLFormElement) {
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id'];
+    for (const key of keys) {
+      const canonical = target.querySelector<HTMLInputElement>(`input[name="${key}"]`);
+      const legacy = target.querySelector<HTMLInputElement>(`input[name="form_fields[${key}]"]`);
+      if (canonical && legacy?.value && !canonical.value) canonical.value = legacy.value;
+    }
+  }
+
   function buildPayload(target: HTMLFormElement) {
+    syncLegacyAttribution(target);
     ensureSubmissionId(target);
     const data = new FormData(target);
     const raw: Record<string, string> = {};
