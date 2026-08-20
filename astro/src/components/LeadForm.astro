@@ -13,13 +13,13 @@ interface Props {
  * A dónde escribe el formulario. Se resuelve en build time y viaja al
  * navegador en data-attributes (Astro inlina las variables PUBLIC_*).
  *
- *   1. PUBLIC_MAKE_WEBHOOK_URL definida -> POST directo al webhook nuevo de Make.
+ *   1. PUBLIC_MAKE_WEBHOOK_URL o MAKE_WEBHOOK_URL definida -> POST directo al webhook nuevo de Make.
  *   2. PUBLIC_API_BASE_URL definida -> POST a la API de ../api (backend propio).
  *   3. PUBLIC_SUPABASE_URL + PUBLIC_SUPABASE_ANON_KEY -> INSERT directo en
  *      Supabase vía su API REST. Es el modo para un Static Site.
  *   4. Ninguna de las anteriores -> modo demo: valida y escribe en la consola.
  */
-const makeWebhookUrl = import.meta.env.PUBLIC_MAKE_WEBHOOK_URL ?? '';
+const makeWebhookUrl = import.meta.env.PUBLIC_MAKE_WEBHOOK_URL ?? import.meta.env.MAKE_WEBHOOK_URL ?? '';
 const apiBase = (import.meta.env.PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
 const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL ?? '').replace(/\/+$/, '');
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
