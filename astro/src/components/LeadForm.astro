@@ -30,7 +30,7 @@ const compactPhonePrompt = Astro.props.compactPhonePrompt ?? false;
 const stepEventNames = Astro.props.stepEventNames ?? [];
 const finalEventName = Astro.props.finalEventName ?? '';
 const formVersion = Astro.props.formVersion ?? '';
-const sourceForm = formVersion === 'v2' ? 'lp2' : 'lp1';
+const sourceForm = formVersion === 'v2' ? 'Nueva Landing GP V2' : 'Nueva Landing GP V1';
 const contactCopy = formVersion === 'v2'
   ? { action: 'te contactaremos', procedure: 'implante' }
   : { action: 'te contactaremos', procedure: 'injerto' };
