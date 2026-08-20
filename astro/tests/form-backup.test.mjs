@@ -4,6 +4,13 @@ import test from 'node:test';
 
 const source = await readFile(new URL('../src/components/LeadForm.astro', import.meta.url), 'utf8');
 
+test('el build conecta el webhook guardado con el nombre usado en Render', () => {
+  assert.match(
+    source,
+    /PUBLIC_MAKE_WEBHOOK_URL\s*\?\?\s*import\.meta\.env\.MAKE_WEBHOOK_URL/
+  );
+});
+
 test('el formulario guarda el respaldo antes de intentar Make', () => {
   assert.match(source, /async function persistLeadBackup/);
   assert.match(source, /async function notifyMake/);
