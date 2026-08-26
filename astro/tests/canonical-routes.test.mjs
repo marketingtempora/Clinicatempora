@@ -47,6 +47,12 @@ test('las URL antiguas solo redirigen y no duplican las landings', async () => {
 });
 
 test('permanecen las páginas de gracias vigentes', async () => {
+  assert.equal(await exists('../src/pages/gracias-agendamiento/index.astro'), true);
   assert.equal(await exists('../src/pages/lp1/gracias-agendamiento/index.astro'), true);
   assert.equal(await exists('../src/pages/lp2/gracias-agendamiento/index.astro'), true);
+
+  const rootThanks = await readFile(new URL('../src/pages/gracias-agendamiento/index.astro', import.meta.url), 'utf8');
+  assert.match(rootThanks, /ReservationThanks/);
+  assert.match(rootThanks, /landing="lp1"/);
+  assert.doesNotMatch(rootThanks, /LegacyRedirect/);
 });
