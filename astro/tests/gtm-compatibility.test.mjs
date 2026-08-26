@@ -7,7 +7,7 @@ const form = await readFile(new URL('../src/components/LeadForm.astro', import.m
 const cms = await readFile(new URL('../src/pages/CMS/index.astro', import.meta.url), 'utf8');
 const lp1 = await readFile(new URL('../src/components/Version1Page.astro', import.meta.url), 'utf8');
 const lp2 = await readFile(new URL('../src/pages/lp2/index.astro', import.meta.url), 'utf8');
-const hold = await readFile(new URL('../src/pages/hold/index.astro', import.meta.url), 'utf8');
+const old = await readFile(new URL('../src/pages/old/index.astro', import.meta.url), 'utf8');
 
 test('las páginas públicas cargan el contenedor oficial de GTM', () => {
   assert.match(layout, /GTM-58K95WQ/);
@@ -37,7 +37,7 @@ test('LP1 y LP2 ocultan LeadBooster sin retirarlo del home anterior', () => {
   assert.match(layout, /leadbooster-chat\.pipedrive\.com/);
   assert.match(lp1, /<Layout suppressLeadBooster>/);
   assert.match(lp2, /suppressLeadBooster/);
-  assert.doesNotMatch(hold, /suppressLeadBooster/);
+  assert.doesNotMatch(old, /suppressLeadBooster/);
 });
 
 test('el formulario acepta el script UTM antiguo de Elementor sin cambiar el payload', () => {

@@ -14,17 +14,20 @@ test('LP1 y LP2 son las únicas rutas públicas de las landings', async () => {
   assert.doesNotMatch(lp2, /pages\/version2|\.\.\/version2/);
 });
 
-test('el home redirige a LP1 y el home anterior permanece en hold', async () => {
+test('el home renderiza LP1 y el home anterior permanece en old', async () => {
   const home = await readFile(new URL('../src/pages/index.astro', import.meta.url), 'utf8');
+  const old = await readFile(new URL('../src/pages/old/index.astro', import.meta.url), 'utf8');
   const hold = await readFile(new URL('../src/pages/hold/index.astro', import.meta.url), 'utf8');
 
-  assert.match(home, /LegacyRedirect/);
-  assert.match(home, /destination="\/lp1\/"/);
-  assert.doesNotMatch(home, /<Hero\s*\/>/);
+  assert.match(home, /Version1Page/);
+  assert.doesNotMatch(home, /LegacyRedirect/);
 
-  assert.match(hold, /<Hero\s*\/>/);
-  assert.match(hold, /<Testimonials\s*\/>/);
-  assert.match(hold, /<Footer\s*\/>/);
+  assert.match(old, /<Hero\s*\/>/);
+  assert.match(old, /<Testimonials\s*\/>/);
+  assert.match(old, /<Footer\s*\/>/);
+
+  assert.match(hold, /LegacyRedirect/);
+  assert.match(hold, /destination="\/old\/"/);
 });
 
 test('las URL antiguas solo redirigen y no duplican las landings', async () => {
