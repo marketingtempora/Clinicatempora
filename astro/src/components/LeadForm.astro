@@ -457,6 +457,7 @@ const gtmLegacyFields = [
     if (!supabaseUrl || !supabaseKey) return false;
 
     const makeConfigured = Boolean(target.dataset.makeWebhookUrl);
+    const backupSourceForm = payload.form_version === 'v2' ? 'lp2' : 'lp1';
     await request(
       `${supabaseUrl}/rest/v1/${supabaseTable}`,
       {
@@ -467,6 +468,9 @@ const gtmLegacyFields = [
       },
       {
         ...payload,
+        // Supabase usa códigos internos para sus políticas y métricas. El
+        // payload original conserva el nombre comercial que recibe Pipedrive.
+        source_form: backupSourceForm,
         delivery_status: 'received',
         make_status: makeConfigured ? 'pending' : 'not_configured',
         pipedrive_status: makeConfigured ? 'pending' : 'not_configured',
@@ -522,15 +526,23 @@ const gtmLegacyFields = [
     const supabaseKey = target.dataset.supabaseKey ?? '';
     const backupConfigured = Boolean(supabaseUrl && supabaseKey);
     let backupSaved = false;
+    let backupError: unknown;
 
-    if (backupConfigured) backupSaved = await persistLeadBackup(target, payload);
+    if (backupConfigured) {
+      try {
+        backupSaved = await persistLeadBackup(target, payload);
+      } catch (error) {
+        backupError = error;
+        console.error('[Témpora] El respaldo falló; se intentará Make:', error);
+      }
+    }
 
     try {
       const makeSent = await notifyMake(target, payload);
       if (makeSent && backupSaved) {
         await logDeliveryEvent(target, payload.submission_id, 'make_success').catch(() => undefined);
       }
-      if (makeSent) return { ok: true, backupSaved };
+      if (makeSent) return { ok: true, backupSaved, backupFailed: Boolean(backupError) };
 
       if (!backupSaved && apiBase) {
         await request(`${apiBase}/api/leads`, { 'Content-Type': 'application/json' }, payload);
@@ -544,6 +556,8 @@ const gtmLegacyFields = [
       console.error('[Témpora] Lead respaldado, pero Make falló:', error);
       return { ok: true, backupSaved, integrationFailed: true };
     }
+
+    if (backupError) throw backupError;
 
     console.info('[Témpora] Modo demo – lead capturado:', payload);
     return { ok: true, demo: true };

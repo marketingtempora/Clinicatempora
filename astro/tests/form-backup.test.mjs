@@ -33,6 +33,22 @@ test('cada landing identifica inequívocamente el origen del formulario', () => 
   assert.match(source, /name="source_form" value=\{sourceForm\}/);
 });
 
+test('Supabase recibe códigos internos y Pipedrive conserva los nombres comerciales', () => {
+  assert.match(
+    source,
+    /const backupSourceForm = payload\.form_version === 'v2' \? 'lp2' : 'lp1'/
+  );
+  assert.match(source, /source_form: backupSourceForm/);
+  assert.match(source, /raw_payload: payload/);
+});
+
+test('un fallo del respaldo no impide intentar el envío a Make', () => {
+  const delivery = source.slice(source.indexOf('async function sendLead'));
+  assert.ok(delivery.indexOf('await persistLeadBackup') < delivery.indexOf('await notifyMake'));
+  assert.match(delivery, /catch \(error\)[\s\S]*backupError = error/);
+  assert.match(delivery, /if \(makeSent\) return \{ ok: true, backupSaved, backupFailed: Boolean\(backupError\) \}/);
+});
+
 test('el formulario limita la atribución a los campos ocultos solicitados', () => {
   const start = source.indexOf('const attributionFields = [');
   const attributionBlock = source.slice(start, source.indexOf('] as const;', start) + '] as const;'.length);
