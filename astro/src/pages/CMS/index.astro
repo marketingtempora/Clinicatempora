@@ -250,7 +250,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 </style>
 
 <script>
-  type Lead = Record<string, string | number | null>;
+  type Lead = Record<string, unknown>;
   type Session = { access_token: string; refresh_token?: string; expires_at?: number; user?: { email?: string } };
   type TableColumn = { label: string; field: string; format?: 'date' };
 
@@ -328,7 +328,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
     const tableColumns: TableColumn[] = [
       { label: 'Fecha', field: 'created_at', format: 'date' },
-      { label: 'Landing', field: 'source_form' },
+      { label: 'Landing detectada', field: 'source_form' },
       { label: 'Nombre', field: 'nombre' },
       { label: 'Apellido', field: 'apellido' },
       { label: 'Email', field: 'email' },
@@ -347,10 +347,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       { label: 'UTM content', field: 'utm_content' },
       { label: 'Campaign ID', field: 'campaign_id' },
     ];
-    const detailColumns = [...tableColumns, ...attributionColumns];
-    const displayColumns = detailColumns;
+    const technicalColumns: TableColumn[] = [
+      { label: 'Versión del formulario', field: 'form_version' },
+      { label: 'Identificador enviado a Make', field: 'make_source_form' },
+      { label: 'URL de origen', field: 'page_url' },
+    ];
+    const displayColumns = [...tableColumns, ...attributionColumns];
+    const detailColumns = [...displayColumns, ...technicalColumns];
     const detailGroups = [
-      { title: 'Datos de contacto', fields: ['created_at', 'source_form', 'nombre', 'apellido', 'email', 'telefono'] },
+      { title: 'Datos de contacto', fields: ['created_at', 'nombre', 'apellido', 'email', 'telefono'] },
+      { title: 'Trazabilidad técnica', fields: ['source_form', 'form_version', 'make_source_form', 'page_url'] },
       { title: 'Preferencias', fields: ['urgencia_cirugia', 'medio_evaluacion', 'genero', 'horario_contacto'] },
       { title: 'Atribución', fields: detailColumns.filter((column) => column.field.startsWith('utm_')
         || column.field === 'campaign_id').map((column) => column.field) },
@@ -369,8 +375,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     tableHead.append(actionsHeading);
 
     const columnValue = (lead: Lead, column: TableColumn) => {
+      const rawPayload = lead.raw_payload && typeof lead.raw_payload === 'object'
+        ? lead.raw_payload as Record<string, unknown>
+        : {};
       if (column.format === 'date') return formatDate(lead[column.field]);
       if (column.field === 'source_form') return String(lead.source_form ?? '—').toUpperCase();
+      if (column.field === 'form_version') {
+        return String(lead.form_version ?? rawPayload.form_version ?? '—').toUpperCase();
+      }
+      if (column.field === 'make_source_form') return String(rawPayload.source_form ?? '—');
+      if (column.field === 'page_url') return String(lead.page_url ?? rawPayload.page_url ?? '—');
       return String(lead[column.field] ?? '—');
     };
 
