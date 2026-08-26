@@ -8,9 +8,16 @@ interface Props {
   description?: string;
   robots?: string;
   tracking?: boolean;
+  suppressLeadBooster?: boolean;
 }
 
-const { title = site.title, description = site.description, robots = 'index, follow', tracking = true } = Astro.props;
+const {
+  title = site.title,
+  description = site.description,
+  robots = 'index, follow',
+  tracking = true,
+  suppressLeadBooster = false,
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const gtmId = 'GTM-58K95WQ';
 const gtmHead = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -45,6 +52,16 @@ const schema = {
 <html lang="es">
   <head>
     {tracking && <script is:inline set:html={gtmHead}></script>}
+    {suppressLeadBooster && (
+      <style is:inline>
+        html:root body #LeadboosterContainer,
+        iframe[src*="leadbooster-chat.pipedrive.com"] {
+          display: none !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+      </style>
+    )}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
