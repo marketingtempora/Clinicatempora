@@ -20,6 +20,7 @@ test('Marcelo aparece primero y conserva el orden relativo de los otros testimon
     assert.ok(current > previous, `${id} debe aparecer después del testimonio anterior`);
     previous = current;
   }
+  assert.match(content, /thumb: '\/assets\/img\/v2\/MARCELO_ROOT\.jpg'/);
 });
 
 test('la página principal usa un carrusel de tres testimonios visibles', () => {
