@@ -26,6 +26,7 @@ test('la página principal usa un carrusel de tres testimonios visibles', () => 
   assert.match(rootTestimonials, /import Carousel from '.\/Carousel\.astro'/);
   assert.match(rootTestimonials, /perView=\{3\}/);
   assert.match(rootTestimonials, /class="carousel__slide voices-v1__card reveal"/);
+  assert.match(rootTestimonials, /\.voices-v1__card:nth-child\(even\) \{ transform: translateY\(28px\); \}/);
 });
 
 test('LP2 abre con Marcelo, su portada y el texto solicitado', () => {

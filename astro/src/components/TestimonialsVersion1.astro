@@ -104,7 +104,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
     background: rgba(255, 255, 255, 0.52);
   }
 
-  .voices-v1__card:nth-child(3) { transform: translateY(28px); }
+  .voices-v1__card:nth-child(even) { transform: translateY(28px); }
 
   .voices-v1__meta {
     display: flex;
@@ -131,7 +131,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
     }
     .voices-v1__carousel :global(.carousel__viewport) { padding-bottom: 0; }
     .voices-v1__card { border-radius: 22px; }
-    .voices-v1__card:nth-child(3) { transform: none; }
+    .voices-v1__card:nth-child(even) { transform: none; }
     .voices-v1__card :global(.video) { aspect-ratio: 4 / 5; }
   }
 </style>
