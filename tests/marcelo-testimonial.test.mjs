@@ -31,7 +31,8 @@ test('la página principal usa un carrusel de tres testimonios visibles', () => 
 
 test('LP2 abre con Marcelo, su portada y el texto solicitado', () => {
   assert.match(lp2, /v2-media__slide is-active[^>]*>[\s\S]*?id="pLiwFyqZ71U"/);
-  assert.match(lp2, /thumb="\/assets\/img\/v2\/MARCELO\.jpg"/);
+  assert.match(lp2, /thumb="\/assets\/img\/v2\/MARCELO_LP2_WIDE\.webp"/);
+  assert.match(lp2, /--thumb-y: 12%; --thumb-y-mobile: 50%/);
   assert.match(lp2, /Marcelo · Santiago/);
   assert.match(lp2, /«Un mensaje del Marcelo del pasado»/);
   assert.match(lp2, /Marcelo relata su experiencia como paciente de Clínica Témpora\./);
