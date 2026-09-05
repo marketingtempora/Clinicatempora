@@ -46,7 +46,7 @@ export const testimonials = {
   text: 'Conoce a quienes ya han transformado su vida y su imagen con el implante capilar en Clínica Témpora.',
   /** thumb = miniatura servida en local (tools/optimize-assets.mjs la genera) */
   videos: [
-    { name: 'Marcelo', id: 'pLiwFyqZ71U', thumb: '/assets/img/v2/MARCELO.jpg', alt: 'Marcelo contando su experiencia en Clínica Témpora' },
+    { name: 'Marcelo', id: 'pLiwFyqZ71U', thumb: '/assets/img/v2/MARCELO_ROOT.jpg', alt: 'Marcelo contando su experiencia en Clínica Témpora' },
     { name: 'Joaquín', id: 'P7t6AGGPv48', thumb: '/assets/img/v2/JOAQUIN.jpg', alt: 'Joaquín contando su experiencia en Clínica Témpora' },
     { name: 'Pablo', id: 'h08RqUihV1I', thumb: '/assets/img/v2/PABLO.jpg', alt: 'Pablo contando su experiencia en Clínica Témpora' },
     { name: 'Juliano', id: 'gAZ2xNm--Bo', thumb: '/assets/img/v2/JULIANO.jpg', alt: 'Juliano contando su experiencia en Clínica Témpora' },
