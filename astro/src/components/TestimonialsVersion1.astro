@@ -1,5 +1,6 @@
 ---
 import { testimonials } from '../data/content';
+import Carousel from './Carousel.astro';
 import YouTubeFacade from './YouTubeFacade.astro';
 ---
 
@@ -16,17 +17,26 @@ import YouTubeFacade from './YouTubeFacade.astro';
       </div>
     </div>
 
-    <ol class="voices-v1__grid" aria-label="Testimonios de pacientes">
-      {testimonials.videos.map((video) => (
-        <li class="voices-v1__card reveal" data-reveal="fade-up">
-          <div class="voices-v1__meta">
-            <span>TESTIMONIO</span>
-            <span>{video.name}</span>
-          </div>
-          <YouTubeFacade id={video.id} thumb={video.thumb} alt={video.alt} ratio="vertical" />
-        </li>
-      ))}
-    </ol>
+    <div class="voices-v1__carousel">
+      <Carousel
+        perView={3}
+        perViewTablet={2}
+        perViewMobile={1}
+        label="Testimonios de pacientes"
+        prevLabel="Testimonio anterior"
+        nextLabel="Testimonio siguiente"
+      >
+        {testimonials.videos.map((video) => (
+          <li class="carousel__slide voices-v1__card reveal" data-reveal="fade-up">
+            <div class="voices-v1__meta">
+              <span>TESTIMONIO</span>
+              <span>{video.name}</span>
+            </div>
+            <YouTubeFacade id={video.id} thumb={video.thumb} alt={video.alt} ratio="vertical" />
+          </li>
+        ))}
+      </Carousel>
+    </div>
   </div>
 </section>
 
@@ -81,11 +91,10 @@ import YouTubeFacade from './YouTubeFacade.astro';
 
   .voices-v1__intro > a span { font-size: 1.3rem; }
 
-  .voices-v1__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
+  .voices-v1__carousel { min-width: 0; }
+  .voices-v1__carousel :global(.carousel) { --dots-space: 20px; }
+  .voices-v1__carousel :global(.carousel__viewport) { padding-bottom: 28px; }
+  .voices-v1__carousel :global(.carousel__track) { align-items: flex-start; }
 
   .voices-v1__card {
     min-width: 0;
@@ -95,7 +104,7 @@ import YouTubeFacade from './YouTubeFacade.astro';
     background: rgba(255, 255, 255, 0.52);
   }
 
-  .voices-v1__card:nth-child(2) { transform: translateY(28px); }
+  .voices-v1__card:nth-child(3) { transform: translateY(28px); }
 
   .voices-v1__meta {
     display: flex;
@@ -116,20 +125,13 @@ import YouTubeFacade from './YouTubeFacade.astro';
     .voices-v1 { padding: 42px 0 44px; }
     .voices-v1__head { grid-template-columns: 1fr; gap: 22px; margin-bottom: 30px; }
     .voices-v1 h2 { font-size: 2.7rem; }
-    .voices-v1__grid {
-      grid-template-columns: none;
-      grid-auto-flow: column;
-      grid-auto-columns: 72%;
-      gap: 12px;
+    .voices-v1__carousel {
       margin-inline: -20px;
-      padding: 4px 20px 30px;
-      overflow-x: auto;
-      scroll-snap-type: inline mandatory;
-      scrollbar-width: none;
+      padding-inline: 20px;
     }
-    .voices-v1__grid::-webkit-scrollbar { display: none; }
-    .voices-v1__card { scroll-snap-align: center; border-radius: 22px; }
-    .voices-v1__card:nth-child(2) { transform: none; }
+    .voices-v1__carousel :global(.carousel__viewport) { padding-bottom: 0; }
+    .voices-v1__card { border-radius: 22px; }
+    .voices-v1__card:nth-child(3) { transform: none; }
     .voices-v1__card :global(.video) { aspect-ratio: 4 / 5; }
   }
 </style>
